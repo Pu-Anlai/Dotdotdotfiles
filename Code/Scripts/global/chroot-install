@@ -28,6 +28,9 @@ echo -e "127.0.0.1	localhost\n"\
 "::1		localhost\n"\
 "127.0.1.1	$myhostname.localdomain	$myhostname" > /etc/hosts
 
+echo "Enabling color in pacman."
+sed -i 's/#Color/Color/' /etc/pacman.conf
+
 echo "Installing some very basic packages."
 pacman -S neovim man-db man-pages
 
