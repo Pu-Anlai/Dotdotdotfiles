@@ -72,8 +72,19 @@ function process_skel -a skel_file
     end
 end
 
+function prompt -a file
+    read -P "About to merge $file. Continue? [Y/n] " -n 1 answer
+    set answer (string lower $answer)
+    test -z "$answer"; and set answer y
+    if [ "$answer" = "y" ]
+        return 0
+    else
+        return 1
+    end
+end
+
 function main
-    argparse -n merge-configs 'v/vendor' -- "$argv" || return 1
+    argparse -n merge-configs 'v/vendor' 'p/prompt' -- "$argv" || return 1
     # set where to find the files to parse
     if [ -n "$_flag_v" ]
         set -g ACTIVE_PATH $VENDOR_SKEL_FILES_PATH
@@ -87,6 +98,10 @@ function main
     end
 
     for file in "$ACTIVE_PATH"/*
+        if [ -n "$_flag_p" ]
+            prompt "$file" || continue
+        end
+
         process_skel "$file"
     end
 end
