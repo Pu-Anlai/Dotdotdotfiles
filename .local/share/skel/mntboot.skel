@@ -1,0 +1,8 @@
+# %-LOCATION:$HOME/Code/Scripts/mntboot-% -*-sh-*-
+#!/bin/bash
+# DO EDITS HERE: $HOME/.local/share/skel/i3.skel
+
+if ! findmnt /boot >/dev/null 2>&1; then
+    cryptsetup open /dev/disk/by-uuid/{{{BOOT_UUID}}} cryptboot
+    mount /dev/mapper/cryptboot /boot
+fi
