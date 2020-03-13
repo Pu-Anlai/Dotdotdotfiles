@@ -24,15 +24,18 @@ function inject_custom
 end
 
 function safe_write -a write_file
+
     # only write to file if there were no errors
     set target_lines $argv[2..-1]
 
-    if [ -z "$argv" ]
+    if [ -z "$target_lines" ]
         echo "Skipping merge for $write_file..." >&2
         return 1
     else if [ "$ACTIVE_PATH" = "$VENDOR_SKEL_FILES_PATH" ]
+        sudo mkdir -p (dirname "$write_file")
         string join \n $target_lines | sudo tee "$write_file" >/dev/null || return 1
     else
+        mkdir -p (dirname "$write_file")
         string join \n $target_lines > "$write_file" || return 1
     end
 end
@@ -42,8 +45,9 @@ function get_meta_line -a skel_file field
 end
 
 function process_skel -a skel_file
-    set location (get_meta_line $skel_file LOCATION)
-    set custom (get_meta_line $skel_file CUSTOM)
+    set location (get_meta_line "$skel_file" LOCATION)
+    set custom (get_meta_line "$skel_file" CUSTOM)
+    set permissions (stat -c "%a" "$skel_file")
     # resolve variables in string
     set location (eval echo $location)
     set custom (eval echo $custom)
@@ -57,17 +61,23 @@ function process_skel -a skel_file
     if [ -z "$location" ]
         echo "$skel_file has no line specifying its target location." >&2
         return 1
-    else
-        # create directory structure for $location in case it doesn't exist
-        mkdir -p (dirname $location)
     end
 
     if [ -z "$custom" ]
-        safe_write "$location" (mergevars $skel_file 2>/dev/null | tail -n +2)
+        safe_write "$location" (mergevars -q $skel_file | tail -n +2)
         or return 1
     else
-        set merged_var_lines (mergevars -i custom $skel_file 2>/dev/null | tail -n +2)
+        set merged_var_lines (mergevars -q -i custom $skel_file | tail -n +2)
         safe_write "$location" (inject_custom -c $custom -- $merged_var_lines)
+        or return 1
+    end
+
+    # copy permissions from skel file to destination
+    if [ "$ACTIVE_PATH" = "$VENDOR_SKEL_FILES_PATH" ]
+        sudo chmod $permissions "$location"
+        or return 1
+    else
+        chmod $permissions "$location"
         or return 1
     end
 end

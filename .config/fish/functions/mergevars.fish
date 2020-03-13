@@ -1,5 +1,5 @@
 function mergevars -S
-    argparse -n mergevar 'i/ignore=+' -- $argv
+    argparse -n mergevar 'q/quiet' 'i/ignore=+' -- $argv
 
     set -l infile $argv
     if [ ! -f $infile ]
@@ -25,7 +25,7 @@ function mergevars -S
     end
 
     # abort if there are no fields
-    if not count $vars > /dev/null
+    if not count $vars > /dev/null; and test -z "$_flag_q"
         echo "No variable fields in file $infile or all relevant fields ignored." >&2
     end
 
