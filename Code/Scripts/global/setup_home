@@ -5,7 +5,7 @@ set tmp_dir (mktemp -d)
 cd $tmp_dir
 
 function install_from_aur
-    if not pacman -Q $argv > /dev/null 2>/dev/null
+    if not pacman -Q $argv >/dev/null 2>&1
         aurmake $argv
     end
 end
@@ -51,16 +51,27 @@ end
 print_bold "This script assumes the following:"
 echo -e "  - you are logged in as a non-root user\n"\
 "  - network access is set up\n"\
-"  - \$HOME is a clone of this repo: https://github.com/InspectorMustache/Dotdotdotfiles.git\n"\
-"  - \$AURMAKE_FOLDER is set"\
-"  - there is a folder at /var/cache/pacman/makepkg that the user has write permission to"
+"  - \$HOME is a clone of this repo: https://github.com/InspectorMustache/Dotdotdotfiles.git\n"
+
+if [ -z "$AURMAKE_FOLDER" ]
+    echo -e "Note: AURMAKE_FOLDER will be set to $HOME/Downloads/AUR.\n"
+    set -x AURMAKE_FOLDER "$HOME/Downloads/AUR"
+end
+
 read -P "Continue? [y] " -n 1 answer
 if [ ! (echo "$answer" | tr 'Y' 'y') = 'y' ]
     exit
 end
 
 # install sudo first
-command -s sudo > /dev/null 2>/dev/null; or install_sudo
+command -s sudo >/dev/null 2>&1; or install_sudo
+
+# make sure there's a writable folder at /var/cache/pacman/makepkg
+if [ ! -w /var/cache/pacman/makepkg ]
+    print_bold "Setting up /var/cache/pacman/makepkg..."
+    sudo mkdir -p /var/cache/pacman/makepkg
+    sudo chown $USER /var/cache/pacman/makepkg
+end
 
 # then git
 print_bold "Installing base tools for proceeding..."
@@ -71,7 +82,7 @@ print_bold "Merge configuration files..."
 
 # some AUR stuff, if it's not installed already
 print_bold "Building specific AUR packages..."
-command -s auracle > /dev/null 2>/dev/null; or install_auracle
+command -s auracle >/dev/null 2>&1; or install_auracle
 install_from_aur i3lock-color
 install_from_aur unclutter-xfixes-git
 install_from_aur ttf-mononoki
@@ -102,6 +113,7 @@ sudo pacman -S --needed \
     openssh \
     pass \
     picom \
+    smartmontools \
     syncthing \
     ttf-freefont \
     ttf-liberation \
@@ -131,8 +143,14 @@ fc-cache -fv
 print_bold "Starting systemd-timesyncd..."
 sudo systemctl enable --now systemd-timesyncd
 
+print_bold "Starting dnscrypt-proxy..."
+sudo systemctl enable --now dnscrypt-proxy
+
 print_bold "Enabling user systemd services..."
-systemctl --user enable dunst
+systemctl --user enable --now dunst
+
+print_bold "Enabling smartd monitoring service..."
+sudo systemctl enable --now smartd
 
 read -P "Enter 'amd' or 'intel' to install the respective microcode package or neither to skip this step. " answer
 switch $answer
