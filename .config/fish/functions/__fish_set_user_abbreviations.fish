@@ -51,6 +51,7 @@ function __fish_set_user_abbreviations
     abbr --add sctlrb systemctl reboot
     abbr --add sctl systemctl
     abbr --add sctlu systemctl --user
+    abbr --add se sudoedit
     abbr --add strm string match
     abbr --add strr string replace
     abbr --add str string
