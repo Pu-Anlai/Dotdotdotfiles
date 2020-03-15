@@ -87,15 +87,6 @@ function ring_bell
 end
 
 
-function s
-    # shorthand for sudo that also rings the terminal bell when credentials aren't cached
-    if not sudo -n true 2>/dev/null
-        ring_bell
-    end
-    sudo $argv
-end
-
-
 function confirm -a msg
     # show a confirm prompt that doesn't print user input
     ring_bell
@@ -207,19 +198,19 @@ function update_pacman_mirrorlist
 
     echo "Retrieving current copy..."
     set mirrorlist_temp (mktemp --suffix="-mirrorlist")
-    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "https://www.archlinux.org/mirrorlist/$PACUPDATE_MIRRORLIST_STRING" > $mirrorlist_temp 2>/dev/null
+    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "https://www.archlinux.org/mirrorlist/$PACUPDATE_MIRRORLIST_STRING" > "$mirrorlist_temp" 2>/dev/null
         or begin
             echo 'Error retrieving the mirrorlist. Is $PACUPDATE_MIRRORLIST_STRING set correctly?' >&2
             return 1
         end
 
     # cleaning up mirrorlist
-    string replace -r '^#Server' 'Server' < $mirrorlist_temp > $mirrorlist_temp
+    sed -i 's/^#Server/Server/' "$mirrorlist_temp"
 
     # backing up the old mirrorlist and setting the new one in place
-    s cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+    sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
         or return 1
-    s mv $mirrorlist_temp /etc/pacman.d/mirrorlist
+    sudo mv $mirrorlist_temp /etc/pacman.d/mirrorlist
         or return 1
     echo_important "Mirrorlist updated."
 end
@@ -386,7 +377,7 @@ end
 
 function check_repo_updates
     echo_head "Updates in Pacman's repos?"
-    s pacman -Sy > /dev/null
+    sudo pacman -Sy > /dev/null
         or return 1
     set repo_updates (pacman -Quq)
     set repo_updates_count (count $repo_updates)
@@ -471,7 +462,7 @@ function install_repo_updates
         or return 1
 
     echo_head "Installing updates from Pacman's repos..."
-    s pacman -Su
+    sudo pacman -Su
         or return 1
 
     get_added_lines $pacman_old_log $pacman_log > $pacman_new_log
