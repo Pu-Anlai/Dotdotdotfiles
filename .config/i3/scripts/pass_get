@@ -17,31 +17,27 @@ set class (string replace -a ' ' '_' "$class")
 
 
 function get_value -a pass key copy fallback
-    # get the value for $key in the pass file
-    pass show $pass | string replace -rf '^'$key':\s?(.+)$' '$1' | read -l value
+    set -l value (pass show $pass); or return 1
+    # get the value for $key
+    set -l value (printf '%s\n' $value | string replace -rf '^'$key':\s?(.+)$' '$1')
     test -z "$value"; and set value "$fallback"
     if test -n "$value"
         if eval $copy
             echo $value | xclip -selection clipboard -i
-            true
+            return 0
         else
             echo $value
-            true
+            return 0
         end
     else
-        false
+        return 1
     end
 end
 
 
-function complain_not_found -a key
-    notify-send "Unable to retrieve $key"
-end
-
-
 function xdo_pass_entry -a pass
-    set -l user (get_value $pass "user" false "$PASS_FALLBACK_USER"); or return
-    set -l pass_string (pass show $pass | head -n 1); or return
+    set -l user (get_value $pass "user" false "$PASS_FALLBACK_USER"); or return 1
+    set -l pass_string (pass show $pass | head -n 1); or return 1
     set -l field_div (get_value $pass "xdoDiv" false)
     test -z "$field_div"; and set field_div "Tab"
     xdotool keyup Super
