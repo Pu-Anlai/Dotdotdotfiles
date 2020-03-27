@@ -21,7 +21,7 @@ CONF_DIR = os.path.join(
 )
 XDG_DESKTOP_FILE_DIRS = [
     os.path.join("/", "usr", "share", "applications"),
-    os.path.join(os.getenv("HOME"), ".local", ".share", "applications"),
+    os.path.join(os.getenv("HOME"), ".local", "share", "applications"),
 ]
 
 # ensure existence of CONF_DIR
