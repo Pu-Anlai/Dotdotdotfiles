@@ -1,4 +1,4 @@
-# %-LOCATION:$HOME/.mbsyncrc-%
+# %-LOCATION:$HOME/.mbsyncrc-% %-CUSTOM:$HOME/.mbsyncrc-custom-% -*-conf-*-
 # DO EDITS HERE: $HOME/.local/share/skel/mbsync.skel
 IMAPAccount posteo
 Host posteo.de
@@ -21,3 +21,5 @@ Slave :posteo-local:
 Patterns *
 Create Both
 SyncState *
+
+{{{custom}}}
