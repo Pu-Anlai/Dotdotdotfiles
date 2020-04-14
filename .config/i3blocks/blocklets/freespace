@@ -1,24 +1,13 @@
 #!/bin/bash
 
-calc() {
-    awk "BEGIN { print "$*" }";
-}
+df_out=$(df -h --output=pcent,avail "$BLOCK_INSTANCE" | tail -n 1)
 
-read -r -a df_line <<< $(df -BM -l --output=source,size,used | grep ${BLOCK_INSTANCE})
-used=${df_line[2]::-1}
-size=${df_line[1]::-1}
-percentage=$(calc $used/$size*100)
-left=$(calc $size-$used)
+percentage=$(awk '{print $1}' <<< $df_out)
+left=$(awk '{print $2}' <<< $df_out)
 
-if (( $left > 9999 )); then
-    left="$(( $left / 1000 ))G"
-else
-    left="${left}M"
-fi
+echo "${percentage} <span size='x-small'>($left)</span>"
+echo ${percentage}
 
-echo "${percentage%.*}% <span size='x-small'>($left)</span>"
-echo ${percentage%.*}%
-
-if (( ${percentage%.*} > 92 )); then
+if (( ${percentage:0:-1} > 92 )); then
     echo \#$__BASE08
 fi
