@@ -234,7 +234,7 @@ assign [class="Steam"] $ws6
 for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
 for_window [class="Yad"] floating enable
 for_window [class="Pinentry"] floating enable
-for_window [instance="fzfly"] floating enable, border pixel 0
+for_window [instance="fzfly"] fullscreen enable global
 
 ## modes
 set $mode_resize " resize"

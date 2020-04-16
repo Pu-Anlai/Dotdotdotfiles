@@ -11,7 +11,7 @@ selection=\"\$(cat '$tmp_stdin' | fzf $FZF_OVERLAY_OPTS)\"
 echo \"\$selection\" > \"$tmp_stdout\"" > "$tmp_scr"
 chmod +x "$tmp_scr"
 
-alacritty -t fzfly --class fzfly --config-file "$HOME/.config/alacritty/overlay.yml" -e "$tmp_scr" &
+termite -t fzfly --name fzfly -c "$HOME/.config/termite/overlay" -e "$tmp_scr" &
 exec 3> "$tmp_stdin"
 cat >&3
 exec 3>&-
