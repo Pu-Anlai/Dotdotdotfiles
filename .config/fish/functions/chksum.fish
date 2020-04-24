@@ -9,7 +9,7 @@ function chksum
         return
     end
 
-    set filehash ($_flag_binary "$argv[-1]" | awk '{print $1}')
+    set filehash ($_flag_binary[1] "$argv[-1]" | awk '{print $1}')
     or return
 
     if [ "$filehash" = "$argv[-2]" ]
