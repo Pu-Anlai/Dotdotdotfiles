@@ -1,4 +1,4 @@
-;; %-LOCATION:$HOME/.emacs.d/subinits/init-mu4e.el-% -*-emacs-lisp-*-
+;; %-LOCATION:$HOME/.emacs.d/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
 ;; DO EDITS HERE: $HOME/.local/share/skel/mu4e.skel
 
 ;; set mu4e as emacs default mail program
@@ -15,39 +15,43 @@
   :commands (mu4e mu4e-user-agent)
   :straight nil
   :config
-  ;; define smtp settings here as well in case they need to be made part of a mu4e context later
-  (setq smtpmail-stream-type      'ssl
-        smtpmail-smtp-server      "posteo.de"
-        smtpmail-smtp-service     465
-        smtpmail-queue-dir        "~/.local/share/mail/queued_mail/cur")
-  (setq mu4e-maildir                (expand-file-name "~/.local/share/mail/posteo")
-        mu4e-sent-folder            "/Sent"
-        mu4e-drafts-folder          "/Drafts"
-        mu4e-trash-folder           "/Trash"
-        mu4e-refile-folder          "/Archiv"
-        mu4e-get-mail-command       "mbsync posteo"
-        user-mail-address           "{{{MAIL_ADDRESS}}}"
-        user-full-name              "{{{REAL_NAME}}}"
-        mu4e-user-mail-address-list (list user-mail-address))
+  (setq mu4e-context-policy nil)
+  ;; set up private context
+  (make-mu4e-context-account
+   :name "posteo"
+   :match-func (lambda (msg) (unless msg t))
+   :user-mail-address "{{{MAIL_ADDRESS}}}"
+   :sent-folder "Sent"
+   :drafts-folder "Drafts"
+   :trash-folder "Trash"
+   :refile-folder "Archiv"
+   :vars '((user-full-name . "{{{REAL_NAME}}}")
+           (mu4e-get-mail-command . "mbsync posteo")
+           (smtpmail-stream-type . 'ssl)
+           (smtpmail-smtp-server . "posteo.de")
+           (smtpmail-smtp-service . 465)
+           (smtpmail-queue-dir . "~/.local/share/mail/queued_mail/cur")
+           (mu4e-maildir-shortcuts . 
+                                   (("/posteo/Arbeit+Bildung"    . ?b)
+                                    ("/posteo/Archiv"            . ?a)
+                                    ("/posteo/Drafts"            . ?d)
+                                    ("/posteo/Following"         . ?f)
+                                    ("/posteo/Inbox"             . ?i)
+                                    ("/posteo/Privat"            . ?p)
+                                    ("/posteo/Sent"              . ?s)
+                                    ("/posteo/Transaktionen"     . ?t)))))
 
-  ;; maildir shortcuts
-  (setq mu4e-maildir-shortcuts
-        '(("/Arbeit+Bildung"    . ?b)
-          ("/Archiv"            . ?a)
-          ("/Drafts"            . ?d)
-          ("/Following"         . ?f)
-          ("/Inbox"             . ?i)
-          ("/Privat"            . ?p)
-          ("/Sent"              . ?s)
-          ("/Transaktionen"     . ?t)))
+  ;; room for additional contexts
+  {{{custom}}}
+ 
   ;; headers view
   (setq mu4e-use-fancy-chars t
         mu4e-headers-include-related nil
         mu4e-headers-advance-after-mark nil
         mu4e-headers-fields '((:human-date . 12)
-                             (:flags . 6)
-                             (:from-or-to . 22)
-                             (:subject)))
+                              (:flags . 6)
+                              (:from-or-to . 22)
+                              (:subject)))
 
   ;; message view
   (setq mu4e-view-scroll-to-next t)
@@ -100,8 +104,8 @@
     (interactive)
     (mu4e~view-in-headers-context
      (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
-        (mu4e-headers-mark-and-next 'unmark)
-      (mu4e-headers-mark-and-next 'something))))
+         (mu4e-headers-mark-and-next 'unmark)
+       (mu4e-headers-mark-and-next 'something))))
 
   (defun my/mu4e-view-mark-pattern ()
     (interactive)
