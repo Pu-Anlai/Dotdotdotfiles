@@ -33,7 +33,10 @@
     "<f2>"              'mu4e
     "S-<f2>"            (general-lambda (my/split-window-and-do (mu4e)))
     "<f12>"             'my/straight-update
-    "M-<f12>"           'restart-emacs)
+    "M-<f12>"           'restart-emacs
+    "S-M-<f12>"         (general-lambda
+                          (shell-command "merge-configs")
+                          (restart-emacs)))
 
   ;; normal state keybinds
   (general-def
@@ -382,11 +385,7 @@
   (general-def
     :states         'emacs
     :keymaps        'mu4e-main-mode-map
-    "J"             'mu4e~headers-jump-to-maildir
-    "q"             (general-lambda
-                     (mu4e-quit)
-                     (mu4e-update-mail-and-index t))
-    "Q"             'mu4e-quit)
+    "J"             'mu4e~headers-jump-to-maildir)
 
   (general-def
     :states         'emacs
