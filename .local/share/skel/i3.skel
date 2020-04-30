@@ -310,5 +310,4 @@ bar {
 
 exec --no-startup-id picom -f
 exec --no-startup-id feh --bg-fill $HOME/Bilder/wallpaper.jpg
-exec --no-startup-id xss-lock -- $i3scriptsdir/pm_lock
 exec --no-startup-id ibus-daemon -xrd
