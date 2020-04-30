@@ -13,7 +13,7 @@ function inject_custom
 
     # do the replacing
     for line in $target_lines
-        if string match -eq '{{{custom}}}' $line
+        if string match -eq -- '{{{custom}}}' $line
             for custom_line in (cat $custom_file)
                 echo $custom_line
             end
@@ -33,15 +33,15 @@ function safe_write -a write_file
         return 1
     else if [ "$ACTIVE_PATH" = "$VENDOR_SKEL_FILES_PATH" ]
         sudo mkdir -p (dirname "$write_file")
-        string join \n $target_lines | sudo tee "$write_file" >/dev/null || return 1
+        string join -- \n $target_lines | sudo tee "$write_file" >/dev/null || return 1
     else
         mkdir -p (dirname "$write_file")
-        string join \n $target_lines > "$write_file" || return 1
+        string join -- \n $target_lines > "$write_file" || return 1
     end
 end
 
 function get_meta_line -a skel_file field
-    head -n 1 $skel_file | string match -r '(?<=%-'$field':).+?(?=-%)'
+    head -n 1 $skel_file | string match -r -- '(?<=%-'$field':).+?(?=-%)'
 end
 
 function process_skel -a skel_file
@@ -84,7 +84,7 @@ end
 
 function prompt -a file
     read -P "About to merge $file. Continue? [Y/n] " -n 1 answer
-    set answer (string lower $answer)
+    set answer (string lower -- $answer)
     test -z "$answer"; and set answer y
     if [ "$answer" = "y" ]
         return 0

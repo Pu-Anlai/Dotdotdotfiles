@@ -10,7 +10,7 @@ function mergevars -S
     # get all marked fields in the file
     set -l vars
     for match in (string match -ra '\{\{\{[^\}]+\}\}\}' < $infile)
-        set -l v (string trim -c '{}' $match)
+        set -l v (string trim -c '{}' -- $match)
 
         # check if ignored
         if not contains $v $_flag_i
@@ -32,10 +32,10 @@ function mergevars -S
     # do the actual replacing
     set -l file_string (cat $infile)
     for v in $vars
-        set file_string (string replace '{{{'$v'}}}' $$v $file_string)
+        set file_string (string replace -- '{{{'$v'}}}' $$v $file_string)
     end
 
     # print the result
-    string join \n $file_string
+    string join -- \n $file_string
 
 end
