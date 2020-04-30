@@ -89,6 +89,10 @@
 !.emacs.d/init.el
 !.emacs.d/snippets
 !.emacs.d/snippets/**
+!.emacs.d/snippets/mu4e-compose-mode
+.emacs.d/snippets/mu4e-compose-mode/*
+!.emacs.d/snippets/mu4e-compose-mode/private
+!.emacs.d/snippets/mu4e-compose-mode/private/*
 !.emacs.d/subinits
 !.emacs.d/subinits/*
 .emacs.d/subinits/init-mu4e.el
