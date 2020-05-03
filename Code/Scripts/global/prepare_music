@@ -2,6 +2,7 @@
 
 set base_folder "$HOME/Musik/Zwischenspeicher"
 set record_folder $base_folder/Alben
+mkdir -p "$record_folder"
 
 for flac_folder in $record_folder/flac/*
     if [ -d "$flac_folder" -a (count "$flac_folder/"*.flac) -gt 0 ]
