@@ -4,17 +4,26 @@ set base_folder "$HOME/Musik/Zwischenspeicher"
 set record_folder $base_folder/Alben
 mkdir -p "$record_folder"
 
+
+function process_record_folder -a folder
+    set ogg_folder "$record_folder/ogg/"(basename "$folder")
+    # return if the folder already exists
+    test -d "$ogg_folder" && return
+    mkdir -p "$ogg_folder"
+
+    set_color -o; echo "Preparing "(basename "$folder")"..."; set_color normal
+    cd "$folder"
+
+    oggenc -q 6 *.flac || return 1
+    vorbisgain -a *.ogg
+    mv *.ogg "$ogg_folder"/
+    
+    set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
+end
+
+
 for flac_folder in $record_folder/flac/*
     if [ -d "$flac_folder" -a (count "$flac_folder/"*.flac) -gt 0 ]
-        set_color -o; echo "Preparing "(basename "$flac_folder")"..."; set_color normal
-        replaygain $flac_folder/*
-        cd "$flac_folder"
-
-        oggenc -q 6 *.flac
-        set ogg_folder "$record_folder/ogg/"(basename "$flac_folder")
-        mkdir -p "$ogg_folder"
-        mv *.ogg "$ogg_folder"/
-        
-        set_color -o; echo "Finished processing "(basename "$flac_folder")"."; set_color normal
+        process_record_folder $flac_folder || exit 1
     end
 end
