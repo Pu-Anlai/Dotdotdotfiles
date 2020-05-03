@@ -61,7 +61,7 @@
         flymake-fringe-indicator-position 'right-fringe))
 
 (use-package yasnippet
-  :hook ((emacs-lisp-mode go-mode fish-mode snippet-mode python-mode) . yas-minor-mode)
+  :hook ((emacs-lisp-mode go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
   :config
   (yas-reload-all)
   ;; bind this here because yas-maybe-expanded needs to be loaded first

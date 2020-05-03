@@ -58,7 +58,7 @@
   (setq mu4e-confirm-quit nil
         mu4e-change-filenames-when-moving t
         mu4e-view-show-images t
-        mu4e-html2text-command "elinks -force-html -dump"
+        mu4e-html2text-command "w3m -I UTF-8 -T text/html"
         mu4e-attachment-dir (xdg-user-dir "DOWNLOAD")
         mu4e-save-multiple-attachments-without-asking t)
   (when (image-type-available-p 'imagemagick)
@@ -67,9 +67,13 @@
                '("bopen in browser" . mu4e-action-view-in-browser))
   ;; compose view
   (setq mu4e-compose-complete-only-personal t
-        message-kill-buffer-on-exit t
+        mu4e-compose-signature-auto-include nil
         mu4e-compose-dont-reply-to-self t
-        mu4e-compose-format-flowed t)
+        mu4e-compose-format-flowed t
+        mu4e-compose-cite-function #'message-cite-original-without-signature
+        message-citation-line-function #'message-insert-formatted-citation-line
+        message-citation-line-format "Am %A, den %x um %X schrieb %f:"
+        message-kill-buffer-on-exit t)
   (add-hook 'mu4e-compose-mode-hook
             (defun my/setup-mu4e-compose-settings ()
               (visual-line-mode)
