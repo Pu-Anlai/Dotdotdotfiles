@@ -1,0 +1,39 @@
+# %-LOCATION:$HOME/.config/i3/scripts/i3insert-% -*-sh-*-
+#!/bin/bash
+# DO EDITS HERE: $HOME/.local/share/skel/i3insert.skel
+
+function translate_char {
+    case $1 in
+        m)
+            echo "{{{MAIL_ADDRESS}}}"
+            ;;
+        N)
+            echo "{{{REAL_NAME}}}"
+            ;;
+        n)
+            echo $(grep --color=never -o '\S*$' <<< "{{{REAL_NAME}}}")
+            ;;
+        v)
+            echo $(cut -d' ' -f 1 <<< "{{{REAL_NAME}}}")
+            ;;
+        a)
+            echo "{{{ADDRESS_STREET}}}"
+            ;;
+        p)
+            echo "{{{ADDRESS_ZIP}}}"
+            ;;
+        s)
+            echo "{{{ADDRESS_CITY}}}"
+            ;;
+        f)
+            echo "{{{PHONE_NUMBER}}}"
+            ;;
+    esac
+}
+
+function X_insert_text {
+    xdotool keyup $1
+    xdotool type --clearmodifiers "$(translate_char $1)"
+}
+
+X_insert_text $1

@@ -240,6 +240,7 @@ for_window [instance="fzfly"] fullscreen enable global
 set $mode_resize " resize"
 set $mode_music " music"
 set $mode_blocks " blocks"
+set $mode_insert " insert"
 
 # resize window (you can also use the mouse for that)
 mode $mode_resize {
@@ -283,10 +284,27 @@ mode $mode_blocks {
         bindsym $mod+b mode "default"
 }
 
+# insert text
+mode $mode_insert {
+        bindsym m exec $i3scriptsdir/i3insert m; mode "default"
+        bindsym Shift+n exec $i3scriptsdir/i3insert N; mode "default"
+        bindsym n exec $i3scriptsdir/i3insert n; mode "default"
+        bindsym v exec $i3scriptsdir/i3insert v; mode "default"
+        bindsym a exec $i3scriptsdir/i3insert a; mode "default"
+        bindsym p exec $i3scriptsdir/i3insert p; mode "default"
+        bindsym s exec $i3scriptsdir/i3insert s; mode "default"
+        bindsym f exec $i3scriptsdir/i3insert f; mode "default"
+
+        bindsym Escape mode "default"
+        bindsym $mod+i mode "default"
+}
+
+
 # bind modes to keys
 bindsym $mod+plus mode $mode_resize
 bindsym $mod+m mode $mode_music
 bindsym $mod+b mode $mode_blocks
+bindsym $mod+i mode $mode_insert
 
 # Start i3bar to display a workspace bar
 bar {
