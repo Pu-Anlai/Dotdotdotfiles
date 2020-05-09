@@ -16,18 +16,19 @@
   :straight nil
   :config
   (setq mu4e-context-policy nil)
+  (setq mu4e-compose-context-policy nil)
   ;; set up private context
   (make-mu4e-context-account
    :name "posteo"
-   :match-func (lambda (msg) (unless msg t))
    :user-mail-address "{{{MAIL_ADDRESS}}}"
    :sent-folder "Sent"
    :drafts-folder "Drafts"
    :trash-folder "Trash"
    :refile-folder "Archiv"
-   :vars '((user-full-name . "{{{REAL_NAME}}}")
+   :vars `((user-full-name . "{{{REAL_NAME}}}")
            (mu4e-get-mail-command . "mbsync posteo")
-           (smtpmail-stream-type . 'ssl)
+           (smtpmail-mail-address . ,user-mail-address)
+           (smtpmail-stream-type . ssl)
            (smtpmail-smtp-server . "posteo.de")
            (smtpmail-smtp-service . 465)
            (smtpmail-queue-dir . "~/.local/share/mail/queued_mail/cur")
@@ -44,6 +45,17 @@
   ;; room for additional contexts
   {{{custom}}}
  
+  ;; context on startup
+  (mu4e-context-switch nil "posteo")
+
+  ;; sync mail accounts on quitting emacs
+  (add-to-list 'kill-emacs-query-functions
+               (lambda ()
+                 (message "Syncing mail accounts...")
+                 (not
+                  (unless (eql (call-process-shell-command "mbsync -a") 0)
+                   (display-warning 'mbsync "Error syncing mail accounts" :error)))))
+
   ;; headers view
   (setq mu4e-use-fancy-chars t
         mu4e-headers-include-related nil
@@ -91,6 +103,12 @@
                                                 "en_AU"))
                 (flyspell-mode)
                 (message "Ispell Dictionary set to %s." ispell-local-dictionary))))
+
+  (defun my/mu4e-update-on-kill-emacs ()
+    (when (and mu4e-get-mail-command
+               (process-live-p (get-buffer-process mu4e~update-buffer)))
+      (run-hooks 'mu4e-update-pre-hook)
+      ()))
 
   (defun my/mu4e-headers-mark-toggle ()
     (interactive)
