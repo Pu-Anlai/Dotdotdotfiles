@@ -104,6 +104,10 @@
                 (flyspell-mode)
                 (message "Ispell Dictionary set to %s." ispell-local-dictionary))))
 
+  ;; always sync after sending a new message
+  (add-hook 'message-sent-hook
+            (lambda () (mu4e-update-mail-and-index t)))
+  
   (defun my/mu4e-update-on-kill-emacs ()
     (when (and mu4e-get-mail-command
                (process-live-p (get-buffer-process mu4e~update-buffer)))
