@@ -70,9 +70,9 @@
 
 (require 'init-general-programming)
 
-(require 'init-language-specific)
-
 (require 'init-keybinds)
+
+(require 'init-language-specific)
 
 ;; load custom file late so it can make use of previously defined references
 (load (expand-file-name emacs-custom-file user-emacs-directory))
