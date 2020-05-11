@@ -47,6 +47,8 @@
              my/split-window-sensibly
              my/straight-update
              my/toggle-scratch-buffer
+             my/restore-window-layout
+             my//window-layout-stack-push
              my/window-clear-side
              my/split-window-and-do))
 

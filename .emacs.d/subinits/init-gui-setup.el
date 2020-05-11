@@ -20,6 +20,15 @@
 ;; WHY is vertical splitting preferred over horizontal?
 (setq split-window-preferred-function 'my/split-window-sensibly)
 
+;; keep track of window layout changes
+(defun my//first-push-to-window-layout-stack (&rest args)
+  (unless (eql (count-windows) 1)
+    (my//window-layout-stack-push)))
+;; only add this advice to high-level functions; otherwise it will be called
+;; multiple times for each time the parent function calls the lower-level one
+(advice-add #'delete-other-windows :before #'my//first-push-to-window-layout-stack)
+(advice-add #'evil-window-delete :before #'my//first-push-to-window-layout-stack)
+
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook (lambda ()
                    (setq display-line-numbers 'relative

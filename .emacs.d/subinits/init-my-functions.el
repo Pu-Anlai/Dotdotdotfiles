@@ -36,12 +36,6 @@
   "Uniform way to get content of current line."
   (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
 
-(defun my/sudo-find-file ()
-  "Open 'find-file' with sudo prefix."
-  (interactive)
-  (let ((default-directory "/sudo::/"))
-    (command-execute 'find-file)))
-
 (defun my/dired-mark-toggle ()
   "Toggle mark for currently selected file."
   (interactive)
@@ -227,6 +221,9 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
   "Returns t if point is within a string according to syntax-ppss.  Otherwise nil."
   (not (eq (nth 3 (syntax-ppss)) nil)))
 
+(defun my//window-layout-stack-push ()
+  (push (current-window-configuration) my//window-layout-stack))
+
 (defun my/python-remove-breakpoints ()
   "Remove all breakpoint declarations in buffer."
   (interactive)
@@ -248,6 +245,13 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
                         (:default-directory . ,new-py-path)
                         (:exec . ("pytest"))))
     (setenv "PYTHONPATH" old-py-path)))
+
+(defun my/restore-window-layout ()
+  "Restore window layout that is on top of `my//window-layout-stack'."
+  (interactive)
+  (let ((layout (pop my//window-layout-stack)))
+    (when layout
+      (set-window-configuration layout))))
 
 (defun my/source-ssh-env ()
   "Read environment variables for the ssh environment from '~/.ssh/environment'."
@@ -298,6 +302,12 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
     (straight-check-all)
     (restart-emacs)))
 
+(defun my/sudo-find-file ()
+  "Open 'find-file' with sudo prefix."
+  (interactive)
+  (let ((default-directory "/sudo::/"))
+    (command-execute 'find-file)))
+
 (defun my//syntax-depth ()
   "Return depth at point within syntax tree. "
   (nth 0 (syntax-ppss)))
@@ -319,5 +329,9 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
                    (funcall (intern (concat "windmove-" direction))))
                (delete-window))))
     (mapc #'clear (list "up" "down"))))
+
+;; variables
+(defvar my//window-layout-stack nil
+  "Stack of recently recorded layout changes.")
 
 (provide 'init-my-functions.el)

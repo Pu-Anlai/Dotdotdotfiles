@@ -13,6 +13,7 @@
     :keymaps            'override
     :states             '(motion emacs)
     "M-o"               'delete-other-windows
+    "M-i"               'my/restore-window-layout
     "M-c"               'evil-window-delete
     "M-O"               'my/window-clear-side
     "M-h"               'evil-window-left
@@ -252,6 +253,24 @@
     "t"             'my/dired-mark-toggle
     "T"             'dired-toggle-marks)
 
+  ;; eglot keybinds
+  (general-def-leader
+    :states         'motion
+    :keymaps        'eglot-mode-map
+    "hx"            'eglot-help-at-point)
+  
+  (general-def-goleader
+    :states         'motion
+    :keymaps        'eglot-mode-map
+    "d"             'xref-find-definitions
+    "="             'eglot-format-buffer
+    "*"             'xref-find-references)
+
+  (general-def-goleader
+   :states          'visual
+   :keymaps         'eglot-mode-map
+   "="              'eglot-format)
+
   ;; eshell keybinds (eshell-mode-keymap is buffer-local and only gets
   ;; initialized after eshell is started - why?)
   (defun my/eshell-set-keys ()
@@ -285,6 +304,13 @@
     :keymaps        'edebug-mode-map
     "SPC"           'edebug-step-mode)
 
+  ;; helpful keybindings
+  (general-def
+    :states         'motion
+    :keymaps        'helpful-mode-map
+    "<C-o>"         'backward-button
+    "<C-i>"         'forward-button)
+
   ;; ivy keybinds
   (general-def
     :keymaps        'ivy-minibuffer-map
@@ -302,13 +328,6 @@
     :keymaps        'ivy-switch-buffer-map
     "C-k"           'ivy-switch-buffer-kill)
 
-
-  ;; term keybinds
-  (general-def
-    :states         'emacs
-    :keymaps        'vterm-mode-map
-    "C-h k"         'helpful-key
-    "C-c $"         'my/vterm)
 
   ;; fish-mode keybinds
   (general-def-leader
@@ -342,23 +361,33 @@
    :keymaps         'go-mode-map
    "ci"             'go-import-add)
 
-  ;;eglot keybinds
+  ;; (emacs-)lisp keybindings
+  (general-def
+    :states         'normal
+    :keymaps        'lisp-mode-shared-map
+    "D"             'evil-cp-delete-line
+    "C"             'evil-cp-change-line
+    "c"             'evil-cp-change
+    "d"             'evil-cp-delete
+    "S"             'evil-cp-change-whole-line
+    "^"             'my/evil-lisp-first-non-blank
+    "A"             'my/evil-lisp-append-line
+    "I"             'my/evil-lisp-insert-line
+    "o"             'my/evil-lisp-open-below
+    "O"             'my/evil-lisp-open-above)
+
+  (general-def
+    :states         'visual
+    :keymaps        'lisp-mode-shared-map
+    "c"             'evil-cp-change)
+
   (general-def-leader
     :states         'motion
-    :keymaps        'eglot-mode-map
-    "hx"            'eglot-help-at-point)
-  
-  (general-def-goleader
-    :states         'motion
-    :keymaps        'eglot-mode-map
-    "d"             'xref-find-definitions
-    "="             'eglot-format-buffer
-    "*"             'xref-find-references)
-
-  (general-def-goleader
-   :states          'visual
-   :keymaps         'eglot-mode-map
-   "="              'eglot-format)
+    :keymaps        'lisp-mode-shared-map
+    "e"             'my/eval-at-point
+    "E"             'my/eval-line
+    "M-e"           'eval-buffer
+    "C-e"           'eval-defun)
 
   ;; markdown-mode keybinds
   (general-def-leader
@@ -472,32 +501,12 @@
     :keymaps        'inferior-python-mode-map
     "<return>"      'comint-send-input)
 
+  ;; vterm keybinds
   (general-def
-    :states         'normal
-    :keymaps        'lisp-mode-shared-map
-    "D"             'evil-cp-delete-line
-    "C"             'evil-cp-change-line
-    "c"             'evil-cp-change
-    "d"             'evil-cp-delete
-    "S"             'evil-cp-change-whole-line
-    "^"             'my/evil-lisp-first-non-blank
-    "A"             'my/evil-lisp-append-line
-    "I"             'my/evil-lisp-insert-line
-    "o"             'my/evil-lisp-open-below
-    "O"             'my/evil-lisp-open-above)
-
-  (general-def
-    :states         'visual
-    :keymaps        'lisp-mode-shared-map
-    "c"             'evil-cp-change)
-
-  (general-def-leader
-    :states         'motion
-    :keymaps        'lisp-mode-shared-map
-    "e"             'my/eval-at-point
-    "E"             'my/eval-line
-    "M-e"           'eval-buffer
-    "C-e"           'eval-defun)
+    :states         'emacs
+    :keymaps        'vterm-mode-map
+    "C-h k"         'helpful-key
+    "C-c $"         'my/vterm)
 
   (general-def-leader
     :states         'normal
@@ -514,6 +523,7 @@
     :states         'visual
     :keymaps        'lisp-mode-shared-map
     "e"             'my/eval-visual-region)
+
   ;; visual regexp keybinds
   (general-def
     :keymaps        'vr/minibuffer-keymap
