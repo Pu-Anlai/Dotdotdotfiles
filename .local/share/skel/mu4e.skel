@@ -1,6 +1,6 @@
 ;; %-LOCATION:$HOME/.emacs.d/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
 ;; DO EDITS HERE: $HOME/.local/share/skel/mu4e.skel
-
+(require 'subr-x)
 ;; set mu4e as emacs default mail program
 (setq mail-user-agent #'mu4e-user-agent)
 
@@ -17,6 +17,8 @@
   :config
   (setq mu4e-context-policy nil)
   (setq mu4e-compose-context-policy nil)
+  (defvar my/mu4e~account-list nil
+    "List of contexts that have been switched to. This will be passed to \"mbsync\" on exiting Emacs.")
   ;; set up private context
   (make-mu4e-context-account
    :name "posteo"
@@ -45,16 +47,26 @@
   ;; room for additional contexts
   {{{custom}}}
  
+  ;; add context to my/mu4e~account-list after each switch (if they're not
+  ;; already there)
+  (add-hook 'mu4e-context-changed-hook
+            (lambda ()
+              (cl-pushnew (mu4e-context-name (mu4e-context-current)) my/mu4e~account-list)))
+  ;; sync on emacs exit
+  (add-to-list 'kill-emacs-query-functions
+               (defun my//final-mail-sync ()
+                 "Sync all mail accounts that we have switched to during this session."
+                 (message
+                  (concat "Syncing mail accounts ("
+                          (string-join my/mu4e~account-list ", ")
+                          ")..."))
+
+                 (let ((cmd (string-join (push "mbsync" my/mu4e~account-list) " ")))
+                   (not
+                    (unless (eql (call-process-shell-command cmd) 0)
+                      (display-warning 'mbsync "Error syncing mail accounts" :error))))))
   ;; context on startup
   (mu4e-context-switch nil "posteo")
-
-  ;; sync mail accounts on quitting emacs
-  (add-to-list 'kill-emacs-query-functions
-               (lambda ()
-                 (message "Syncing mail accounts...")
-                 (not
-                  (unless (eql (call-process-shell-command "mbsync -a") 0)
-                   (display-warning 'mbsync "Error syncing mail accounts" :error)))))
 
   ;; headers view
   (setq mu4e-use-fancy-chars t
@@ -82,7 +94,7 @@
         mu4e-compose-signature-auto-include nil
         mu4e-compose-dont-reply-to-self t
         mu4e-compose-format-flowed t
-        mu4e-compose-cite-function #'message-cite-original-without-signature
+        mu4e-compose-cite-function #'message-cite-original
         message-citation-line-function #'message-insert-formatted-citation-line
         message-citation-line-format "Am %A, den %x um %X schrieb %f:"
         message-kill-buffer-on-exit t)
