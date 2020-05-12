@@ -13,6 +13,7 @@ Account posteo
 MaildirStore posteo-local
 Path ~/.local/share/mail/posteo/
 Inbox ~/.local/share/mail/posteo/Inbox
+Trash Trash
 SubFolders Verbatim
 
 Channel posteo
@@ -20,6 +21,8 @@ Master :posteo-remote:
 Slave :posteo-local:
 Patterns *
 Create Both
+Remove Both
+Expunge Both
 SyncState *
 
 {{{custom}}}
