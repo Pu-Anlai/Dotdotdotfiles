@@ -221,8 +221,11 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
   "Returns t if point is within a string according to syntax-ppss.  Otherwise nil."
   (not (eq (nth 3 (syntax-ppss)) nil)))
 
-(defun my//window-layout-stack-push ()
-  (push (current-window-configuration) my//window-layout-stack))
+(defun my/join-path (&rest elements)
+  "Join ELEMENTS to create a path.  The last element should be the name of a file."
+  (let ((file (car (last elements)))
+        (folders (butlast elements)))
+    (apply #'concat `(,@(mapcar #'file-name-as-directory folders) ,file))))
 
 (defun my/python-remove-breakpoints ()
   "Remove all breakpoint declarations in buffer."
@@ -329,6 +332,9 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
                    (funcall (intern (concat "windmove-" direction))))
                (delete-window))))
     (mapc #'clear (list "up" "down"))))
+
+(defun my//window-layout-stack-push ()
+  (push (current-window-configuration) my//window-layout-stack))
 
 ;; variables
 (defvar my//window-layout-stack nil

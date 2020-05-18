@@ -1,7 +1,6 @@
 ;; get rid of the custom blabla by using custom-file
-(defconst emacs-custom-file (expand-file-name "custom.el" user-emacs-directory))
-(unless (file-exists-p emacs-custom-file)
-  (write-region "" "" emacs-custom-file))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 ;; set up a separate location for backup and temp files
 (defconst emacs-tmp-dir (expand-file-name "auto-save" user-emacs-directory))
@@ -22,6 +21,7 @@
 (use-package init-my-functions
   :straight nil
   :commands (my/get-line
+             my/join-path
              my/sudo-find-file
              my/dired-mark-toggle
              my/eshell
@@ -76,6 +76,3 @@
 (require 'init-keybinds)
 
 (require 'init-language-specific)
-
-;; load custom file late so it can make use of previously defined references
-(load (expand-file-name emacs-custom-file user-emacs-directory))
