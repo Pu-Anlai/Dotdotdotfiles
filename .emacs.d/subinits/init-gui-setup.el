@@ -68,7 +68,7 @@
   (telephone-line-defsegment telephone-line-my-projectile-segment ()
     (cond
      ((not (buffer-file-name)) ; buffer is not a file
-      "")
+      "Ø")
      ((and (fboundp 'projectile-project-name)
            (projectile-project-p)) ; buffer is part of a project
       (let*
@@ -93,11 +93,11 @@
                             (propertize (prin1-to-string .warning) 'face 'telephone-line-warning))))
                      ""))
         ('running    "")
-        ('no-checker (propertize "" 'face 'telephone-line-unimportant))
-        ('not-checked "")
-        ('interrupted (propertize "" 'face 'telephone-line-error))
-        ('error       (propertize "" 'face 'telephone-line-error))
-        ('suspicious  ""))))
+        ('no-checker (propertize "…" 'face 'telephone-line-unimportant))
+        ('not-checked "-")
+        ('interrupted (propertize "X" 'face 'telephone-line-error))
+        ('error       (propertize "!" 'face 'telephone-line-error))
+        ('suspicious  "?"))))
 
   (telephone-line-defsegment telephone-line-my-buffer-segment ()
     (if (and (buffer-file-name)
