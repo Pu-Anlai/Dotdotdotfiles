@@ -61,8 +61,9 @@
 ;; various mode setting options
 (push '(".gitignore" . prog-mode) auto-mode-alist)
 
-;; mu4e
-(require 'init-mu4e)
+;; mu4e (lazily so emacs still runs without it)
+(unless (require 'init-mu4e nil t)
+  (message "Error loading mu4e."))
 
 (require 'init-ivy)
 
