@@ -429,7 +429,7 @@
                       (evil-scroll-down 0))
     "C-u"           (general-lambda
                       (evil-scroll-up 0))
-    "/"             'mu4e-headers-search
+    "/"             'mu4e-headers-search-edit
     "S"             'mu4e-headers-change-sorting
     "<tab>"         'mu4e-headers-toggle-include-related
     "t"             'my/mu4e-headers-mark-toggle
@@ -450,7 +450,6 @@
   (general-def-goleader
     :states         'emacs
     :keymaps        'mu4e-headers-mode-map
-    "/"             'mu4e-headers-search-edit
     "g"             'evil-goto-first-line)
 
   (general-def
@@ -458,11 +457,12 @@
     :keymaps        'mu4e-view-mode-map
     "C-d"           'scroll-up-command
     "C-u"           'scroll-down-command
-    "n"             'mu4e-scroll-up
-    "p"             'mu4e-scroll-down
-    "j"             'mu4e-view-headers-next
-    "k"             'mu4e-view-headers-prev
-    "/"             'mu4e-view-search
+    "k"             'mu4e-scroll-up
+    "j"             'mu4e-scroll-down
+    "f"             'link-hint-open-link
+    "n"             'mu4e-view-headers-next
+    "p"             'mu4e-view-headers-prev
+    "/"             'swiper
     "t"             'my/mu4e-view-mark-toggle
     "T"             'mu4e-view-mark-pattern
     "%"             'my/mu4e-view-mark-pattern
@@ -473,7 +473,6 @@
   (general-def-leader
     :states 'emacs
     :keymaps 'mu4e-view-mode-map
-    "f"      'link-hint-open-link
     "/"      'mu4e-view-search-narrow
     "d"      'mu4e-view-mark-for-delete)
   

@@ -61,9 +61,11 @@
                           (string-join my/mu4e~account-list ", ")
                           ")..."))
 
-                 (let ((cmd (string-join (push "mbsync" my/mu4e~account-list) " ")))
+                 (let* ((cmd (string-join (push "mbsync" my/mu4e~account-list) " "))
+                        (result (call-process-shell-command cmd)))
+                   (mu4e-update-index)
                    (not
-                    (unless (eql (call-process-shell-command cmd) 0)
+                    (unless (eql result 0)
                       (display-warning 'mbsync "Error syncing mail accounts" :error))))))
   ;; context on startup
   (mu4e-context-switch nil "posteo")
