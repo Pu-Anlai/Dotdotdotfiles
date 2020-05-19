@@ -99,7 +99,7 @@
         fill-flowed-encode-column 72
         mu4e-compose-cite-function #'message-cite-original
         message-citation-line-function #'message-insert-formatted-citation-line
-        message-citation-line-format "Am %A, den %x um %X schrieb %f:"
+        message-citation-line-format "\nAm %A, den %x um %X schrieb %f:"
         message-kill-buffer-on-exit t)
   (add-hook 'mu4e-compose-mode-hook
             (defun my/setup-mu4e-compose-settings ()
