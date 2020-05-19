@@ -457,8 +457,8 @@
     :keymaps        'mu4e-view-mode-map
     "C-d"           'scroll-up-command
     "C-u"           'scroll-down-command
-    "k"             'mu4e-scroll-up
-    "j"             'mu4e-scroll-down
+    "k"             'mu4e-scroll-down
+    "j"             'mu4e-scroll-up
     "f"             'link-hint-open-link
     "n"             'mu4e-view-headers-next
     "p"             'mu4e-view-headers-prev
