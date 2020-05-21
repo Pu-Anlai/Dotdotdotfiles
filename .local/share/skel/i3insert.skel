@@ -16,13 +16,13 @@ function translate_char {
         v)
             echo $(cut -d' ' -f 1 <<< "{{{REAL_NAME}}}")
             ;;
-        a)
+        s)
             echo "{{{ADDRESS_STREET}}}"
             ;;
         p)
             echo "{{{ADDRESS_ZIP}}}"
             ;;
-        s)
+        o)
             echo "{{{ADDRESS_CITY}}}"
             ;;
         f)

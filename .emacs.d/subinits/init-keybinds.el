@@ -432,6 +432,7 @@
     "/"             'mu4e-headers-search-edit
     "S"             'mu4e-headers-change-sorting
     "<tab>"         'mu4e-headers-toggle-include-related
+    "<backtab>"     'mu4e-headers-toggle-threading
     "t"             'my/mu4e-headers-mark-toggle
     "%"             'mu4e-headers-mark-pattern
     "T"             'my/mu4e-headers-mark-pattern

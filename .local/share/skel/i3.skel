@@ -290,9 +290,9 @@ mode $mode_insert {
         bindsym Shift+n exec $i3scriptsdir/i3insert N; mode "default"
         bindsym n exec $i3scriptsdir/i3insert n; mode "default"
         bindsym v exec $i3scriptsdir/i3insert v; mode "default"
-        bindsym a exec $i3scriptsdir/i3insert a; mode "default"
-        bindsym p exec $i3scriptsdir/i3insert p; mode "default"
         bindsym s exec $i3scriptsdir/i3insert s; mode "default"
+        bindsym p exec $i3scriptsdir/i3insert p; mode "default"
+        bindsym o exec $i3scriptsdir/i3insert o; mode "default"
         bindsym f exec $i3scriptsdir/i3insert f; mode "default"
 
         bindsym Escape mode "default"
