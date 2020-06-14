@@ -17,6 +17,18 @@ if [ ! -e $cache_file ]
     touch $cache_file
 end
 
+
+function mktemp
+    # override mktemp to use $parent_tmp_dir
+    command mktemp -p "$parent_tmp_dir" $argv
+end
+
+
+# create a copy of cache_file to make changes to
+set cache_file_updated (mktemp --suffix='-pacupdate')
+cp $cache_file $cache_file_updated
+
+
 # setup fallbacks for envar settings
 function set_or_fallback -S -a var fallback
     if not set -q $var
@@ -75,12 +87,6 @@ function test_installed -a cmd
 end
 
 
-function mktemp
-    # override mktemp to use $parent_tmp_dir as a sort of sandbox
-    command mktemp -p "$parent_tmp_dir" $argv
-end
-
-
 function ring_bell
     # ring the terminal bell, call this before any interactive command
     printf "\a" >&2
@@ -121,16 +127,16 @@ end
 
 
 function set_cache_var -a key value
-    if string match -qr "^$key\s*=" < $cache_file
-        string replace -r '^('$key'\s*=\s*).+$' '${1}'$value < $cache_file > $cache_file
+    if string match -qr '^'"$key" < $cache_file_updated
+        sed -i 's/\('"$key"' = \).*/\1'"$value"'/' $cache_file_updated
     else
-        echo "$key = $value" >> $cache_file
+        echo "$key = $value" >> $cache_file_updated
     end
 end
 
 
 function get_cache_var -a key
-    string replace -rf '^'$key'\s*=\s*(.+)$' '$1' < $cache_file
+    awk -v key="$key" -F' = ' 'BEGIN {ec=1} $1 ~ key {print $2; ec=0} END {exit ec}' $cache_file_updated
 end
 
 
@@ -550,6 +556,10 @@ function main
         and set exit_status 1
     end
 
+    # merge changes made to cache_file
+    mv $cache_file_updated $cache_file
+
+    # clean up
     rm -rf $parent_tmp_dir
     exit $exit_status
 end
