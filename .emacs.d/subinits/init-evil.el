@@ -16,9 +16,13 @@
   (evil-mode 1)
   ;; sensible Y behavior
   (customize-set-variable 'evil-want-Y-yank-to-eol t)
+
+  ;; set initial states for specific modes
   (dolist (modestate '((dashboard-mode . emacs)
-                      (edebug-mode . emacs)
-                      (vterm-mode . emacs)))
+                       (edebug-mode . emacs)
+                       (vterm-mode . emacs)
+                       (telega-root-mode . emacs)
+                       (telega-chat-mode . insert)))
     (evil-set-initial-state (car modestate) (cdr modestate)))
   (add-hook 'evil-insert-state-entry-hook (lambda () (blink-cursor-mode 1)))
   (add-hook 'evil-insert-state-exit-hook (lambda () (blink-cursor-mode -1))))

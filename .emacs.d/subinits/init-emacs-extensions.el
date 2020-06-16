@@ -68,6 +68,9 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
 (use-package restart-emacs
   :commands restart-emacs)
 
+(use-package telega
+  :commands telega)
+
 (use-package visual-regexp-steroids
   :commands (vr/replace vr/query-replace vr/isearch-forward vr/isearch-backward)
   :after pcre2el

@@ -33,6 +33,8 @@
     "S-<f1>"            (general-lambda (my/split-window-and-do (call-interactively 'eww)))
     "<f2>"              'mu4e
     "S-<f2>"            (general-lambda (my/split-window-and-do (mu4e)))
+    "<f3>"              'telega
+    "S-<f3>"            (general-lambda (my/split-window-and-do (telega)))
     "<f12>"             'my/straight-update
     "M-<f12>"           'restart-emacs
     "S-M-<f12>"         (general-lambda
@@ -504,6 +506,27 @@
     :keymaps        'inferior-python-mode-map
     "<return>"      'comint-send-input)
 
+  ;; telega keybinds
+  (general-def
+    :states         'emacs
+    :keymaps        'telega-root-mode-map
+    "f"             'link-hint-open-link
+    "j"             'telega-button-forward
+    "k"             'telega-button-backward)
+
+  (general-def
+    :states         'insert
+    :keymaps        'telega-chat-mode-map
+    "<return>"      'telega-chatbuf-input-send
+    "M-g"           'end-of-buffer
+    "C-c C-c"       'kill-this-buffer
+    "C-g"           'kill-this-buffer)
+  
+  (general-def
+    :states         'normal
+    :keymaps        'telega-chat-mode-map
+    "q"             'kill-this-buffer)
+  
   ;; vterm keybinds
   (general-def
     :states         'emacs

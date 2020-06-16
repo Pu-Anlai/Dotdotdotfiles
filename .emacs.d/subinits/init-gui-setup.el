@@ -12,8 +12,10 @@
 (setq echo-keystrokes .01)
 (setq eldoc-idle-delay .45)
 (setq-default fill-column 80)
-(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-  (add-hook hook #'hl-line-mode))
+(dolist (hook '(prog text conf telega-root))
+  (add-hook
+   (intern (concat (symbol-name hook) "-mode-hook"))
+   #'hl-line-mode))
 
 ;; window splitting settings
 (setq split-width-threshold 100)
