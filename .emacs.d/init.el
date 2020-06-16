@@ -20,37 +20,38 @@
 ;; and everything that can be deferred goes in here
 (use-package init-my-functions
   :straight nil
-  :commands (my/get-line
-             my/join-path
-             my/sudo-find-file
-             my/dired-mark-toggle
+  :commands (my/dired-mark-toggle
              my/eshell
              my/eval-at-point
-             my/eval-visual-region
              my/eval-normal-line
-             my/evil-dry-open-below
+             my/eval-visual-region
              my/evil-dry-open-above
-             my/evil-lisp-first-non-blank
+             my/evil-dry-open-below
              my/evil-lisp-append-line
+             my/evil-lisp-first-non-blank
              my/evil-lisp-insert-line
-             my/evil-lisp-open-below
              my/evil-lisp-open-above
+             my/evil-lisp-open-below
              my/evil-lisp-paste-with-newline-above
              my/evil-lisp-paste-with-newline-below
              my/evil-paste-with-newline-above
              my/evil-paste-with-newline-below
              my/evil-search-visual-selection
+             my/get-line
+             my/ispell-cycle-dicts
+             my/join-path
              my/nillify-func
              my/python-remove-breakpoints
              my/python-test
+             my/restore-window-layout
              my/source-ssh-env
+             my/split-window-and-do
              my/split-window-sensibly
              my/straight-update
+             my/sudo-find-file
              my/toggle-scratch-buffer
-             my/restore-window-layout
-             my//window-layout-stack-push
              my/window-clear-side
-             my/split-window-and-do))
+             my//window-layout-stack-push))
 
 ;; setup gui early to avoid modeline troubles
 (require 'init-gui-setup)

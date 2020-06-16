@@ -32,10 +32,6 @@
          (indent-according-to-mode)))))
 
 ;; functions
-(defun my/get-line ()
-  "Uniform way to get content of current line."
-  (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
-
 (defun my/dired-mark-toggle ()
   "Toggle mark for currently selected file."
   (interactive)
@@ -192,7 +188,7 @@ Start eshell if it isn't running already."
 (my/defun-newline-paste
  my/evil-lisp-paste-with-newline-below
  (my/evil-lisp-open-below 1))
-
+ 
 (defun my/evil-search-visual-selection (direction count)
   "Search for visually selected text in buffer.
 DIRECTION can be forward or backward.  Don't know what COUNT does."
@@ -217,9 +213,23 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
     (when (fboundp 'evil-ex-search-next)
       (evil-ex-search-next count))))
 
+(defun my/get-line ()
+  "Uniform way to get content of current line."
+  (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+
 (defun my//in-string-p ()
   "Returns t if point is within a string according to syntax-ppss.  Otherwise nil."
   (not (eq (nth 3 (syntax-ppss)) nil)))
+
+(defun my/ispell-cycle-dicts ()
+  (interactive)
+  "Cycle through the dicts in `my/ispell-dicts-in-use'."
+  (ispell-change-dictionary
+   (catch 'dict
+     (while t
+       (nconc my/ispell-dicts-in-use (list (pop my/ispell-dicts-in-use)))
+       (unless (string= ispell-current-dictionary (car my/ispell-dicts-in-use))
+         (throw 'dict (car my/ispell-dicts-in-use)))))))
 
 (defun my/join-path (&rest elements)
   "Join ELEMENTS to create a path.  The last element should be the name of a file."

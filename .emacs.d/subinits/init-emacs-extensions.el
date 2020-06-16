@@ -15,6 +15,9 @@
 
 ;; spellchecking settings
 (setq ispell-program-name "hunspell")
+(defvar my/ispell-dicts-in-use
+  '("de_DE" "en_AU")
+  "List of dicts to cycle through by using my/ispell-cycle-dicts.")
 
 ;; use more conservative sentence definition
 (setq sentence-end-double-space nil)

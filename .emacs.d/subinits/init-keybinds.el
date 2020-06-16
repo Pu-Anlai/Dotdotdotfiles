@@ -145,6 +145,7 @@
     "Q"             'my/sudo-find-file
     "Yn"            'yas-new-snippet
     "Ye"            'yas-visit-snippet-file
+    "Yi"            'yas-insert-snippet
     "/"             'swiper-all)
 
   ;; visual keybinds
@@ -482,6 +483,8 @@
     :keymaps    'mu4e-compose-mode-map
     "!"         'message-send-and-exit
     "k"         'mu4e-message-kill-buffer
+    "d"         'my/ispell-cycle-dicts
+    "D"         'ispell-change-dictionary
     "a"         'mail-add-attachment
     "cc"        'message-dont-send)
 
@@ -533,9 +536,6 @@
   ;; yas-maybe-expand must be bound after the package is loaded because it's a var
   (general-def
     :keymaps        '(yas-keymap yas/keymap)
-    "<tab>"         nil
-    "TAB"           nil
-    "<backtab>"     nil
     "M-j"           'yas-next-field-or-maybe-expand
     "M-k"           'yas-prev-field
     "M-S-j"         'yas-skip-and-clear-field)
