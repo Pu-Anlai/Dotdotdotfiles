@@ -210,7 +210,8 @@
     :states         'normal
     :keymaps        '(helpful-mode-map
                       flycheck-error-list-mode-map godoc-mode-map
-                      quickrun--mode-map magit-mode-map xref--xref-buffer-mode-map)
+                      quickrun--mode-map magit-mode-map xref--xref-buffer-mode-map
+                      telega-image-mode-map)
     "q"             'quit-window)
 
   (general-def
@@ -525,15 +526,23 @@
     :states         'insert
     :keymaps        'telega-chat-mode-map
     "<return>"      'telega-chatbuf-input-send
-    "M-g"           'end-of-buffer
     "C-c C-c"       'kill-this-buffer
     "C-g"           'kill-this-buffer)
   
   (general-def
     :states         'normal
     :keymaps        'telega-chat-mode-map
-    "q"             'kill-this-buffer)
+    "q"             'kill-this-buffer
+    "j"             'evil-next-line
+    "k"             'evil-previous-line)
   
+  (general-def
+    :keymaps        'telega-msg-button-map
+    "j"             nil
+    "k"             nil
+    "l"             nil
+    "i"             nil) ; don't allow overriding evil binds
+
   ;; vterm keybinds
   (general-def
     :states         'emacs

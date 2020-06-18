@@ -21,7 +21,8 @@
 ;; everything that can be deferred goes in here
 (use-package init-my-functions
   :straight nil
-  :commands (my/dired-mark-toggle
+  :commands (my/add-hook-to-mode
+             my/dired-mark-toggle
              my/eshell
              my/eval-at-point
              my/eval-normal-line

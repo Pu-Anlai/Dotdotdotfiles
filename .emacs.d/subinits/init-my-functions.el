@@ -1,4 +1,7 @@
 ;; -*- lexical-binding: t -*-
+
+(require 'cl-lib)
+
 ;; macros
 (defmacro my/flet (bindings &rest body)
   "Like flet but using cl-letf and therefore not deprecated."
@@ -33,6 +36,12 @@
          (indent-according-to-mode)))))
 
 ;; functions
+(defun my/add-hook-to-mode (hook function mode &optional append)
+  "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option APPEND."
+  (add-hook (intern (concat (symbol-name mode) "-hook"))
+            (lambda ()
+              (add-hook hook function append t))))
+
 (defun my/dired-mark-toggle ()
   "Toggle mark for currently selected file."
   (interactive)

@@ -102,10 +102,15 @@
     (add-hook 'evil-emacs-state-exit-hook
               (lambda () (internal-show-cursor nil t))
               nil t))
-  (dolist (hook '(view headers))
-    (add-hook
-     (intern (concat "mu4e-" (symbol-name hook) "-mode-hook"))
-     #'my//mu4e-view-cursor-handling))
+  (dolist (mode '(mu4e-view-mode mu4e-headers-mode))
+    (my/add-hook-to-mode
+     'evil-emacs-state-entry-hook
+     (lambda () (internal-show-cursor nil nil))
+     mode)
+    (my/add-hook-to-mode
+     'evil-emacs-state-exit-hook
+     (lambda () (internal-show-cursor nil t))
+     mode))
   (add-hook 'mu4e-main-mode-hook (lambda () (internal-show-cursor nil t)))
 
   ;; compose view
