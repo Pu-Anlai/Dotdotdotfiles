@@ -222,8 +222,8 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
   (not (eq (nth 3 (syntax-ppss)) nil)))
 
 (defun my/ispell-cycle-dicts ()
-  (interactive)
   "Cycle through the dicts in `my/ispell-dicts-in-use'."
+  (interactive)
   (ispell-change-dictionary
    (catch 'dict
      (while t

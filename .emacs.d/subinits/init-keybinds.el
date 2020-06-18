@@ -467,6 +467,8 @@
     "n"             'mu4e-view-headers-next
     "p"             'mu4e-view-headers-prev
     "/"             'swiper
+    "gg"            'evil-goto-first-line
+    "G"             'evil-goto-line
     "t"             'my/mu4e-view-mark-toggle
     "T"             'mu4e-view-mark-pattern
     "%"             'my/mu4e-view-mark-pattern
@@ -485,8 +487,12 @@
     :keymaps    'mu4e-compose-mode-map
     "!"         'message-send-and-exit
     "k"         'mu4e-message-kill-buffer
-    "d"         'my/ispell-cycle-dicts
-    "D"         'ispell-change-dictionary
+    "d"         (general-lambda
+                  (my/ispell-cycle-dicts)
+                  (flyspell-buffer))
+    "D"         (general-lambda
+                  (ispell-change-dictionary)
+                  (flyspell-buffer))
     "a"         'mail-add-attachment
     "cc"        'message-dont-send)
 

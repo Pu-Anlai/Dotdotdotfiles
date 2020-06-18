@@ -74,14 +74,15 @@
   (setq mu4e-use-fancy-chars t
         mu4e-headers-include-related nil
         mu4e-headers-advance-after-mark nil
+        mu4e-headers-leave-behavior 'apply
         mu4e-headers-fields '((:human-date . 12)
                               (:flags . 6)
                               (:from-or-to . 22)
                               (:subject)))
 
   ;; message view
-  (setq mu4e-view-scroll-to-next t)
   (setq mu4e-confirm-quit nil
+        mu4e-view-scroll-to-next t
         mu4e-change-filenames-when-moving t
         mu4e-view-show-images t
         mu4e-html2text-command "w3m -I UTF-8 -T text/html"
@@ -91,6 +92,21 @@
     (imagemagick-register-types))
   (add-to-list 'mu4e-view-actions
                '("bopen in browser" . mu4e-action-view-in-browser))
+
+  ;; don't show cursor in emacs state when in message or headers view
+  (defun my//mu4e-view-cursor-handling ()
+    (add-hook 'evil-emacs-state-entry-hook
+              (lambda () (internal-show-cursor nil nil))
+              nil t)
+    (add-hook 'evil-emacs-state-exit-hook
+              (lambda () (internal-show-cursor nil t))
+              nil t))
+  (dolist (hook '(view headers))
+    (add-hook
+     (intern (concat "mu4e-" (symbol-name hook) "-mode-hook"))
+     #'my//mu4e-view-cursor-handling))
+  (add-hook 'mu4e-main-mode-hook (lambda () (internal-show-cursor nil t)))
+
   ;; compose view
   (setq mu4e-compose-complete-only-personal t
         mu4e-compose-signature-auto-include nil
