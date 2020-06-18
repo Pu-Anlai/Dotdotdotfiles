@@ -2,4 +2,4 @@
 # name: Herzliche Grüße
 # key: hgr
 # --
-Herzliche Grüße
+`(if (eq 2 (length (split-string (my/get-line)))) "H" "h")`erzliche Grüße

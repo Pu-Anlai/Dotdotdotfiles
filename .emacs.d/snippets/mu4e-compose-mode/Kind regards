@@ -2,4 +2,4 @@
 # name: Kind regards
 # key: krg
 # --
-Kind regards
+`(if (eq 2 (length (split-string (my/get-line)))) "K" "k")`ind regards
