@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; get rid of the custom blabla by using custom-file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -17,7 +18,7 @@
 
 (require 'init-package-management)
 
-;; and everything that can be deferred goes in here
+;; everything that can be deferred goes in here
 (use-package init-my-functions
   :straight nil
   :commands (my/dired-mark-toggle

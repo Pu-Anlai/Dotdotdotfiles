@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; default indentation settings (no TABs) - other settings on a per-mode basis
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)

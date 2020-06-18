@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (use-package general
   :config
   (general-auto-unbind-keys)

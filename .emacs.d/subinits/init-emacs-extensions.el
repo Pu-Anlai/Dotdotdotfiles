@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; carry history variables across sessions
 (savehist-mode)
 

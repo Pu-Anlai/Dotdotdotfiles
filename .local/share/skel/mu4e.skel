@@ -1,5 +1,6 @@
 ;; %-LOCATION:$HOME/.emacs.d/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
 ;; DO EDITS HERE: $HOME/.local/share/skel/mu4e.skel
+;; -*- lexical-binding: t -*-
 (require 'subr-x)
 ;; set mu4e as emacs default mail program
 (setq mail-user-agent #'mu4e-user-agent)

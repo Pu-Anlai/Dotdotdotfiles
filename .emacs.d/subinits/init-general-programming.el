@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (use-package magit
   :commands magit-status
   :hook ((magit-mode . my/source-ssh-env)

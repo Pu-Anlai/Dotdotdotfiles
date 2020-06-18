@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; undo-tree is a dependency but not available in melpa so get it from elpa (straight takes care of this automatically)
 (use-package undo-tree
   :config

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; macros
 (defmacro my/flet (bindings &rest body)
   "Like flet but using cl-letf and therefore not deprecated."

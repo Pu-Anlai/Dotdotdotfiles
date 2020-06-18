@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; setup package management with straight.el and use-package
 (defvar bootstrap-version)
 (let ((bootstrap-file

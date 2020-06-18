@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; GUI and Highlighting settings
 (setq inhibit-startup-message t)
 (fringe-mode '(0 . 8))
