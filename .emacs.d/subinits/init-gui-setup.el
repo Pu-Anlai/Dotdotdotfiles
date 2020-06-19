@@ -58,7 +58,10 @@
                                      exit-minibuffer
                                      previous-line
                                      next-line))
-  (add-hook 'focus-in-hook #'beacon-blink))
+  (add-hook 'focus-in-hook
+            (defun my/beacon-blink-upon-refocus ()
+              (unless (member major-mode beacon-dont-blink-major-modes)
+                (beacon-blink)))))
 
 ;; delimiter highlighting and matching
 (setq electric-pair-open-newline-between-pairs t)
