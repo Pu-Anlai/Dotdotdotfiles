@@ -421,6 +421,11 @@
     :keymaps        'mu4e-main-mode-map
     "J"             'mu4e~headers-jump-to-maildir)
 
+  (general-def-leader
+    :states         'emacs
+    :keymaps        'mu4e-main-mode-map
+    "U"             'my/mu4e-main-update-all)
+
   (general-def
     :states         'emacs
     :keymaps        'mu4e-headers-mode-map

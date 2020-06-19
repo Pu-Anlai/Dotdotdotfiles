@@ -62,7 +62,7 @@
                           (string-join my/mu4e~account-list ", ")
                           ")..."))
 
-                 (let* ((cmd (string-join (push "mbsync" my/mu4e~account-list) " "))
+                 (let* ((cmd (string-join (cons "mbsync" my/mu4e~account-list) " "))
                         (result (call-process-shell-command cmd)))
                    (mu4e-update-index)
                    (not
@@ -95,13 +95,6 @@
                '("bopen in browser" . mu4e-action-view-in-browser))
 
   ;; don't show cursor in emacs state when in message or headers view
-  (defun my//mu4e-view-cursor-handling ()
-    (add-hook 'evil-emacs-state-entry-hook
-              (lambda () (internal-show-cursor nil nil))
-              nil t)
-    (add-hook 'evil-emacs-state-exit-hook
-              (lambda () (internal-show-cursor nil t))
-              nil t))
   (dolist (mode '(mu4e-view-mode mu4e-headers-mode))
     (my/add-hook-to-mode
      'evil-emacs-state-entry-hook
@@ -145,12 +138,6 @@
   (add-hook 'message-sent-hook
             (lambda () (mu4e-update-mail-and-index t)))
   
-  (defun my/mu4e-update-on-kill-emacs ()
-    (when (and mu4e-get-mail-command
-               (process-live-p (get-buffer-process mu4e~update-buffer)))
-      (run-hooks 'mu4e-update-pre-hook)
-      ()))
-
   (defun my/mu4e-headers-mark-toggle ()
     (interactive)
     (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
@@ -162,6 +149,12 @@
     (cl-letf (((symbol-function #'mu4e~mark-get-markpair)
                (lambda (&rest args) '(something))))
       (mu4e-headers-mark-pattern)))
+
+  (defun my/mu4e-main-update-all ()
+      (interactive)
+      (let
+          ((mu4e-get-mail-command (string-join (cons "mbsync" my/mu4e~account-list) " ")))
+        (mu4e-update-mail-and-index nil)))
 
   (defun my/mu4e-view-mark-toggle ()
     (interactive)
