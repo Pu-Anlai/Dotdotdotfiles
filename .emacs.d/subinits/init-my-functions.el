@@ -38,9 +38,13 @@
 ;; functions
 (defun my/add-hook-to-mode (hook function mode &optional append)
   "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option APPEND."
-  (add-hook (intern (concat (symbol-name mode) "-hook"))
+  (add-hook (my/concat-symbols mode '-hook)
             (lambda ()
               (add-hook hook function append t))))
+
+(defun my/concat-symbols (&rest symbols)
+  "Concatenate SYMBOLS together to form a single symbol."
+  (intern (apply #'concat (mapcar #'symbol-name symbols))))
 
 (defun my/dired-mark-toggle ()
   "Toggle mark for currently selected file."
@@ -349,9 +353,9 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
              (direction)
              (while
                  (ignore-errors
-                   (funcall (intern (concat "windmove-" direction))))
+                   (funcall (my/concat-symbols 'windmove- direction)))
                (delete-window))))
-    (mapc #'clear (list "up" "down"))))
+    (mapc #'clear '(up down))))
 
 (defun my//window-layout-stack-push ()
   (push (current-window-configuration) my//window-layout-stack))

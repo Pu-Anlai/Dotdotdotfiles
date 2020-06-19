@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: Anrede (mnl.)
-# key: Liebe
+# key: Lieber
 # --
 Lieber Herr ${1:`(capitalize (car (last (split-string (car (car (mu4e-message-field mu4e-compose-parent-message :from)))))))`},
 

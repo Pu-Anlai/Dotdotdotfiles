@@ -95,16 +95,19 @@
                '("bopen in browser" . mu4e-action-view-in-browser))
 
   ;; don't show cursor in emacs state when in message or headers view
-  (dolist (mode '(mu4e-view-mode mu4e-headers-mode))
-    (my/add-hook-to-mode
-     'evil-emacs-state-entry-hook
-     (lambda () (internal-show-cursor nil nil))
-     mode)
-    (my/add-hook-to-mode
-     'evil-emacs-state-exit-hook
-     (lambda () (internal-show-cursor nil t))
-     mode))
-  (add-hook 'mu4e-main-mode-hook (lambda () (internal-show-cursor nil t)))
+  (defun my//emacs-state-hide-cursor ()
+    (add-hook 'evil-emacs-state-entry-hook
+              (lambda () (internal-show-cursor nil nil))
+              nil t)
+    (add-hook 'evil-emacs-state-exit-hook
+              (lambda () (internal-show-cursor nil t))
+              nil t))
+  (dolist (mode '(headers view))
+    (add-hook (my/concat-symbols 'mu4e- mode '-mode-hook)
+              #'my//emacs-state-hide-cursor))
+  (dolist (mode '(main compose))
+    (add-hook (my/concat-symbols 'mu4e- mode '-mode-hook)
+              (lambda () (internal-show-cursor nil t))))
 
   ;; compose view
   (setq mu4e-compose-complete-only-personal t
@@ -137,6 +140,22 @@
   ;; always sync after sending a new message
   (add-hook 'message-sent-hook
             (lambda () (mu4e-update-mail-and-index t)))
+  
+  (defun my/mu4e-compose-edit-anything ()
+    (interactive)
+    (let ((msg (mu4e-message-at-point t)))
+      (if (member 'draft (mu4e-message-field msg :flags))
+          (mu4e-compose-edit)
+        (let ((cont (mu4e-message-body-text msg))
+              (buf (get-buffer-create "*mu4e-work-on-message*"))
+              (inhibit-read-only t))
+          (with-current-buffer buf
+            (erase-buffer)
+            (insert cont)
+            (view-mode)
+            (goto-char (point-min)))
+          (switch-to-buffer buf)
+          (internal-show-cursor nil t)))))
   
   (defun my/mu4e-headers-mark-toggle ()
     (interactive)

@@ -22,6 +22,7 @@
 (use-package init-my-functions
   :straight nil
   :commands (my/add-hook-to-mode
+             my/concat-symbols
              my/dired-mark-toggle
              my/eshell
              my/eval-at-point

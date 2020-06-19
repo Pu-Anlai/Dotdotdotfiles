@@ -313,8 +313,8 @@
   (general-def
     :states         'motion
     :keymaps        'helpful-mode-map
-    "<C-o>"         'backward-button
-    "<C-i>"         'forward-button)
+    "C-o"           'backward-button
+    "C-i"           'forward-button)
 
   ;; ivy keybinds
   (general-def
@@ -432,6 +432,7 @@
     "J"             'mu4e~headers-jump-to-maildir
     "j"             'mu4e-headers-next
     "k"             'mu4e-headers-prev
+    "E"             'my/mu4e-compose-edit-anything
     "G"             'evil-goto-line
     "C-j"           'mu4e-headers-next-unread
     "C-k"           'mu4e-headers-prev-unread
@@ -468,6 +469,7 @@
     :keymaps        'mu4e-view-mode-map
     "C-d"           'scroll-up-command
     "C-u"           'scroll-down-command
+    "E"             'my/mu4e-compose-edit-anything
     "k"             'mu4e-scroll-down
     "j"             'mu4e-scroll-up
     "f"             'link-hint-open-link
@@ -493,15 +495,15 @@
     :states     'normal
     :keymaps    'mu4e-compose-mode-map
     "!"         'message-send-and-exit
-    "k"         'mu4e-message-kill-buffer
+    "k"         'message-dont-send
+    "K"         'mu4e-message-kill-buffer
     "d"         (general-lambda
                   (my/ispell-cycle-dicts)
                   (flyspell-buffer))
     "D"         (general-lambda
                   (ispell-change-dictionary)
                   (flyspell-buffer))
-    "a"         'mail-add-attachment
-    "cc"        'message-dont-send)
+    "a"         'mail-add-attachment)
 
   ;; python and jedi keybinds
   (general-def-leader
