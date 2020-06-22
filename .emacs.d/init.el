@@ -43,6 +43,7 @@
              my/get-line
              my/ispell-cycle-dicts
              my/join-path
+             my/last-name
              my/nillify-func
              my/python-remove-breakpoints
              my/python-test

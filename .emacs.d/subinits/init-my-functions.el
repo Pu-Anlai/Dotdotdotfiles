@@ -251,6 +251,16 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
         (folders (butlast elements)))
     (apply #'concat `(,@(mapcar #'file-name-as-directory folders) ,file))))
 
+(defun my/last-name (name)
+  (let* ((nlist (reverse (split-string (downcase name))))
+         (lname (capitalize (pop nlist)))
+         (pres (mapcar #'downcase my/last-name-prefixes))
+         (pre (pop nlist))
+         (rpre (cl-position pre pres :test #'string=)))
+    (if rpre
+      (concat (nth rpre my/last-name-prefixes) " " lname)
+      lname)))
+
 (defun my/python-remove-breakpoints ()
   "Remove all breakpoint declarations in buffer."
   (interactive)
@@ -361,6 +371,9 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
   (push (current-window-configuration) my//window-layout-stack))
 
 ;; variables
+(defvar my/last-name-prefixes '("von" "de" "van" "Al")
+  "List of possible last name prefixes for `my/last-name' to consider.")
+
 (defvar my//window-layout-stack nil
   "Stack of recently recorded layout changes.")
 
