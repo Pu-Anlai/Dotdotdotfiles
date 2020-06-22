@@ -252,14 +252,16 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
     (apply #'concat `(,@(mapcar #'file-name-as-directory folders) ,file))))
 
 (defun my/last-name (name)
-  (let* ((nlist (reverse (split-string (downcase name))))
-         (lname (capitalize (pop nlist)))
-         (pres (mapcar #'downcase my/last-name-prefixes))
-         (pre (pop nlist))
-         (rpre (cl-position pre pres :test #'string=)))
-    (if rpre
-      (concat (nth rpre my/last-name-prefixes) " " lname)
-      lname)))
+  "Return the last name portion of NAME."
+  (when (string-to-list name)
+    (let* ((nlist (reverse (split-string (downcase name))))
+           (lname (capitalize (pop nlist)))
+           (pres (mapcar #'downcase my/last-name-prefixes))
+           (pre (pop nlist))
+           (rpre (cl-position pre pres :test #'string=)))
+      (if rpre
+          (concat (nth rpre my/last-name-prefixes) " " lname)
+        lname))))
 
 (defun my/python-remove-breakpoints ()
   "Remove all breakpoint declarations in buffer."

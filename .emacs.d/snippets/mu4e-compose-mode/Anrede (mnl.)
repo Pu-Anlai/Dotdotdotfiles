@@ -1,7 +1,8 @@
 # -*- mode: snippet -*-
 # name: Anrede (mnl.)
 # key: Lieber
+# expand-env: ((parent-sender (if mu4e-compose-parent-message (car (car (mu4e-message-field mu4e-compose-parent-message :from)))) ""))
 # --
-Lieber Herr ${1:`(capitalize (car (last (split-string (car (car (mu4e-message-field mu4e-compose-parent-message :from)))))))`},
+Lieber ${1:Herr ${2:`(or (my/last-name parent-sender) "")`}},
 
 $0
