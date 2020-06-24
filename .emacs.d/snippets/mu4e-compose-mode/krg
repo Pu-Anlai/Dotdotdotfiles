@@ -3,3 +3,4 @@
 # key: krg
 # --
 `(if (eq 2 (length (split-string (my/get-line)))) "K" "k")`ind regards
+$0

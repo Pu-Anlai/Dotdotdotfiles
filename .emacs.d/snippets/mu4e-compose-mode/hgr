@@ -3,3 +3,4 @@
 # key: hgr
 # --
 `(if (eq 2 (length (split-string (my/get-line)))) "H" "h")`erzliche Grüße
+$0

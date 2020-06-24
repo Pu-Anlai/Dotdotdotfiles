@@ -65,18 +65,18 @@
   :hook ((emacs-lisp-mode go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
   :config
   (yas-reload-all)
-  ;; bind this here because yas-maybe-expanded needs to be loaded first
+  ;; bind this here because yas-maybe-expand needs to be loaded first
   (general-def
-    :states  'insert
-    :keymaps 'yas-minor-mode-map
-    "SPC"    yas-maybe-expand)
+    :states         'insert
+    :keymaps        'yas-minor-mode-map
+    "SPC"           yas-maybe-expand
+    "<return>"      yas-maybe-expand)
 
   ;; expansion for some python snippets
   (general-def
     :keymaps    'python-mode-map
     :states     'insert
     ":"         yas-maybe-expand)
-
 
   ;; yas related functions
   (cl-defun my/yas-func-padding (count &optional down)
