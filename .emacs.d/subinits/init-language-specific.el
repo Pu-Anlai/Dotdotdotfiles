@@ -212,6 +212,9 @@ If decorator syntax is found a line above the current, don't do any padding."
    (make-local-variable 'write-file-functions)
    (add-to-list 'write-file-functions (my/nillify-func (eglot-format-buffer)))))
 
+(use-package blacken
+  :hook (python-mode . blacken-mode))
+
 ;; golang settings
 (use-package go-mode
   :commands go-mode
