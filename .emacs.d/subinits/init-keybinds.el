@@ -495,7 +495,6 @@
     :states     'normal
     :keymaps    'mu4e-compose-mode-map
     "!"         'message-send-and-exit
-    "k"         'message-dont-send
     "K"         'mu4e-message-kill-buffer
     "d"         (general-lambda
                   (my/ispell-cycle-dicts)
