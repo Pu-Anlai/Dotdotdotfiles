@@ -1,4 +1,4 @@
-function __fish_plz_bind
+function __fish_pls_bind
     # operate either on the current commandline or the last history entry if the
     # current commandline is empty
     set -l cmdln_old (commandline)
@@ -8,7 +8,7 @@ function __fish_plz_bind
 
     # if the selected entry already has the keyword prepended, don't do any
     # further modification
-    if [ ! (string sub -l 5 "$cmdln_old") = "sudo " ]
+    if [ ! (string sub -l 5 -- "$cmdln_old") = "sudo " ]
         set -l cursor_pos (commandline --cursor)
         set -l cmdln_new 'sudo '"$cmdln_old"
         commandline -r $cmdln_new
