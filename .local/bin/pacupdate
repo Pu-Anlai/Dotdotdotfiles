@@ -263,7 +263,10 @@ end
 
 
 function get_git_package_commit -a pkg
-    pacman -Q $pkg | awk '{ print $NF }' | string match -r '.{7}(?=-\d+$)'
+    string match -r '.{7}(?=-\d+$)' (pacman -Q $pkg | string split ' ')[-1]
+    # if the package version number doesn't contain the revision id, there's no
+    # way of comparing it with the most recent revision, therefore:
+    or echo 0
 end
 
 
@@ -543,6 +546,11 @@ function install_updates
 end
 
 
+function merge_cache_file
+    mv $cache_file_updated $cache_file
+end
+
+
 function main
     test_sudo
     and update_pacman_mirrorlist
@@ -551,13 +559,11 @@ function main
     and check_aur_updates
     and check_git_updates
     and install_updates
+    and merge_cache_file
     or begin
         echo_head -c red "Update aborted."
         and set exit_status 1
     end
-
-    # merge changes made to cache_file
-    mv $cache_file_updated $cache_file
 
     # clean up
     rm -rf $parent_tmp_dir
