@@ -245,10 +245,11 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
        (unless (string= ispell-current-dictionary (car my/ispell-dicts-in-use))
          (throw 'dict (car my/ispell-dicts-in-use)))))))
 
-(defun my/join-path (&rest elements)
-  "Join ELEMENTS to create a path.  The last element should be the name of a file."
-  (let ((file (car (last elements)))
-        (folders (butlast elements)))
+(defun my/join-path (folders-only &rest elements)
+  "Join ELEMENTS to create a path. The last element should be the name of a file
+unless FOLDERS-ONLY is non-nil."
+  (let* ((file (unless folders-only (car (last elements))))
+        (folders (cl-remove file elements :test #'equal :count 1 :from-end t)))
     (apply #'concat `(,@(mapcar #'file-name-as-directory folders) ,file))))
 
 (defun my/last-name (name)
