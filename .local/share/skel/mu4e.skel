@@ -21,33 +21,34 @@
   (defvar my/mu4e~account-list nil
     "List of contexts that have been switched to. This will be passed to \"mbsync\" on exiting Emacs.")
   ;; set up private context
-  (make-mu4e-context-account
-   :name "posteo"
-   :user-mail-address "{{{MAIL_ADDRESS}}}"
-   :sent-folder "Sent"
-   :drafts-folder "Drafts"
-   :trash-folder "Trash"
-   :refile-folder "Archiv"
-   :vars `((user-full-name . "{{{REAL_NAME}}}")
-           (mu4e-get-mail-command . "mbsync posteo")
-           (smtpmail-mail-address . ,user-mail-address)
-           (smtpmail-stream-type . ssl)
-           (smtpmail-smtp-server . "posteo.de")
-           (smtpmail-smtp-service . 465)
-           (smtpmail-queue-dir . "~/.local/share/mail/queued_mail/cur")
-           (mu4e-maildir-shortcuts . 
-                                   (("/posteo/Arbeit+Bildung"    . ?b)
-                                    ("/posteo/Archiv"            . ?a)
-                                    ("/posteo/Drafts"            . ?d)
-                                    ("/posteo/Following"         . ?f)
-                                    ("/posteo/Inbox"             . ?i)
-                                    ("/posteo/Privat"            . ?p)
-                                    ("/posteo/Sent"              . ?s)
-                                    ("/posteo/Transaktionen"     . ?t)))))
+  (setq mu4e-contexts
+        `(,(make-mu4e-context
+            :name "posteo"
+            :vars '((user-mail-address . "{{{MAIL_ADDRESS}}}")
+                    (user-full-name . "{{{REAL_NAME}}}")
+                    (mu4e-sent-folder . "/posteo/Sent")
+                    (mu4e-drafts-folder . "/posteo/Drafts")
+                    (mu4e-trash-folder . "/posteo/Trash")
+                    (mu4e-refile-folder . "/posteo/Archiv")
+                    (mu4e-get-mail-command . "mbsync posteo")
+                    (smtpmail-mail-address . "{{{MAIL_ADDRESS}}}")
+                    (smtpmail-stream-type . ssl)
+                    (smtpmail-smtp-server . "posteo.de")
+                    (smtpmail-smtp-service . 465)
+                    (smtpmail-queue-dir . "~/.local/share/mail/queued_mail/cur")
+                    (mu4e-maildir-shortcuts . (("/posteo/Arbeit+Bildung"    . ?b)
+                                               ("/posteo/Archiv"            . ?a)
+                                               ("/posteo/Drafts"            . ?d)
+                                               ("/posteo/Following"         . ?f)
+                                               ("/posteo/Inbox"             . ?i)
+                                               ("/posteo/Privat"            . ?p)
+                                               ("/posteo/Sent"              . ?s)
+                                               ("/posteo/Transaktionen"     . ?t)))))
 
-  ;; room for additional contexts
-  {{{custom}}}
- 
+        ;; room for additional contexts
+        {{{custom}}}
+        ))
+
   ;; add context to my/mu4e~account-list after each switch (if they're not
   ;; already there)
   (add-hook 'mu4e-context-changed-hook
