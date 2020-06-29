@@ -10,7 +10,7 @@ next_img            J
 zoom_in             L
 zoom_out            H
 delete              X
-toggle_auto_zoom    =
+toggle_auto_zoom    equal
 toggle_fullscreen   f
 save_filelist       F
 toggle_keep_vp      p
