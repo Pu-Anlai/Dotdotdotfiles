@@ -79,7 +79,21 @@
     ":"         yas-maybe-expand)
 
   ;; yas related functions
-  (cl-defun my/yas-func-padding (count &optional down)
+  (defun my/yas-choose-greeting (name lang)
+    "Create a list of possible greetings from NAME and LANG and call
+yas-choose-value on it."
+    (cl-flet
+        ((ncat (x) (concat x " " (my/last-name name))))
+      (let
+          ((name-list (pcase lang
+                        ('de `(,@(mapcar #'ncat '("Liebe Frau" "Lieber Herr"))
+                               ,(concat "Guten Tag " name)))
+                        ('en `(,@(mapcar #'ncat '("Dear Ms." "Dear Mr."))
+                               ,(concat "Dear " name)
+                               ,(concat "Dear " (car (split-string name))))))))
+        (yas-choose-value (cl-remove-duplicates name-list :test #'equal)))))
+
+  (defun my/yas-func-padding (count &optional down)
     "Add COUNT empty lines above current position.
 
 If DOWN is non-nil, then add lines below instead."
@@ -89,21 +103,25 @@ If DOWN is non-nil, then add lines below instead."
           (direction (if down 1 -1))
           (current-line (line-number-at-pos)))
       ;; do nothing if we're already at the end or beginning of the file
-      (when (or
-             (= current-line 1)
-             (>= current-line (- (line-number-at-pos (max-char)) 1)))
-        (cl-return-from my/yas-func-padding))
-      (save-excursion
-        (while (and (> counter 0) non-break)
-          (forward-line direction)
-          (if (string= "" (my/get-line))
-              (setq counter (1- counter))
-            (setq non-break nil)))
-        (make-string counter ?\n))))
+      (unless (or
+               (= current-line 1)
+               (>= current-line (- (line-number-at-pos (max-char)) 1)))
+        (save-excursion
+          (while (and (> counter 0) non-break)
+            (forward-line direction)
+            (if (string= "" (my/get-line))
+                (setq counter (1- counter))
+              (setq non-break nil)))
+          (make-string counter ?\n)))))
 
   (defun my/yas-indented-p (line)
     "Return t if LINE is indented, else return nil."
     (if (string-match-p "^\s" line) t nil))
+
+  (defun my/mu4e-message-field (msg field)
+    "Like `mu4e-message-field' but return nil if msg doesn't exist."
+    (when msg
+      (mu4e-message-field msg field)))
 
   (defun my/yas-snippet-key ()
     "Retrieve the key of the snippet that's currently being edited."
