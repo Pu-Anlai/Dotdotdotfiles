@@ -28,7 +28,7 @@ WINEARCH                            DEFAULT=win32
 PASSWORD_STORE_ENABLE_EXTENSIONS    DEFAULT=true
 
 # setup base16 colors as environment variables
-__BASE00                            DEFAULT=282828
+__BASE00                            DEFAULT=32302f
 __BASE01                            DEFAULT=3c3836
 __BASE02                            DEFAULT=504945
 __BASE03                            DEFAULT=665c54
