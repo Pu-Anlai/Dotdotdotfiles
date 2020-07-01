@@ -16,7 +16,7 @@ signal=10
 instance=localhost; 6600
 
 # [custom]
-# {{{custom}}}
+{{{custom}}}
 
 # end of custom settings
 
