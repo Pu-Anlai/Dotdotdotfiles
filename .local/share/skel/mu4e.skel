@@ -24,6 +24,7 @@
   (setq mu4e-contexts
         `(,(make-mu4e-context
             :name "posteo"
+            :match-func (lambda (msg) (my/mu4e-match-maildir msg "posteo"))
             :vars '((user-mail-address . "{{{MAIL_ADDRESS}}}")
                     (user-full-name . "{{{REAL_NAME}}}")
                     (mu4e-sent-folder . "/posteo/Sent")
@@ -169,6 +170,18 @@
     (cl-letf (((symbol-function #'mu4e~mark-get-markpair)
                (lambda (&rest args) '(something))))
       (mu4e-headers-mark-pattern)))
+
+  (defun my/mu4e-match-maildir (msg maildir)
+    (when msg
+        (let*
+            ((path-sep (substring (file-name-as-directory "x") -1))
+             (first-part "")
+             (maildir-path (mu4e-message-field msg :maildir))
+             (path-list (split-string maildir-path path-sep)))
+          (while (equal first-part "")
+            (message first-part)
+            (setq first-part (pop path-list)))
+          (equal first-part maildir))))
 
   (defun my/mu4e-main-update-all ()
       (interactive)
