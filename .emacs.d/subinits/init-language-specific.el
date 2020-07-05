@@ -15,7 +15,11 @@
 
 ;; language server
 (use-package eglot
-  :hook ((python-mode go-mode) . eglot-ensure))
+  :hook ((python-mode go-mode) . eglot-ensure)
+  :init
+  (setq eglot-workspace-configuration
+        '((:pyls . (:plugins (:pycodestyle (:enabled nil))))))
+  (load-library "project"))
 
 ;; autocompletion
 (use-package company
@@ -38,8 +42,7 @@
     (interactive)
     (company-quickhelp-manual-begin)
     (company-select-previous))
-  (evil-declare-not-repeat #'my/company-select-next)
-  (evil-declare-not-repeat #'my/company-select-previous))
+  (mapc #'evil-declare-not-repeat #'(my/company-select-next my/company-select-previous)))
 
 (use-package company-flx
   :after company
@@ -59,7 +62,8 @@
 (use-package flymake
   :config
   (setq flymake-no-changes-timeout nil
-        flymake-fringe-indicator-position 'right-fringe))
+        flymake-fringe-indicator-position 'right-fringe)
+  (mapc #'evil-declare-not-repeat #'(flymake-goto-next-error flymake-goto-prev-error)))
 
 (use-package yasnippet
   :hook ((emacs-lisp-mode go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
@@ -229,9 +233,6 @@ If decorator syntax is found a line above the current, don't do any padding."
    (setq-local electric-pair-open-newline-between-pairs nil)
    (make-local-variable 'write-file-functions)
    (add-to-list 'write-file-functions (my/nillify-func (eglot-format-buffer)))))
-
-(use-package blacken
-  :hook (python-mode . blacken-mode))
 
 ;; golang settings
 (use-package go-mode

@@ -138,6 +138,7 @@
                      (let ((ivy-use-virtual-buffers t))
                        (counsel-switch-buffer)))
     "k"             'kill-this-buffer
+    "K"             'kill-buffer-and-window
     "v"             'evil-window-split
     "s"             'evil-window-vsplit
     "S"             (general-lambda
