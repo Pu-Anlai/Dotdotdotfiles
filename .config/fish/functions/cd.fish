@@ -27,7 +27,7 @@ function cd
     end
 
     if test -n "$argv[-1]" -a ! -d "$argv[-1]"
-        set -l parent (dirname $argv[-1])
+        set -l parent (command dirname $argv[-1])
         if test -d $parent
             printf 'cd %s\n' $parent
             builtin cd $parent
