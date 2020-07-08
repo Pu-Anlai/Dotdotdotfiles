@@ -253,7 +253,8 @@ c.fonts.prompts = "9pt {}".format(FONT_SANS)
 # Font used in the statusbar.
 c.fonts.statusbar = "9pt {}".format(FONT_MONO)
 # Font used in the tab bar.
-c.fonts.tabs = "10pt {}".format(FONT_SANS)
+c.fonts.tabs.selected = "500 10pt {}".format(FONT_SANS)
+c.fonts.tabs.unselected = "10pt {}".format(FONT_SANS)
 ## Font family for sans-serif fonts.
 c.fonts.web.family.sans_serif = "Liberation Sans"
 ## Font family for serif fonts.
