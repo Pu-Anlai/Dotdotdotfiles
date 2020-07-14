@@ -1,13 +1,13 @@
 #!/usr/bin/env fish
 
+set -q BACKUP_FOLDER || exit 1
 set ext_drive "$MEDIA/Megahulle/"
 
 function ext_backup
     echo "Backing up to external drive..."
-    rsync -rltvxP --delay-updates --delete-delay $HOME/Musik/ "$ext_drive/Gebrauch/Musik/"
-    rsync -rltvxP --delay-updates $MEDIA/Erde/Backup/Musik/ "$ext_drive/Backup/Musik/"
-    rsync -rltvxP --delay-updates $MEDIA/Erde/Backup/Spiele/ "$ext_drive/Backup/Spiele/"
-    rsync -rltvxP --delay-updates "$MEDIA/Erde/Bilder/Ich war wo/" "$ext_drive/Backup/Bilder/"
+    rsync -rltvxP --delay-updates --delete-delay "$HOME"/Musik/ "$ext_drive"/Gebrauch/Musik/
+    rsync -rltvxP --delay-updates "$BACKUP_FOLDER"/Musik/ "$ext_drive"/Backup/Musik/
+    rsync -rltvxP --delay-updates "$HOME"/Bilder/Erlebnisse/ "$ext_drive"/Backup/Bilder/
 end
 
 [ -d $ext_drive ]; and ext_backup
