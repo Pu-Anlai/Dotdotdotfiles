@@ -404,6 +404,7 @@ config.bind("<Ctrl-b>", "rl-backward-char", mode="command")
 config.bind("<Ctrl-f>", "rl-forward-char", mode="command")
 config.bind("<Ctrl-Shift-b>", "rl-backward-word", mode="command")
 config.bind("<Ctrl-Shift-f>", "rl-forward-word", mode="command")
+config.bind("<Ctrl-q>", "open-editor", mode="insert")
 # emacsy input keybindings in prompt mode
 config.bind("<Ctrl-a>", "rl-beginning-of-line", mode="prompt")
 config.bind("<Ctrl-e>", "rl-end-of-line", mode="prompt")
@@ -414,7 +415,6 @@ config.bind("<Ctrl-Shift-f>", "rl-forward-word", mode="prompt")
 # one day these might be supported in insert mode as well... until then at
 # least unbind them
 config.unbind("<Ctrl-e>", mode="insert")
-config.bind("<Ctrl-z>", "open-editor", mode="insert")
 
 ## Per-domain settings
 # SSH tunneling
