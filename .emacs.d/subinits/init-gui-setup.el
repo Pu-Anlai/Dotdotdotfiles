@@ -98,10 +98,10 @@
                           (when .warning
                             (propertize (prin1-to-string .warning) 'face 'telephone-line-warning))))
                      ""))
-        ('running    "")
-        ('no-checker (propertize "…" 'face 'telephone-line-unimportant))
+        ('running    "...")
+        ('no-checker (propertize "X" 'face 'telephone-line-unimportant))
         ('not-checked "-")
-        ('interrupted (propertize "X" 'face 'telephone-line-error))
+        ('interrupted (propertize "|" 'face 'telephone-line-error))
         ('error       (propertize "!" 'face 'telephone-line-error))
         ('suspicious  "?"))))
 

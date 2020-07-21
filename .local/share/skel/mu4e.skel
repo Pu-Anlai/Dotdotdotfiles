@@ -72,6 +72,10 @@
                       (display-warning 'mbsync "Error syncing mail accounts" :error))))))
   ;; context on startup
   (mu4e-context-switch nil "posteo")
+  ;; switch context before moving messages so as to make use of the individual maildir-shortcuts
+  (dolist (mode '(view headers))
+    (advice-add (my/concat-symbols 'mu4e- mode '-mark-for-move)
+                :before #'my/mu4e-context-switch-at-point))
 
   ;; headers view
   (setq mu4e-use-fancy-chars t
@@ -158,7 +162,18 @@
             (goto-char (point-min)))
           (switch-to-buffer buf)
           (internal-show-cursor nil t)))))
-  
+
+ (defun my/mu4e-context-switch-at-point ()
+    "Use the message at point for determining what context to switch to."
+    (mu4e-context-switch nil
+                         (mu4e-context-name
+                          (mu4e-context-determine (mu4e-message-at-point))))) 
+
+ (defun my/mu4e-headers-handle-deferred (action)
+   (cl-letf (((symbol-function #'mu4e-read-option)
+              (lambda (&rest args) action)))
+     (mu4e-mark-resolve-deferred-marks)))
+
   (defun my/mu4e-headers-mark-toggle ()
     (interactive)
     (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
@@ -199,11 +214,6 @@
   (defun my/mu4e-view-mark-pattern ()
     (interactive)
     (mu4e~view-in-headers-context
-     (my/mu4e-headers-mark-pattern)))
-
-  (defun my/mu4e-headers-handle-deferred (action)
-    (cl-letf (((symbol-function #'mu4e-read-option)
-               (lambda (&rest args) action)))
-      (mu4e-mark-resolve-deferred-marks))))
+     (my/mu4e-headers-mark-pattern))))
 
 (provide 'init-mu4e)

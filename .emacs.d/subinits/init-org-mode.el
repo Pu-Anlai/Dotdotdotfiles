@@ -6,4 +6,7 @@
   (add-hook 'org-mode-hook (lambda ()
                              (setq evil-auto-indent nil))))
 
+(use-package evil-org
+  :after org)
+
 (provide 'init-org-mode)
