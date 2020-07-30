@@ -150,6 +150,7 @@
     "Yn"            'yas-new-snippet
     "Ye"            'yas-visit-snippet-file
     "Yi"            'yas-insert-snippet
+    "Yt"            'yas-describe-tables
     "/"             'swiper-all)
 
   ;; visual keybinds
