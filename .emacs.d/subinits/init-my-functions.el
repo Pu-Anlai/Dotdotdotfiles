@@ -255,6 +255,10 @@ unless FOLDERS-ONLY is non-nil."
 (defun my/last-name (name)
   "Return the last name portion of NAME."
   (when (string-to-list name)
+    (setq name (string-join
+                (reverse
+                 (mapcar #'string-trim (split-string name ",")))
+                " ")) ; to accomodate for comma-separated last names at the beginning
     (let* ((nlist (reverse (split-string (downcase name))))
            (lname (capitalize (pop nlist)))
            (pres (mapcar #'downcase my/last-name-prefixes))

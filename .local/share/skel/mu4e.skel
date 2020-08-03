@@ -158,7 +158,7 @@
           (with-current-buffer buf
             (erase-buffer)
             (insert cont)
-            (view-mode)
+            (text-mode)
             (goto-char (point-min)))
           (switch-to-buffer buf)
           (internal-show-cursor nil t)))))
