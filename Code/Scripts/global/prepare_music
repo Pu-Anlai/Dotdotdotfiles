@@ -15,7 +15,6 @@ function process_record_folder -a folder
     cd "$folder"
 
     oggenc -q 6 *.flac || return 1
-    vorbisgain -a *.ogg
     mv *.ogg "$ogg_folder"/
     
     set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
