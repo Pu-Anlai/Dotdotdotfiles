@@ -1,7 +1,11 @@
 ;; -*- lexical-binding: t -*-
-;; get rid of the custom blabla by using custom-file
+;; custom-file handling
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
+;; provide two custom-file hooks for different init stages
+(defvar my/pre-init-custom-hook nil)
+(defvar my/post-init-custom-hook nil)
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;; set up a separate location for backup and temp files
 (defconst emacs-tmp-dir (expand-file-name "auto-save" user-emacs-directory))
@@ -17,6 +21,8 @@
 (push emacs-subinit-dir load-path)
 
 (require 'init-package-management)
+
+(run-hooks 'my/pre-init-custom-hook) ; everything even earlier can go directly into custom-file
 
 ;; everything that can be deferred goes in here
 (use-package init-my-functions
@@ -81,3 +87,5 @@
 (require 'init-keybinds)
 
 (require 'init-language-specific)
+
+(run-hooks 'my/post-init-custom-hook)
