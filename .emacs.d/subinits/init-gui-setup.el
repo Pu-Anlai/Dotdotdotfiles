@@ -178,7 +178,7 @@
   (deftheme base16-generic)
   (base16-theme-define 'base16-generic base16-generic-colors)
   ;; additional theming here:
-  (set-face-font 'default (concat (or (getenv "FONT_MONO") "Monospace") " 11"))
+  (push `(font . ,(concat (or (getenv "FONT_MONO") "Monospace") " 11")) default-frame-alist)
   (setq evil-emacs-state-cursor   `(,(plist-get base16-generic-colors :base0D) box)
         evil-insert-state-cursor  `(,(plist-get base16-generic-colors :base05) bar)
         evil-motion-state-cursor  `(,(plist-get base16-generic-colors :base0E) box)
