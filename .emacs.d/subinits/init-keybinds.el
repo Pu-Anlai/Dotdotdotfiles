@@ -431,6 +431,7 @@
   (general-def
     :states         'emacs
     :keymaps        'mu4e-headers-mode-map
+    "q"             'my/mu4e-headers-quit-view-or-headers
     "J"             'mu4e~headers-jump-to-maildir
     "j"             'mu4e-headers-next
     "k"             'mu4e-headers-prev

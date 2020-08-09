@@ -169,6 +169,15 @@
                          (mu4e-context-name
                           (mu4e-context-determine (mu4e-message-at-point))))) 
 
+ (defun my/mu4e-headers-quit-view-or-headers ()
+   (interactive)
+   (let ((view-buf (mu4e-get-view-buffer)))
+     (if view-buf
+         (progn
+           (select-window (get-buffer-window view-buf))
+           (mu4e~view-quit-buffer))
+       (mu4e~headers-quit-buffer))))
+
  (defun my/mu4e-headers-handle-deferred (action)
    (cl-letf (((symbol-function #'mu4e-read-option)
               (lambda (&rest args) action)))
