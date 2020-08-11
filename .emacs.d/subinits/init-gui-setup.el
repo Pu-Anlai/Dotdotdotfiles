@@ -85,26 +85,6 @@
      (t ; buffer is a file but not part of a project
       (file-name-base (directory-file-name (file-name-directory (buffer-file-name)))))))
 
-  (telephone-line-defsegment telephone-line-my-flycheck-segment ()
-    (when (bound-and-true-p flycheck-mode)
-      (pcase flycheck-last-status-change
-        ('finished (if flycheck-current-errors
-                       (let-alist (flycheck-count-errors flycheck-current-errors)
-                         (concat
-                          (when .error
-                            (propertize (prin1-to-string .error) 'face 'telephone-line-error))
-                          (when (and .error .warning)
-                            "/")
-                          (when .warning
-                            (propertize (prin1-to-string .warning) 'face 'telephone-line-warning))))
-                     ""))
-        ('running    "...")
-        ('no-checker (propertize "X" 'face 'telephone-line-unimportant))
-        ('not-checked "-")
-        ('interrupted (propertize "|" 'face 'telephone-line-error))
-        ('error       (propertize "!" 'face 'telephone-line-error))
-        ('suspicious  "?"))))
-
   (telephone-line-defsegment telephone-line-my-buffer-segment ()
     (if (and (buffer-file-name)
              (fboundp 'projectile-project-name)
@@ -145,8 +125,7 @@
           (nil       . (telephone-line-my-buffer-segment))))
 
   (setq telephone-line-rhs
-        '((nil       . (telephone-line-misc-info-segment
-                        telephone-line-my-flycheck-segment))
+        '((nil       . (telephone-line-misc-info-segment))
           (accent    . (telephone-line-major-mode-segment))
           (evil      . (telephone-line-airline-position-segment))))
   (setq telephone-line-primary-left-separator     'telephone-line-cubed-left
