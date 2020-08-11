@@ -96,6 +96,8 @@
 !.emacs.d/subinits
 !.emacs.d/subinits/*
 .emacs.d/subinits/init-mu4e.el
+!.emacs.d/themes
+!.emacs.d/themes/base16-generic-theme.el
 
 !.local/bin
 !.local/bin/*

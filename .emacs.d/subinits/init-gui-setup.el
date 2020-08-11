@@ -134,38 +134,9 @@
         telephone-line-secondary-right-separator  'telephone-line-abs-right)
   (telephone-line-mode t))
 
-(use-package base16-theme
-  :config
-  (defvar base16-generic-colors
-    `(:base00     ,(concat "#" (getenv "__BASE00"))
-                  :base01     ,(concat "#" (getenv "__BASE01"))
-                  :base02     ,(concat "#" (getenv "__BASE02"))
-                  :base03     ,(concat "#" (getenv "__BASE03"))
-                  :base04     ,(concat "#" (getenv "__BASE04"))
-                  :base05     ,(concat "#" (getenv "__BASE05"))
-                  :base06     ,(concat "#" (getenv "__BASE06"))
-                  :base07     ,(concat "#" (getenv "__BASE07"))
-                  :base08     ,(concat "#" (getenv "__BASE08"))
-                  :base09     ,(concat "#" (getenv "__BASE09"))
-                  :base0A     ,(concat "#" (getenv "__BASE0A"))
-                  :base0B     ,(concat "#" (getenv "__BASE0B"))
-                  :base0C     ,(concat "#" (getenv "__BASE0C"))
-                  :base0D     ,(concat "#" (getenv "__BASE0D"))
-                  :base0E     ,(concat "#" (getenv "__BASE0E"))
-                  :base0F     ,(concat "#" (getenv "__BASE0F"))))
-
-  (deftheme base16-generic)
-  (base16-theme-define 'base16-generic base16-generic-colors)
-  ;; additional theming here:
-  (push `(font . ,(concat (or (getenv "FONT_MONO") "Monospace") " 11")) default-frame-alist)
-  (setq evil-emacs-state-cursor   `(,(plist-get base16-generic-colors :base0D) box)
-        evil-insert-state-cursor  `(,(plist-get base16-generic-colors :base05) bar)
-        evil-motion-state-cursor  `(,(plist-get base16-generic-colors :base0E) box)
-        evil-normal-state-cursor  `(,(plist-get base16-generic-colors :base05) box)
-        evil-replace-state-cursor `(,(plist-get base16-generic-colors :base08) hollow)
-        evil-visual-state-cursor  `(,(plist-get base16-generic-colors :base05) box))
-  (setq pos-tip-foreground-color (plist-get base16-generic-colors :base00))
-  (setq pos-tip-background-color (plist-get base16-generic-colors :base06)))
+(push (expand-file-name "themes" user-emacs-directory) custom-theme-load-path)
+(load-theme 'base16-generic t)
+(push `(font . ,(concat (or (getenv "FONT_MONO") "Monospace") " 11")) default-frame-alist)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
