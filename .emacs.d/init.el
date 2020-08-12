@@ -7,8 +7,8 @@
 ;; custom-file handling
 (setq custom-file (expand-file-name "custom.el" emacs-subinit-dir))
 ;; provide two custom-file hooks for different init stages
-(defvar my/pre-init-custom-hook nil)
-(defvar my/post-init-custom-hook nil)
+(defvar °pre-init-custom-hook nil)
+(defvar °post-init-custom-hook nil)
 (when (file-exists-p custom-file)
   (load custom-file))
 
@@ -23,7 +23,7 @@
 
 (require 'init-package-management)
 
-(run-hooks 'my/pre-init-custom-hook) ; everything even earlier can go directly into custom-file
+(run-hooks '°pre-init-custom-hook) ; everything even earlier can go directly into custom-file
 
 ;; set up autoloads for init-my-functions
 (setq generated-autoload-file (expand-file-name "custom-autoloads.el" emacs-subinit-dir))
@@ -62,4 +62,4 @@
 
 (require 'init-language-specific)
 
-(run-hooks 'my/post-init-custom-hook)
+(run-hooks '°post-init-custom-hook)

@@ -18,13 +18,13 @@
   :config
   (setq mu4e-context-policy nil)
   (setq mu4e-compose-context-policy nil)
-  (defvar my/mu4e~account-list nil
+  (defvar °mu4e~account-list nil
     "List of contexts that have been switched to. This will be passed to \"mbsync\" on exiting Emacs.")
   ;; set up private context
   (setq mu4e-contexts
         `(,(make-mu4e-context
             :name "posteo"
-            :match-func (lambda (msg) (my/mu4e-match-maildir msg "posteo"))
+            :match-func (lambda (msg) (°mu4e-match-maildir msg "posteo"))
             :vars '((user-mail-address . "{{{MAIL_ADDRESS}}}")
                     (user-full-name . "{{{REAL_NAME}}}")
                     (mu4e-sent-folder . "/posteo/Sent")
@@ -50,21 +50,21 @@
         {{{custom}}}
         ))
 
-  ;; add context to my/mu4e~account-list after each switch (if they're not
+  ;; add context to °mu4e~account-list after each switch (if they're not
   ;; already there)
   (add-hook 'mu4e-context-changed-hook
             (lambda ()
-              (cl-pushnew (mu4e-context-name (mu4e-context-current)) my/mu4e~account-list)))
+              (cl-pushnew (mu4e-context-name (mu4e-context-current)) °mu4e~account-list)))
   ;; sync on emacs exit
   (add-to-list 'kill-emacs-query-functions
-               (defun my//final-mail-sync ()
+               (defun °°final-mail-sync ()
                  "Sync all mail accounts that we have switched to during this session."
                  (message
                   (concat "Syncing mail accounts ("
-                          (string-join my/mu4e~account-list ", ")
+                          (string-join °mu4e~account-list ", ")
                           ")..."))
 
-                 (let* ((cmd (string-join (cons "mbsync" my/mu4e~account-list) " "))
+                 (let* ((cmd (string-join (cons "mbsync" °mu4e~account-list) " "))
                         (result (call-process-shell-command cmd)))
                    (mu4e-update-index)
                    (not
@@ -74,8 +74,8 @@
   (mu4e-context-switch nil "posteo")
   ;; switch context before moving messages so as to make use of the individual maildir-shortcuts
   (dolist (mode '(view headers))
-    (advice-add (my/concat-symbols 'mu4e- mode '-mark-for-move)
-                :before #'my/mu4e-context-switch-at-point))
+    (advice-add (°concat-symbols 'mu4e- mode '-mark-for-move)
+                :before #'°mu4e-context-switch-at-point))
 
   ;; headers view
   (setq mu4e-use-fancy-chars t
@@ -101,7 +101,7 @@
                '("bopen in browser" . mu4e-action-view-in-browser))
 
   ;; don't show cursor in emacs state when in message or headers view
-  (defun my//emacs-state-hide-cursor ()
+  (defun °°emacs-state-hide-cursor ()
     (add-hook 'evil-emacs-state-entry-hook
               (lambda () (internal-show-cursor nil nil))
               nil t)
@@ -109,10 +109,10 @@
               (lambda () (internal-show-cursor nil t))
               nil t))
   (dolist (mode '(headers view))
-    (add-hook (my/concat-symbols 'mu4e- mode '-mode-hook)
-              #'my//emacs-state-hide-cursor))
+    (add-hook (°concat-symbols 'mu4e- mode '-mode-hook)
+              #'°°emacs-state-hide-cursor))
   (dolist (mode '(main compose))
-    (add-hook (my/concat-symbols 'mu4e- mode '-mode-hook)
+    (add-hook (°concat-symbols 'mu4e- mode '-mode-hook)
               (lambda () (internal-show-cursor nil t))))
 
   ;; compose view
@@ -126,7 +126,7 @@
         message-citation-line-format "\nAm %A, den %x um %X schrieb %f:"
         message-kill-buffer-on-exit t)
   (add-hook 'mu4e-compose-mode-hook
-            (defun my/setup-mu4e-compose-settings ()
+            (defun °setup-mu4e-compose-settings ()
               (visual-line-mode)
               (let*
                   ((sender1 (cdr (car
@@ -147,7 +147,7 @@
   (add-hook 'message-sent-hook
             (lambda () (mu4e-update-mail-and-index t)))
   
-  (defun my/mu4e-compose-edit-anything ()
+  (defun °mu4e-compose-edit-anything ()
     (interactive)
     (let ((msg (mu4e-message-at-point t)))
       (if (member 'draft (mu4e-message-field msg :flags))
@@ -163,13 +163,13 @@
           (switch-to-buffer buf)
           (internal-show-cursor nil t)))))
 
- (defun my/mu4e-context-switch-at-point ()
+ (defun °mu4e-context-switch-at-point ()
     "Use the message at point for determining what context to switch to."
     (mu4e-context-switch nil
                          (mu4e-context-name
                           (mu4e-context-determine (mu4e-message-at-point))))) 
 
- (defun my/mu4e-headers-quit-view-or-headers ()
+ (defun °mu4e-headers-quit-view-or-headers ()
    (interactive)
    (let ((view-buf (mu4e-get-view-buffer)))
      (if view-buf
@@ -178,24 +178,24 @@
            (mu4e~view-quit-buffer))
        (mu4e~headers-quit-buffer))))
 
- (defun my/mu4e-headers-handle-deferred (action)
+ (defun °mu4e-headers-handle-deferred (action)
    (cl-letf (((symbol-function #'mu4e-read-option)
               (lambda (&rest args) action)))
      (mu4e-mark-resolve-deferred-marks)))
 
-  (defun my/mu4e-headers-mark-toggle ()
+  (defun °mu4e-headers-mark-toggle ()
     (interactive)
     (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
         (mu4e-headers-mark-and-next 'unmark)
       (mu4e-headers-mark-and-next 'something)))
 
-  (defun my/mu4e-headers-mark-pattern ()
+  (defun °mu4e-headers-mark-pattern ()
     (interactive)
     (cl-letf (((symbol-function #'mu4e~mark-get-markpair)
                (lambda (&rest args) '(something))))
       (mu4e-headers-mark-pattern)))
 
-  (defun my/mu4e-match-maildir (msg maildir)
+  (defun °mu4e-match-maildir (msg maildir)
     (when msg
         (let*
             ((path-sep (substring (file-name-as-directory "x") -1))
@@ -207,22 +207,22 @@
             (setq first-part (pop path-list)))
           (equal first-part maildir))))
 
-  (defun my/mu4e-main-update-all ()
+  (defun °mu4e-main-update-all ()
       (interactive)
       (let
-          ((mu4e-get-mail-command (string-join (cons "mbsync" my/mu4e~account-list) " ")))
+          ((mu4e-get-mail-command (string-join (cons "mbsync" °mu4e~account-list) " ")))
         (mu4e-update-mail-and-index nil)))
 
-  (defun my/mu4e-view-mark-toggle ()
+  (defun °mu4e-view-mark-toggle ()
     (interactive)
     (mu4e~view-in-headers-context
      (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
          (mu4e-headers-mark-and-next 'unmark)
        (mu4e-headers-mark-and-next 'something))))
 
-  (defun my/mu4e-view-mark-pattern ()
+  (defun °mu4e-view-mark-pattern ()
     (interactive)
     (mu4e~view-in-headers-context
-     (my/mu4e-headers-mark-pattern))))
+     (°mu4e-headers-mark-pattern))))
 
 (provide 'init-mu4e)

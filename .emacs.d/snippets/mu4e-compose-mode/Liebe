@@ -1,7 +1,7 @@
 # key: Liebe
 # name: Anrede (wbl.)
-# expand-env: ((sender-name (car (car (my/mu4e-message-field mu4e-compose-parent-message :from)))))
+# expand-env: ((sender-name (car (car (°mu4e-message-field mu4e-compose-parent-message :from)))))
 # --
-Liebe ${1:Frau ${2:`(or (my/last-name sender-name) "")`}},
+Liebe ${1:Frau ${2:`(or (°last-name sender-name) "")`}},
 
 $0

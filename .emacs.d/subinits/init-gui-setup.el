@@ -21,16 +21,16 @@
 ;; window splitting settings
 (setq split-width-threshold 100)
 ;; WHY is vertical splitting preferred over horizontal?
-(setq split-window-preferred-function 'my/split-window-sensibly)
+(setq split-window-preferred-function '°split-window-sensibly)
 
 ;; keep track of window layout changes
-(defun my//first-push-to-window-layout-stack (&rest args)
+(defun °°first-push-to-window-layout-stack (&rest args)
   (unless (eql (count-windows) 1)
-    (my//window-layout-stack-push)))
+    (°°window-layout-stack-push)))
 ;; only add this advice to high-level functions; otherwise it will be called
 ;; multiple times for each time the parent function calls the lower-level one
-(advice-add #'delete-other-windows :before #'my//first-push-to-window-layout-stack)
-(advice-add #'evil-window-delete :before #'my//first-push-to-window-layout-stack)
+(advice-add #'delete-other-windows :before #'°°first-push-to-window-layout-stack)
+(advice-add #'evil-window-delete :before #'°°first-push-to-window-layout-stack)
 
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook (lambda ()
@@ -59,7 +59,7 @@
                                      previous-line
                                      next-line))
   (add-hook 'focus-in-hook
-            (defun my/beacon-blink-upon-refocus ()
+            (defun °beacon-blink-upon-refocus ()
               (unless (member major-mode beacon-dont-blink-major-modes)
                 (beacon-blink)))))
 

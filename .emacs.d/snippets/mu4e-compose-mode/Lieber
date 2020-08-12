@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name: Anrede (mnl.)
 # key: Lieber
-# expand-env: ((sender-name (car (car (my/mu4e-message-field mu4e-compose-parent-message :from)))))
+# expand-env: ((sender-name (car (car (°mu4e-message-field mu4e-compose-parent-message :from)))))
 # --
-Lieber ${1:Herr ${2:`(or (my/last-name sender-name) "")`}},
+Lieber ${1:Herr ${2:`(or (°last-name sender-name) "")`}},
 
 $0

@@ -34,14 +34,14 @@
   (setq vertigo-cut-off 9)
   (evil-declare-motion #'vertigo-set-digit-argument)
   (evil-add-command-properties #'vertigo-set-digit-argument :jump t)
-  (defun my/vertigo--remember-arg (func num)
-    (setq-local my/vertigo--last-arg num)
+  (defun °vertigo--remember-arg (func num)
+    (setq-local °vertigo--last-arg num)
     (funcall func num))
-  (advice-add #'vertigo--set-digit-argument :around #'my/vertigo--remember-arg)
-  (defun my/vertigo-reuse-last-arg ()
+  (advice-add #'vertigo--set-digit-argument :around #'°vertigo--remember-arg)
+  (defun °vertigo-reuse-last-arg ()
     (interactive)
-    (if (boundp 'my/vertigo--last-arg)
-        (vertigo--set-digit-argument my/vertigo--last-arg)
+    (if (boundp '°vertigo--last-arg)
+        (vertigo--set-digit-argument °vertigo--last-arg)
       (message "No previously used vertigo."))))
 
 (use-package evil-commentary
@@ -83,7 +83,7 @@
   :commands (evil-numbers/inc-at-pt evil-numbers/dec-at-pt))
 
 ;; evil commands and ex-commands
-(evil-define-command my/mv-buf-and-file (new-filename)
+(evil-define-command °mv-buf-and-file (new-filename)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "<a>")
   (let ((name (buffer-name))
@@ -98,6 +98,6 @@
           (set-visited-file-name new-filename)
           (set-buffer-modified-p nil))))))
 
-(evil-ex-define-cmd "mv" 'my/mv-buf-and-file)
+(evil-ex-define-cmd "mv" '°mv-buf-and-file)
 
 (provide 'init-evil)

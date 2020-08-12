@@ -31,18 +31,18 @@
   (setq company-idle-delay 0.1)
   (push 'company-tng-frontend company-frontends)
 
-  (defun my/company-select-next ()
+  (defun °company-select-next ()
     "Navigate company-mode and also open the quickhelp popup."
     (interactive)
     (company-quickhelp-manual-begin)
     (company-select-next))
 
-  (defun my/company-select-previous ()
+  (defun °company-select-previous ()
     "Navigate company-mode and also open the quickhelp popup."
     (interactive)
     (company-quickhelp-manual-begin)
     (company-select-previous))
-  (mapc #'evil-declare-not-repeat #'(my/company-select-next my/company-select-previous)))
+  (mapc #'evil-declare-not-repeat #'(°company-select-next °company-select-previous)))
 
 (use-package company-flx
   :after company
@@ -83,11 +83,11 @@
     ":"         yas-maybe-expand)
 
   ;; yas related functions
-  (defun my/yas-choose-greeting (name lang)
+  (defun °yas-choose-greeting (name lang)
     "Create a list of possible greetings from NAME and LANG and call
 yas-choose-value on it."
     (cl-flet
-        ((ncat (x) (concat x " " (my/last-name name))))
+        ((ncat (x) (concat x " " (°last-name name))))
       (let
           ((name-list (pcase lang
                         ('de `(,@(mapcar #'ncat '("Liebe Frau" "Lieber Herr"))
@@ -97,7 +97,7 @@ yas-choose-value on it."
                                ,(concat "Dear " (car (split-string name))))))))
         (yas-choose-value (cl-remove-duplicates name-list :test #'equal)))))
 
-  (defun my/yas-func-padding (count &optional down)
+  (defun °yas-func-padding (count &optional down)
     "Add COUNT empty lines above current position.
 
 If DOWN is non-nil, then add lines below instead."
@@ -113,28 +113,28 @@ If DOWN is non-nil, then add lines below instead."
         (save-excursion
           (while (and (> counter 0) non-break)
             (forward-line direction)
-            (if (string= "" (my/get-line))
+            (if (string= "" (°get-line))
                 (setq counter (1- counter))
               (setq non-break nil)))
           (make-string counter ?\n)))))
 
-  (defun my/yas-indented-p (line)
+  (defun °yas-indented-p (line)
     "Return t if LINE is indented, else return nil."
     (if (string-match-p "^\s" line) t nil))
 
-  (defun my/mu4e-message-field (msg field)
+  (defun °mu4e-message-field (msg field)
     "Like `mu4e-message-field' but return nil if msg doesn't exist."
     (when msg
       (mu4e-message-field msg field)))
 
-  (defun my/yas-snippet-key ()
+  (defun °yas-snippet-key ()
     "Retrieve the key of the snippet that's currently being edited."
     (save-excursion
       (goto-char 0)
       (search-forward-regexp "# key:[[:space:]]*")
       (thing-at-point 'symbol t)))
 
-  (defun my/yas-python-class-field-splitter (arg-string)
+  (defun °yas-python-class-field-splitter (arg-string)
     "Return ARG-STRING as a conventional Python class field assignment block."
     (if (= (length arg-string) 0)
         ""
@@ -145,7 +145,7 @@ If DOWN is non-nil, then add lines below instead."
         (setq field-list (split-string clean-string ", +"))
         (string-join (mapcar (lambda (s) (concat "self." s " = " s "\n")) field-list)))))
 
-  (defun my/yas-python-doc-wrapper (docstring side)
+  (defun °yas-python-doc-wrapper (docstring side)
     "Wrap DOCSTRING in quotes on either left or right SIDE."
     (let* ((line-length (+ (python-indent-calculate-indentation) 6 (length docstring)))
            (nl ""))
@@ -157,18 +157,18 @@ If DOWN is non-nil, then add lines below instead."
                    ((eq side 'right)
                     `(,nl "\"\"\""))))))
 
-  (defun my/yas-python-func-padding (indent &optional down)
+  (defun °yas-python-func-padding (indent &optional down)
     "Use Python INDENT to determine necessary padding for class or function declaration.
 If decorator syntax is found a line above the current, don't do any padding."
     (let ((decorated nil))
       (unless down
         (save-excursion
           (forward-line -1)
-          (setq decorated (string-match-p "^[ \t]*@" (my/get-line)))))
+          (setq decorated (string-match-p "^[ \t]*@" (°get-line)))))
       ;; exit without any padding here if this is a decorated function
       (if decorated
           ""
-        (my/yas-func-padding (if (> indent 0) 1 2) down)))))
+        (°yas-func-padding (if (> indent 0) 1 2) down)))))
 
 ;; language specific major modes and their settings
 ;; elisp helpers
@@ -232,7 +232,7 @@ If decorator syntax is found a line above the current, don't do any padding."
    (setq-local column-enforce-column 79)
    (setq-local electric-pair-open-newline-between-pairs nil)
    (make-local-variable 'write-file-functions)
-   (add-to-list 'write-file-functions (my/nillify-func (eglot-format-buffer)))))
+   (add-to-list 'write-file-functions (°nillify-func (eglot-format-buffer)))))
 
 ;; golang settings
 (use-package go-mode
@@ -242,7 +242,7 @@ If decorator syntax is found a line above the current, don't do any padding."
    'go-mode-hook
    (lambda ()
      (make-local-variable 'write-file-functions)
-     (add-to-list 'write-file-functions (my/nillify-func (eglot-format-buffer))))))
+     (add-to-list 'write-file-functions (°nillify-func (eglot-format-buffer))))))
 
 (use-package go-eldoc
   :hook (go-mode . go-eldoc-setup))

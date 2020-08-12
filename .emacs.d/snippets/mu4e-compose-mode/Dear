@@ -1,7 +1,7 @@
 # key: Dear
 # name: Anrede (engl.)
-# expand-env: ((sender-name (or (car (car (my/mu4e-message-field mu4e-compose-parent-message :from))) "")))
+# expand-env: ((sender-name (or (car (car (°mu4e-message-field mu4e-compose-parent-message :from))) "")))
 # --
-${1:$$(my/yas-choose-greeting sender-name 'en)},
+${1:$$(°yas-choose-greeting sender-name 'en)},
 
 $0

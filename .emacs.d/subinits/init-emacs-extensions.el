@@ -16,9 +16,9 @@
 
 ;; spellchecking settings
 (setq ispell-program-name "hunspell")
-(defvar my/ispell-dicts-in-use
+(defvar °ispell-dicts-in-use
   '("de_DE" "en_AU")
-  "List of dicts to cycle through by using my/ispell-cycle-dicts.")
+  "List of dicts to cycle through by using °ispell-cycle-dicts.")
 
 ;; use more conservative sentence definition
 (setq sentence-end-double-space nil)
@@ -28,7 +28,7 @@
 (add-hook 'find-file-hook
           (lambda ()
             (when (file-remote-p default-directory)
-              (my/source-ssh-env))))
+              (°source-ssh-env))))
 
 ;; use pass or an encrypted file for auth-sources
 (use-package auth-source-pass
@@ -45,11 +45,11 @@
 (use-package helpful
   :defer t
   :config
-  (setq helpful-switch-buffer-function 'my/helpful-buffer-other-window)
+  (setq helpful-switch-buffer-function '°helpful-buffer-other-window)
   (setq helpful-max-buffers 2)
 
   ;; helpful related functions
-  (defun my/helpful-buffer-other-window (buf)
+  (defun °helpful-buffer-other-window (buf)
     "Display helpful buffer BUF the way I want it, ie:
 Replace buffer/window if in helpful-mode, lazy-open otherwise."
     (let (sw)
@@ -72,7 +72,7 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
 (use-package telega
   :commands telega
   :config
-  (my/add-hook-to-mode
+  (°add-hook-to-mode
    'evil-insert-state-entry-hook
    (lambda ()
      (unless (eq (line-number-at-pos) (count-lines (point-min) (point-max)))
@@ -88,9 +88,9 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
 ;; use locally installed package (from AUR) of emacs-vterm
 (use-package vterm
   :straight nil
-  :commands my/vterm
+  :commands °vterm
   :config
-  (defun my/vterm ()
+  (defun °vterm ()
     "Hide or show vterm window.
 Start terminal if it isn't running already."
     (interactive)

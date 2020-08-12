@@ -14,9 +14,9 @@
     :keymaps            'override
     :states             '(motion emacs)
     "M-o"               'delete-other-windows
-    "M-i"               'my/restore-window-layout
+    "M-i"               '°restore-window-layout
     "M-c"               'evil-window-delete
-    "M-O"               'my/window-clear-side
+    "M-O"               '°window-clear-side
     "M-h"               'evil-window-left
     "M-j"               'evil-window-down
     "M-k"               'evil-window-up
@@ -31,12 +31,12 @@
   (general-def
     :keymaps            'override
     "<f1>"              'eww
-    "S-<f1>"            (general-lambda (my/split-window-and-do (call-interactively 'eww)))
+    "S-<f1>"            (general-lambda (°split-window-and-do (call-interactively 'eww)))
     "<f2>"              'mu4e
-    "S-<f2>"            (general-lambda (my/split-window-and-do (mu4e)))
+    "S-<f2>"            (general-lambda (°split-window-and-do (mu4e)))
     "<f3>"              'telega
-    "S-<f3>"            (general-lambda (my/split-window-and-do (telega)))
-    "<f12>"             'my/straight-update
+    "S-<f3>"            (general-lambda (°split-window-and-do (telega)))
+    "<f12>"             '°straight-update
     "M-<f12>"           'restart-emacs
     "S-M-<f12>"         (general-lambda
                           (shell-command "merge-configs")
@@ -50,8 +50,8 @@
                      (evil-force-normal-state))
     "C-a"           'evil-numbers/inc-at-pt
     "C-x"           'evil-numbers/dec-at-pt
-    "ö"             'my/evil-dry-open-below
-    "Ö"             'my/evil-dry-open-above
+    "ö"             '°evil-dry-open-below
+    "Ö"             '°evil-dry-open-above
     "U"             'undo-tree-visualize
     "_"             'goto-last-change
     "-"             'goto-last-change-reverse)
@@ -59,8 +59,8 @@
   (general-def-leader
     :states         'normal
     "RET"           'quickrun
-    "P"             'my/evil-paste-with-newline-above
-    "p"             'my/evil-paste-with-newline-below)
+    "P"             '°evil-paste-with-newline-above
+    "p"             '°evil-paste-with-newline-below)
 
   (general-def-goleader
     :states         'normal
@@ -74,10 +74,10 @@
 
   (general-def-goleader
     :states         'motion
-    "s"             'my/toggle-scratch-buffer
+    "s"             '°toggle-scratch-buffer
     "S"             (general-lambda
-                     (my/split-window-and-do
-                      (my/toggle-scratch-buffer)))
+                     (°split-window-and-do
+                      (°toggle-scratch-buffer)))
     "/"             'evil-ex-search-forward
     "?"             'evil-ex-search-backward
     "I"             'counsel-imenu)
@@ -111,7 +111,7 @@
     "Q"                 'counsel-projectile-find-file
     "{"                 'evil-backward-sentence-begin
     "}"                 'evil-forward-sentence-begin
-    "<S-SPC><S-SPC>"    'my/vertigo-reuse-last-arg)
+    "<S-SPC><S-SPC>"    '°vertigo-reuse-last-arg)
 
   (general-def-leader
     :states         'motion
@@ -126,10 +126,10 @@
     "hb"            'counsel-descbinds
     "hm"            'describe-mode
     "SPC"           'vertigo-set-digit-argument
-    "$"             'my/vterm
-    "C-$"           'my/eshell
-    "%"             'my/counsel-ag-projectile
-    "C-%"           'my/counsel-ag-prompt-path
+    "$"             '°vterm
+    "C-$"           '°eshell
+    "%"             '°counsel-ag-projectile
+    "C-%"           '°counsel-ag-prompt-path
     "b"             (general-lambda
                      (let ((ivy-use-virtual-buffers nil)
                            (ivy-ignore-buffers (cons "^\*.+?\*$" ivy-ignore-buffers)))
@@ -146,7 +146,7 @@
     "V"             (general-lambda
                      (evil-window-split) (evil-window-down 1))
     "q"             'find-file
-    "Q"             'my/sudo-find-file
+    "Q"             '°sudo-find-file
     "Yn"            'yas-new-snippet
     "Ye"            'yas-visit-snippet-file
     "Yi"            'yas-insert-snippet
@@ -160,10 +160,10 @@
     "M-p"           'evil-mc-skip-and-goto-prev-cursor
     "*"             (lambda (count)
                       (interactive "P")
-                      (my/evil-search-visual-selection 'forward count))
+                      (°evil-search-visual-selection 'forward count))
     "#"             (lambda (count)
                       (interactive "P")
-                      (my/evil-search-visual-selection 'backward count)))
+                      (°evil-search-visual-selection 'backward count)))
 
   (general-def-leader
     :states         'visual
@@ -250,14 +250,14 @@
     "M-<return>"   (general-lambda
                     (company-abort)
                     (newline 1 t))
-    "C-n"          'my/company-select-next
-    "C-p"          'my/company-select-previous)
+    "C-n"          '°company-select-next
+    "C-p"          '°company-select-previous)
 
   ;; dired keybinds
   (general-def
     :keymaps        'dired-mode-map
     "SPC"           nil
-    "t"             'my/dired-mark-toggle
+    "t"             '°dired-mark-toggle
     "T"             'dired-toggle-marks)
 
   ;; eglot keybinds
@@ -280,7 +280,7 @@
 
   ;; eshell keybinds (eshell-mode-keymap is buffer-local and only gets
   ;; initialized after eshell is started - why?)
-  (defun my/eshell-set-keys ()
+  (defun °eshell-set-keys ()
     (general-def
       :states           'insert
       :keymaps          'eshell-mode-map
@@ -295,7 +295,7 @@
                          (eshell-bol)
                          (kill-line)
                          (evil-insert-state))))
-  (add-hook 'eshell-first-time-mode-hook 'my/eshell-set-keys)
+  (add-hook 'eshell-first-time-mode-hook '°eshell-set-keys)
 
   ;; ewwwwwwwww keybinds
   (general-def
@@ -377,11 +377,11 @@
     "c"             'evil-cp-change
     "d"             'evil-cp-delete
     "S"             'evil-cp-change-whole-line
-    "^"             'my/evil-lisp-first-non-blank
-    "A"             'my/evil-lisp-append-line
-    "I"             'my/evil-lisp-insert-line
-    "o"             'my/evil-lisp-open-below
-    "O"             'my/evil-lisp-open-above)
+    "^"             '°evil-lisp-first-non-blank
+    "A"             '°evil-lisp-append-line
+    "I"             '°evil-lisp-insert-line
+    "o"             '°evil-lisp-open-below
+    "O"             '°evil-lisp-open-above)
 
   (general-def
     :states         'visual
@@ -391,8 +391,8 @@
   (general-def-leader
     :states         'motion
     :keymaps        'lisp-mode-shared-map
-    "e"             'my/eval-at-point
-    "E"             'my/eval-line
+    "e"             '°eval-at-point
+    "E"             '°eval-line
     "M-e"           'eval-buffer
     "C-e"           'eval-defun)
 
@@ -426,16 +426,16 @@
   (general-def-leader
     :states         'emacs
     :keymaps        'mu4e-main-mode-map
-    "U"             'my/mu4e-main-update-all)
+    "U"             '°mu4e-main-update-all)
 
   (general-def
     :states         'emacs
     :keymaps        'mu4e-headers-mode-map
-    "q"             'my/mu4e-headers-quit-view-or-headers
+    "q"             '°mu4e-headers-quit-view-or-headers
     "J"             'mu4e~headers-jump-to-maildir
     "j"             'mu4e-headers-next
     "k"             'mu4e-headers-prev
-    "E"             'my/mu4e-compose-edit-anything
+    "E"             '°mu4e-compose-edit-anything
     "G"             'evil-goto-line
     "C-j"           'mu4e-headers-next-unread
     "C-k"           'mu4e-headers-prev-unread
@@ -447,11 +447,11 @@
     "S"             'mu4e-headers-change-sorting
     "<tab>"         'mu4e-headers-toggle-include-related
     "<backtab>"     'mu4e-headers-toggle-threading
-    "t"             'my/mu4e-headers-mark-toggle
+    "t"             '°mu4e-headers-mark-toggle
     "%"             'mu4e-headers-mark-pattern
-    "T"             'my/mu4e-headers-mark-pattern
-    "D"             (general-lambda (my/mu4e-headers-handle-deferred 'trash))
-    "M"             (general-lambda (my/mu4e-headers-handle-deferred 'move))
+    "T"             '°mu4e-headers-mark-pattern
+    "D"             (general-lambda (°mu4e-headers-handle-deferred 'trash))
+    "M"             (general-lambda (°mu4e-headers-handle-deferred 'move))
     "$"             (general-lambda
                      (mu4e-mark-execute-all t)))
 
@@ -472,7 +472,7 @@
     :keymaps        'mu4e-view-mode-map
     "C-d"           'scroll-up-command
     "C-u"           'scroll-down-command
-    "E"             'my/mu4e-compose-edit-anything
+    "E"             '°mu4e-compose-edit-anything
     "k"             'mu4e-scroll-down
     "j"             'mu4e-scroll-up
     "f"             'link-hint-open-link
@@ -481,9 +481,9 @@
     "/"             'swiper
     "gg"            'evil-goto-first-line
     "G"             'evil-goto-line
-    "t"             'my/mu4e-view-mark-toggle
+    "t"             '°mu4e-view-mark-toggle
     "T"             'mu4e-view-mark-pattern
-    "%"             'my/mu4e-view-mark-pattern
+    "%"             '°mu4e-view-mark-pattern
     "$"             (general-lambda
                      (mu4e~view-in-headers-context
                       (mu4e-mark-execute-all t))))
@@ -500,7 +500,7 @@
     "!"         'message-send-and-exit
     "K"         'mu4e-message-kill-buffer
     "d"         (general-lambda
-                  (my/ispell-cycle-dicts)
+                  (°ispell-cycle-dicts)
                   (flyspell-buffer))
     "D"         (general-lambda
                   (ispell-change-dictionary)
@@ -512,10 +512,10 @@
     :states         'normal
     :keymaps        'python-mode-map
     "C-$"           'run-python
-    "cB"            'my/python-remove-breakpoints
+    "cB"            '°python-remove-breakpoints
     "S-<return>"    (general-lambda
                      (if (string-match-p "^test_" (buffer-file-name))
-                         'my/python-test
+                         '°python-test
                        'quickrun)))
 
   (general-def
@@ -557,7 +557,7 @@
     :states         'emacs
     :keymaps        'vterm-mode-map
     "C-h k"         'helpful-key
-    "C-c $"         'my/vterm)
+    "C-c $"         '°vterm)
 
   (general-def-leader
     :states         'normal
@@ -567,13 +567,13 @@
     "^"             'evil-first-non-blank
     "o"             'evil-open-below
     "O"             'evil-open-above
-    "p"             'my/evil-lisp-paste-with-newline-below
-    "P"             'my/evil-lisp-paste-with-newline-above)
+    "p"             '°evil-lisp-paste-with-newline-below
+    "P"             '°evil-lisp-paste-with-newline-above)
 
   (general-def-leader
     :states         'visual
     :keymaps        'lisp-mode-shared-map
-    "e"             'my/eval-visual-region)
+    "e"             '°eval-visual-region)
 
   ;; visual regexp keybinds
   (general-def

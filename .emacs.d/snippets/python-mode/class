@@ -2,9 +2,9 @@
 # name: class
 # key: class
 # expand-env: ((snippet-indent (current-indentation)))
-# condition: (string-match-p "^[[:space:]]*class" (my/get-line))
+# condition: (string-match-p "^[[:space:]]*class" (°get-line))
 # --
-`(my/yas-python-func-padding snippet-indent)`class ${1:MyClass}($2):
-    ${3:$(my/yas-python-doc-wrapper yas-text 'left)}${3:TODO: Docstring for $1}${3:$(my/yas-python-doc-wrapper yas-text 'right)}
+`(°yas-python-func-padding snippet-indent)`class ${1:MyClass}($2):
+    ${3:$(°yas-python-doc-wrapper yas-text 'left)}${3:TODO: Docstring for $1}${3:$(°yas-python-doc-wrapper yas-text 'right)}
     def __init__(self$4):
-        ${4:$(my/yas-python-class-field-splitter yas-text)}$0`(my/yas-python-func-padding snippet-indent t)`
+        ${4:$(°yas-python-class-field-splitter yas-text)}$0`(°yas-python-func-padding snippet-indent t)`

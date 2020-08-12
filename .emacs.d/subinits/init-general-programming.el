@@ -1,10 +1,10 @@
 ;; -*- lexical-binding: t -*-
 (use-package magit
   :commands magit-status
-  :hook ((magit-mode . my/source-ssh-env)
+  :hook ((magit-mode . °source-ssh-env)
          (with-editor-mode . evil-insert-state))
   :config
-  (defun my/force-git-access ()
+  (defun °force-git-access ()
     (interactive)
     (let ((index-file (concat
                        (projectile-project-root) (file-name-as-directory ".git") "index.lock")))

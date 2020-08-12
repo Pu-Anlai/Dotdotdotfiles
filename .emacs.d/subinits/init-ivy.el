@@ -14,7 +14,7 @@
   (counsel-mode 1)
 
   ;; counsel/ivy related functions
-  (defun my/counsel-ag-prompt-path ()
+  (defun °counsel-ag-prompt-path ()
     (interactive)
     (let ((ag-root (read-file-name "ag root: ")))
       (counsel-ag nil ag-root))))
