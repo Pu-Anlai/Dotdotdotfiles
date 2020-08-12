@@ -3,6 +3,7 @@
 (require 'cl-lib)
 
 ;; macros
+;;;###autoload
 (defmacro my/flet (bindings &rest body)
   "Like flet but using cl-letf and therefore not deprecated."
   `(cl-letf ,(mapcar
@@ -12,18 +13,21 @@
               bindings)
      ,@body))
 
+;;;###autoload
 (defmacro my/split-window-and-do (&rest funcs)
   `(progn
      (ignore-errors
        (select-window (funcall split-window-preferred-function)))
      ,@funcs))
 
+;;;###autoload
 (defmacro my/nillify-func (&rest funcs)
   "Return a function that runs FUNCS but always returns nil."
   `(lambda ()
      ,@funcs
      nil))
 
+;;;###autoload
 (defmacro my/defun-newline-paste (func-name &rest open-funcs)
   "Create a function that pastes after opening lines with OPEN-FUNCS."
   `(defun ,func-name (count)
@@ -36,16 +40,19 @@
          (indent-according-to-mode)))))
 
 ;; functions
+;;;###autoload
 (defun my/add-hook-to-mode (hook function mode &optional append)
   "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option APPEND."
   (add-hook (my/concat-symbols mode '-hook)
             (lambda ()
               (add-hook hook function append t))))
 
+;;;###autoload
 (defun my/concat-symbols (&rest symbols)
   "Concatenate SYMBOLS together to form a single symbol."
   (intern (apply #'concat (mapcar #'symbol-name symbols))))
 
+;;;###autoload
 (defun my/dired-mark-toggle ()
   "Toggle mark for currently selected file."
   (interactive)
@@ -59,6 +66,7 @@
                    (list ?\040 dired-marker-char)
                  (list dired-marker-char ?\040)))))))
 
+;;;###autoload
 (defun my/eshell ()
   "Hide or show eshell window.
 Start eshell if it isn't running already."
@@ -69,6 +77,7 @@ Start eshell if it isn't running already."
         (delete-window))
     (eshell)))
 
+;;;###autoload
 (defun my/eval-visual-region ()
   "Evaluate region."
   (interactive)
@@ -78,6 +87,7 @@ Start eshell if it isn't running already."
   (ignore-errors
    (evil-normal-state)))
 
+;;;###autoload
 (defun my/eval-line ()
   "Evaluate current line."
   (interactive)
@@ -85,6 +95,7 @@ Start eshell if it isn't running already."
     (end-of-line)
     (eval-last-sexp nil)))
 
+;;;###autoload
 (defun my/eval-at-point ()
   "Move out to closest sexp and evaluate."
   (interactive)
@@ -108,6 +119,7 @@ Start eshell if it isn't running already."
     (eval-region reg-start reg-end t)))
 
 ;; evil-related-functions
+;;;###autoload
 (defun my/evil-dry-open-below (count)
   "Open LINE number of lines below but stay in current line."
   (interactive "p")
@@ -115,6 +127,7 @@ Start eshell if it isn't running already."
     (end-of-line)
     (open-line count)))
 
+;;;###autoload
 (defun my/evil-dry-open-above (count)
   "Open LINE number of lines above but stay in current line."
   (interactive "p")
@@ -127,6 +140,7 @@ Start eshell if it isn't running already."
     (move-to-column col)))
 
 ;; lisp related functions
+;;;###autoload
 (defun my/evil-lisp-append-line (count)
   (interactive "p")
   (my//evil-lisp-end-of-depth)
@@ -145,6 +159,7 @@ Start eshell if it isn't running already."
       (while (not (eq depth (my//syntax-depth)))
         (backward-char)))))
 
+;;;###autoload
 (defun my/evil-lisp-insert-line (count)
   (interactive "p")
   (my//evil-lisp-start-of-depth)
@@ -153,6 +168,7 @@ Start eshell if it isn't running already."
   (setq evil-insert-count count)
   (evil-insert-state 1))
 
+;;;###autoload
 (defun my/evil-lisp-first-non-blank ()
     (interactive)
   (evil-first-non-blank)
@@ -160,6 +176,7 @@ Start eshell if it isn't running already."
               (not (my//in-string-p)))
     (evil-forward-char)))
 
+;;;###autoload
 (defun my/evil-lisp-open-above (count)
   (interactive "p")
   (my//evil-lisp-start-of-depth)
@@ -171,6 +188,7 @@ Start eshell if it isn't running already."
         evil-insert-lines t)
   (evil-insert-state 1))
 
+;;;###autoload
 (defun my/evil-lisp-open-below (count)
   (interactive "p")
   (my//evil-lisp-end-of-depth)
@@ -187,22 +205,27 @@ Start eshell if it isn't running already."
     (while (not (eq depth (my//syntax-depth)))
       (evil-forward-char))))
 
+;;;###autoload (autoload 'my/evil-paste-with-newline-above "init-my-functions")
 (my/defun-newline-paste
  my/evil-paste-with-newline-above
  (evil-open-above 1))
 
+;;;###autoload (autoload 'my/evil-paste-with-newline-below "init-my-functions")
 (my/defun-newline-paste
  my/evil-paste-with-newline-below
  (evil-open-below 1))
 
+;;;###autoload (autoload 'my/evil-lisp-paste-with-newline-above "init-my-functions")
 (my/defun-newline-paste
  my/evil-lisp-paste-with-newline-above
  (my/evil-lisp-open-above 1))
 
+;;;###autoload (autoload 'my/evil-lisp-paste-with-newline-below "init-my-functions")
 (my/defun-newline-paste
  my/evil-lisp-paste-with-newline-below
  (my/evil-lisp-open-below 1))
  
+;;;###autoload
 (defun my/evil-search-visual-selection (direction count)
   "Search for visually selected text in buffer.
 DIRECTION can be forward or backward.  Don't know what COUNT does."
@@ -227,6 +250,7 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
     (when (fboundp 'evil-ex-search-next)
       (evil-ex-search-next count))))
 
+;;;###autoload
 (defun my/get-line ()
   "Uniform way to get content of current line."
   (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
@@ -235,6 +259,7 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
   "Returns t if point is within a string according to syntax-ppss.  Otherwise nil."
   (not (eq (nth 3 (syntax-ppss)) nil)))
 
+;;;###autoload
 (defun my/ispell-cycle-dicts ()
   "Cycle through the dicts in `my/ispell-dicts-in-use'."
   (interactive)
@@ -245,6 +270,7 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
        (unless (string= ispell-current-dictionary (car my/ispell-dicts-in-use))
          (throw 'dict (car my/ispell-dicts-in-use)))))))
 
+;;;###autoload
 (defun my/join-path (folders-only &rest elements)
   "Join ELEMENTS to create a path. The last element should be the name of a file
 unless FOLDERS-ONLY is non-nil."
@@ -252,6 +278,7 @@ unless FOLDERS-ONLY is non-nil."
         (folders (cl-remove file elements :test #'equal :count 1 :from-end t)))
     (apply #'concat `(,@(mapcar #'file-name-as-directory folders) ,file))))
 
+;;;###autoload
 (defun my/last-name (name)
   "Return the last name portion of NAME."
   (when (string-to-list name)
@@ -268,6 +295,7 @@ unless FOLDERS-ONLY is non-nil."
           (concat (nth rpre my/last-name-prefixes) " " lname)
         lname))))
 
+;;;###autoload
 (defun my/python-remove-breakpoints ()
   "Remove all breakpoint declarations in buffer."
   (interactive)
@@ -279,6 +307,7 @@ unless FOLDERS-ONLY is non-nil."
         (setq counter (1+ counter))))
     (message "%s breakpoint%s removed." counter (if (= counter 1) "" "s"))))
 
+;;;###autoload
 (defun my/python-test ()
   "Run pytest."
   (interactive)
@@ -290,6 +319,7 @@ unless FOLDERS-ONLY is non-nil."
                         (:exec . ("pytest"))))
     (setenv "PYTHONPATH" old-py-path)))
 
+;;;###autoload
 (defun my/restore-window-layout ()
   "Restore window layout that is on top of `my//window-layout-stack'."
   (interactive)
@@ -297,6 +327,7 @@ unless FOLDERS-ONLY is non-nil."
     (when layout
       (set-window-configuration layout))))
 
+;;;###autoload
 (defun my/source-ssh-env ()
   "Read environment variables for the ssh environment from '~/.ssh/environment'."
   (let (pos1 pos2 (var-strs '("SSH_AUTH_SOCK" "SSH_AGENT_PID")))
@@ -314,6 +345,7 @@ unless FOLDERS-ONLY is non-nil."
              (setenv var-str (buffer-substring-no-properties pos1 pos2)))
            var-strs))))))
 
+;;;###autoload
 (defun my/split-window-sensibly (&optional window)
   "Prefer horizontal splits for state-of-the-art widescreen monitors. Also don't
   split when there's 3 or more windows open."
@@ -338,6 +370,7 @@ unless FOLDERS-ONLY is non-nil."
           (split-window-below)))))))
 
 
+;;;###autoload
 (defun my/straight-update ()
   "Fetch, merge and rebuild all straight packages."
   (interactive)
@@ -346,6 +379,7 @@ unless FOLDERS-ONLY is non-nil."
     (straight-check-all)
     (restart-emacs)))
 
+;;;###autoload
 (defun my/sudo-find-file ()
   "Open 'find-file' with sudo prefix."
   (interactive)
@@ -356,6 +390,7 @@ unless FOLDERS-ONLY is non-nil."
   "Return depth at point within syntax tree. "
   (nth 0 (syntax-ppss)))
 
+;;;###autoload
 (defun my/toggle-scratch-buffer ()
   "Go back and forth between scratch buffer and most recent other buffer."
   (interactive)
@@ -363,6 +398,7 @@ unless FOLDERS-ONLY is non-nil."
       (evil-switch-to-windows-last-buffer)
     (switch-to-buffer "*scratch*")))
 
+;;;###autoload
 (defun my/window-clear-side ()
   "Clear selected pane from vertically split windows."
   (interactive)

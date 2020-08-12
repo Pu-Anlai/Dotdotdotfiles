@@ -1,6 +1,11 @@
 ;; -*- lexical-binding: t -*-
+
+;; enable sourcing from init scripts in emacs.d/subinits
+(defconst emacs-subinit-dir (expand-file-name "subinits" user-emacs-directory))
+(add-to-list 'load-path emacs-subinit-dir)
+
 ;; custom-file handling
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" emacs-subinit-dir))
 ;; provide two custom-file hooks for different init stages
 (defvar my/pre-init-custom-hook nil)
 (defvar my/post-init-custom-hook nil)
@@ -16,52 +21,21 @@
     (setq auto-save-list-file-prefix
       emacs-tmp-dir)
 
-(defconst emacs-subinit-dir (expand-file-name "subinits" user-emacs-directory))
-;; enable sourcing from init scripts in emacs.d/subinits
-(push emacs-subinit-dir load-path)
-
 (require 'init-package-management)
 
 (run-hooks 'my/pre-init-custom-hook) ; everything even earlier can go directly into custom-file
 
-;; everything that can be deferred goes in here
-(use-package init-my-functions
-  :straight nil
-  :commands (my/add-hook-to-mode
-             my/concat-symbols
-             my/dired-mark-toggle
-             my/eshell
-             my/eval-at-point
-             my/eval-normal-line
-             my/eval-visual-region
-             my/evil-dry-open-above
-             my/evil-dry-open-below
-             my/evil-lisp-append-line
-             my/evil-lisp-first-non-blank
-             my/evil-lisp-insert-line
-             my/evil-lisp-open-above
-             my/evil-lisp-open-below
-             my/evil-lisp-paste-with-newline-above
-             my/evil-lisp-paste-with-newline-below
-             my/evil-paste-with-newline-above
-             my/evil-paste-with-newline-below
-             my/evil-search-visual-selection
-             my/get-line
-             my/ispell-cycle-dicts
-             my/join-path
-             my/last-name
-             my/nillify-func
-             my/python-remove-breakpoints
-             my/python-test
-             my/restore-window-layout
-             my/source-ssh-env
-             my/split-window-and-do
-             my/split-window-sensibly
-             my/straight-update
-             my/sudo-find-file
-             my/toggle-scratch-buffer
-             my/window-clear-side
-             my//window-layout-stack-push))
+;; set up autoloads for init-my-functions
+(setq generated-autoload-file (expand-file-name "custom-autoloads.el" emacs-subinit-dir))
+(defun °update-my-function-autoloads ()
+  (update-file-autoloads (expand-file-name "init-my-functions.el" emacs-subinit-dir) t))
+(add-hook 'kill-emacs-hook #'°update-my-function-autoloads)
+;; if the autoloads file doesn't exist yet, create it
+(unless (file-exists-p generated-autoload-file)
+  (°update-my-function-autoloads)
+  (kill-buffer (find-buffer-visiting generated-autoload-file)))
+;; and now load it
+(load generated-autoload-file)
 
 ;; setup gui early to avoid modeline troubles
 (require 'init-gui-setup)
