@@ -48,11 +48,6 @@
               (add-hook hook function append t))))
 
 ;;;###autoload
-(defun °concat-symbols (&rest symbols)
-  "Concatenate SYMBOLS together to form a single symbol."
-  (intern (apply #'concat (mapcar #'symbol-name symbols))))
-
-;;;###autoload
 (defun °dired-mark-toggle ()
   "Toggle mark for currently selected file."
   (interactive)

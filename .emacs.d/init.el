@@ -25,7 +25,10 @@
 
 (run-hooks '°pre-init-custom-hook) ; everything even earlier can go directly into custom-file
 
-;; set up autoloads for init-my-functions
+;; require essential custom functions
+(require 'init-my-essential-functions)
+
+;; set up autoloads for all other custom functions
 (setq generated-autoload-file (expand-file-name "custom-autoloads.el" emacs-subinit-dir))
 (defun °update-my-function-autoloads ()
   (update-file-autoloads (expand-file-name "init-my-functions.el" emacs-subinit-dir) t))
