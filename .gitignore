@@ -14,6 +14,20 @@
 !.config/bpython
 !.config/bpython/config
 
+!.config/emacs/
+!.config/emacs/init.el
+!.config/emacs/snippets
+!.config/emacs/snippets/**
+!.config/emacs/snippets/mu4e-compose-mode
+!.config/emacs/snippets/mu4e-compose-mode/*
+.config/emacs/snippets/mu4e-compose-mode/work
+!.config/emacs/subinits
+!.config/emacs/subinits/*
+.config/emacs/subinits/init-mu4e.el
+.config/emacs/subinits/custom*
+!.config/emacs/themes
+!.config/emacs/themes/base16-generic-theme.el
+
 !.config/feh
 !.config/feh/*
 
@@ -85,20 +99,6 @@
 
 !.config/youtube-dl
 !.config/youtube-dl/*
-
-!.emacs.d/
-!.emacs.d/init.el
-!.emacs.d/snippets
-!.emacs.d/snippets/**
-!.emacs.d/snippets/mu4e-compose-mode
-!.emacs.d/snippets/mu4e-compose-mode/*
-.emacs.d/snippets/mu4e-compose-mode/work
-!.emacs.d/subinits
-!.emacs.d/subinits/*
-.emacs.d/subinits/init-mu4e.el
-.emacs.d/subinits/custom*
-!.emacs.d/themes
-!.emacs.d/themes/base16-generic-theme.el
 
 !.local/bin
 !.local/bin/*
