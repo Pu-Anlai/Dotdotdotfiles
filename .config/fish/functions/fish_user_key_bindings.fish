@@ -12,9 +12,8 @@ function fish_user_key_bindings
     bind -M insert \e\l forward-bigword
     bind -M insert \e\x20 accept-autosuggestion
 
-    # iso friendly Emacs keys
-    bind -M insert \cf forward-word
-    bind -M insert \cb backward-word
+    # paste with single quotes around clipboard contents
+    bind -M insert \e\cv 'commandline -i \\\'; and fish_clipboard_paste; and commandline -i \\\''
 
     # prepend/append commands by keypress
     bind -M insert \ep __fish_pls_bind
