@@ -1,4 +1,4 @@
-;; %-LOCATION:$HOME/.emacs.d/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
+;; %-LOCATION:$HOME/.config/emacs/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
 ;; DO EDITS HERE: $HOME/.local/share/skel/mu4e.skel
 ;; -*- lexical-binding: t -*-
 (require 'subr-x)
