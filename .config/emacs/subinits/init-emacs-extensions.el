@@ -36,11 +36,6 @@
   :config
   (auth-source-pass-enable))
 
-(use-package all-the-icons
-  :defer t)
-
-(use-package f)
-
 ;; sexier builtin help
 (use-package helpful
   :defer t
