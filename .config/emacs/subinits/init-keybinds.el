@@ -180,7 +180,6 @@
     "C-S-f"         'forward-word
     "C-S-b"         'backward-word
     "<backtab>"     'indent-relative
-    "<return>"      'newline
     "C-j"           'newline)
 
   ;; isearch keybinds
@@ -243,7 +242,7 @@
   (general-def
     :keymaps       'company-active-map
     "<tab>"        nil
-    "S-<return>"   (general-lambda
+    "<return>"   (general-lambda
                     (company-complete)
                     (company-pseudo-tooltip-hide)
                     (newline 1 t))
