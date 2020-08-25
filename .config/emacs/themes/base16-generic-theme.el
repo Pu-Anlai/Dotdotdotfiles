@@ -32,13 +32,13 @@
      (border                                       :background  ,base03)
      (cursor                                       :background  ,base08)
      (default                                      :foreground  ,base05 :background  ,base00)
-     (fringe                                       :background  ,base01)
+     (fringe                                       :background  ,base00)
      (gui-element                                  :background  ,base01)
      (header-line                                  :foreground  ,base0E :background nil :inherit mode-line)
      (highlight                                    :background  ,base01)
      (link                                         :foreground  ,base0D :underline t)
      (link-visited                                 :foreground  ,base0E :underline t)
-     (minibuffer-prompt                            :foreground  ,base0D)
+     (minibuffer-prompt                            :foreground  ,base0D :background ,base00)
      (region                                       :background  ,base02 :distant-foreground ,base05)
      (secondary-selection                          :background  ,base03 :distant-foreground ,base05)
      (trailing-whitespace                          :foreground  ,base0A :background  ,base0C)
@@ -90,15 +90,15 @@
      (isearch-fail                                 :background  ,base01 :inverse-video t :inherit font-lock-warning-face)
 
 ;;;; line-numbers
-     (line-number                                  :foreground  ,base03 :background  ,base01)
+     (line-number                                  :foreground  ,base03 :background  ,base00)
      (line-number-current-line                     :inverse-video t)
 
 ;;;; mode-line
-     (mode-line                                    :foreground  ,base04 :background  ,base02)
+     (mode-line                                    :foreground  ,base04 :background  ,base00)
      (mode-line-buffer-id                          :foreground  ,base0B :background nil)
-     (mode-line-emphasis                           :foreground  ,base06 :slant italic)
-     (mode-line-highlight                          :foreground  ,base0E :box nil :weight bold)
-     (mode-line-inactive                           :foreground  ,base03 :background  ,base01 :box nil)
+     (mode-line-emphasis                           :foreground  ,base06)
+     (mode-line-highlight                          :foreground  ,base09 :slant italic)
+     (mode-line-inactive                           :foreground  ,base00 :background  ,base00 :box nil)
 
 ;;; Third-party
 
@@ -410,6 +410,16 @@
      (message-header-name                          :foreground  ,base0D :background nil)
      (message-header-newsgroups                    :foreground  ,base0C :background nil :slant normal)
      (message-separator                            :foreground  ,base0E)
+
+;;;; mode-welt (my modeline)
+     (mode-welt-evil-normal                        :foreground  ,base0B :weight bold :inherit mode-line)
+     (mode-welt-evil-insert                        :foreground  ,base0D :weight bold :inherit mode-line)
+     (mode-welt-evil-visual                        :foreground  ,base0E :weight bold :inherit mode-line)
+     (mode-welt-evil-replace                       :foreground  ,base08 :weight bold :inherit mode-line)
+     (mode-welt-evil-operator                      :foreground  ,base01 :weight bold :inherit mode-line)
+     (mode-welt-evil-motion                        :foreground  ,base0C :weight bold :inherit mode-line)
+     (mode-welt-evil-emacs                         :foreground  ,base0E :weight bold :inherit mode-line)
+     (mode-welt-evil-inactive                      :foreground  ,base00 :weight bold)
 
 ;;;; nxml-mode
      (nxml-name-face                               :foreground unspecified :inherit font-lock-constant-face)

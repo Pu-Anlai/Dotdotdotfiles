@@ -66,7 +66,7 @@
   (mapc #'evil-declare-not-repeat #'(flymake-goto-next-error flymake-goto-prev-error)))
 
 (use-package yasnippet
-  :hook ((emacs-lisp-mode go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
+  :hook ((go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
   :config
   (yas-reload-all)
   ;; bind this here because yas-maybe-expand needs to be loaded first
