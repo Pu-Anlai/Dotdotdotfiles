@@ -38,31 +38,6 @@
                          display-line-numbers-widen t
                          display-line-numbers-current-absolute t))))
 
-;; highlight cursor when scrolling
-(use-package beacon
-  :hook ((prog-mode text-mode conf-mode) . beacon-mode)
-  :config
-  (setq beacon-color (concat "#" (getenv "__BASE0C"))
-        beacon-blink-when-window-changes nil
-        beacon-blink-when-buffer-changes nil
-        beacon-blink-delay 0.1
-        beacon-blink-duration 0.25
-        beacon-size 20
-        beacon-push-mark nil)
-  (setq beacon-dont-blink-major-modes '(mu4e-main-mode
-                                        mu4e-view-mode
-                                        mu4e-headers-mode
-                                        vterm-mode))
-  (setq beacon-dont-blink-commands '(evil-ex-search-next
-                                     evil-ex-search-previous
-                                     exit-minibuffer
-                                     previous-line
-                                     next-line))
-  (add-hook 'focus-in-hook
-            (defun °beacon-blink-upon-refocus ()
-              (unless (member major-mode beacon-dont-blink-major-modes)
-                (beacon-blink)))))
-
 ;; delimiter highlighting and matching
 (setq electric-pair-open-newline-between-pairs t)
 (dolist (hook '(prog-mode-hook text-mode-hook))
@@ -113,7 +88,7 @@
                   (°concat-symbols 'mode-welt-evil- evil-state)
                 'mode-welt-evil-inactive)))
     (concat
-     (propertize "  " 'face `(:inherit ,face :inverse-video t))
+     (propertize "%*%+" 'face `(:inherit ,face :inverse-video t))
      (propertize
      (upcase (symbol-name evil-state))
      'face

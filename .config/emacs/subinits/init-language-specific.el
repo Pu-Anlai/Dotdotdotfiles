@@ -224,12 +224,12 @@ If decorator syntax is found a line above the current, don't do any padding."
  'python-mode-hook
  (lambda ()
    ;; auto-fill
-   (auto-fill-mode)
-   (setq-local comment-auto-fill-only-comments t)
-   (setq python-fill-docstring-style 'symmetric)
-   ;; width settings
-   (setq-local fill-column 79)
-   (setq-local column-enforce-column 79)
+   ;; (auto-fill-mode)
+   ;; (setq-local comment-auto-fill-only-comments t)
+   ;; (setq python-fill-docstring-style 'symmetric)
+   ;; ;; width settings
+   ;; (setq-local fill-column 79)
+   ;; (setq-local column-enforce-column 79)
    (setq-local electric-pair-open-newline-between-pairs nil)
    (make-local-variable 'write-file-functions)
    (add-to-list 'write-file-functions (°nillify-func (eglot-format-buffer)))))
