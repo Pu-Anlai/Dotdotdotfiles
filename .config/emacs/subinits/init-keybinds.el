@@ -116,7 +116,7 @@
   (general-def-leader
     :states         'motion
     "rc"            (general-lambda
-                     (find-file (substitute-in-file-name "$HOME/.emacs.d/init.el")))
+                     (find-file (expand-file-name "init.el" user-emacs-directory)))
     "rf"            'counsel-recentf
     "hx"            'helpful-at-point
     "hf"            'helpful-callable

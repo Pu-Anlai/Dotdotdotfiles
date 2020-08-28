@@ -27,8 +27,7 @@
 (defun °°first-push-to-window-layout-stack (&rest args)
   (unless (eql (count-windows) 1)
     (°°window-layout-stack-push)))
-;; only add this advice to high-level functions; otherwise it will be called
-;; multiple times for each time the parent function calls the lower-level one
+;; only add this advice to high-level functions to avoid infinite recursion
 (advice-add #'delete-other-windows :before #'°°first-push-to-window-layout-stack)
 (advice-add #'evil-window-delete :before #'°°first-push-to-window-layout-stack)
 
