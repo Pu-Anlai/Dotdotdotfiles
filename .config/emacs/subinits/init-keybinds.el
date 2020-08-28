@@ -20,7 +20,11 @@
     "M-h"               'evil-window-left
     "M-j"               'evil-window-down
     "M-k"               'evil-window-up
-    "M-l"               'evil-window-right)
+    "M-l"               'evil-window-right
+    "M-H"               'evil-window-move-far-left
+    "M-J"               'evil-window-move-very-bottom
+    "M-K"               'evil-window-move-very-top
+    "M-L"               'evil-window-move-far-right)
 
   (general-def-leader
     :keymaps            'override
@@ -46,8 +50,8 @@
   (general-def
     :states         'normal
     "<escape>"      (general-lambda
-                     (evil-ex-nohighlight)
-                     (evil-force-normal-state))
+                      (evil-ex-nohighlight)
+                      (evil-force-normal-state))
     "C-a"           'evil-numbers/inc-at-pt
     "C-x"           'evil-numbers/dec-at-pt
     "ö"             '°evil-dry-open-below
@@ -76,8 +80,8 @@
     :states         'motion
     "s"             '°toggle-scratch-buffer
     "S"             (general-lambda
-                     (°split-window-and-do
-                      (°toggle-scratch-buffer)))
+                      (°split-window-and-do
+                       (°toggle-scratch-buffer)))
     "/"             'evil-ex-search-forward
     "?"             'evil-ex-search-backward
     "I"             'counsel-imenu)
@@ -93,18 +97,18 @@
     "C-l"               'link-hint-open-link
     "C-S-l"             'link-hint-copy-link
     "M-n"               'evil-mc-make-and-goto-next-match
-    "M-S-n"             'evil-mc-skip-and-goto-next-match
+    "M-N"               'evil-mc-skip-and-goto-next-match
     "M-p"               'evil-mc-skip-and-goto-prev-cursor
-    "M-S-p"             (general-lambda
-                         (evil-mc-undo-cursor-at-pos (point))
-                         (evil-mc-skip-and-goto-prev-cursor))
+    "M-P"               (general-lambda
+                          (evil-mc-undo-cursor-at-pos (point))
+                          (evil-mc-skip-and-goto-prev-cursor))
     "C-q"               'counsel-projectile-switch-project
     "C-u"               'evil-scroll-up
     "Ä"                 'evil-mc-undo-all-cursors
     "ä"                 'evil-mc-make-all-cursors
     "<escape>"          (general-lambda
-                         (evil-ex-nohighlight)
-                         (evil-force-normal-state))
+                          (evil-ex-nohighlight)
+                          (evil-force-normal-state))
     "C-s"               'vr/isearch-forward
     "C-S-s"             'vr/isearch-backward
     "M-H"               'helpful-kill-buffers
@@ -116,13 +120,15 @@
   (general-def-leader
     :states         'motion
     "rc"            (general-lambda
-                     (find-file (expand-file-name "init.el" user-emacs-directory)))
+                      (find-file (expand-file-name "init.el" user-emacs-directory)))
     "rf"            'counsel-recentf
     "hx"            'helpful-at-point
     "hf"            'helpful-callable
     "hF"            'helpful-command
     "hv"            'helpful-variable
     "hk"            'helpful-key
+    "hg"            (general-lambda
+                      (°split-window-and-do (info-emacs-manual)))
     "hb"            'counsel-descbinds
     "hm"            'describe-mode
     "SPC"           'vertigo-set-digit-argument
@@ -131,20 +137,20 @@
     "%"             '°counsel-ag-projectile
     "C-%"           '°counsel-ag-prompt-path
     "b"             (general-lambda
-                     (let ((ivy-use-virtual-buffers nil)
-                           (ivy-ignore-buffers (cons "^\*.+?\*$" ivy-ignore-buffers)))
-                       (counsel-switch-buffer)))
+                      (let ((ivy-use-virtual-buffers nil)
+                            (ivy-ignore-buffers (cons "^\*.+?\*$" ivy-ignore-buffers)))
+                        (counsel-switch-buffer)))
     "B"             (general-lambda
-                     (let ((ivy-use-virtual-buffers t))
-                       (counsel-switch-buffer)))
+                      (let ((ivy-use-virtual-buffers t))
+                        (counsel-switch-buffer)))
     "k"             'kill-this-buffer
     "K"             'kill-buffer-and-window
     "v"             'evil-window-split
     "s"             'evil-window-vsplit
     "S"             (general-lambda
-                     (evil-window-vsplit) (evil-window-right 1))
+                      (evil-window-vsplit) (evil-window-right 1))
     "V"             (general-lambda
-                     (evil-window-split) (evil-window-down 1))
+                      (evil-window-split) (evil-window-down 1))
     "q"             'find-file
     "Q"             '°sudo-find-file
     "Yn"            'yas-new-snippet
@@ -237,20 +243,29 @@
     "M-p"           nil)
 
   ;; keymap/mode-specific keybinds:
-  ;;
+
   ;; company keybinds
   (general-def
-    :keymaps       'company-active-map
-    "<tab>"        nil
-    "<return>"   (general-lambda
-                    (company-complete)
-                    (company-pseudo-tooltip-hide)
-                    (newline 1 t))
-    "M-<return>"   (general-lambda
-                    (company-abort)
-                    (newline 1 t))
-    "C-n"          '°company-select-next
-    "C-p"          '°company-select-previous)
+    :keymaps        'company-active-map
+    "<tab>"         nil
+    "<return>"      (general-lambda
+                      (unless (company-tooltip-visible-p)
+                          (company-complete)
+                      (company-pseudo-tooltip-hide))
+                      (newline 1 t))
+    "M-<return>"    (general-lambda
+                      (company-abort)
+                      (newline 1 t))
+    "C-n"           '°company-select-next
+    "C-p"           '°company-select-previous)
+
+  (general-def
+    :states         'insert
+    :keymaps        'company-search-map
+    "<return>"      (general-lambda
+                      (company-complete)
+                      (company-pseudo-tooltip-hide)
+                      (newline 1 t)))
 
   ;; dired keybinds
   (general-def
@@ -273,9 +288,9 @@
     "*"             'xref-find-references)
 
   (general-def-goleader
-   :states          'visual
-   :keymaps         'eglot-mode-map
-   "="              'eglot-format)
+    :states          'visual
+    :keymaps         'eglot-mode-map
+    "="              'eglot-format)
 
   ;; eshell keybinds (eshell-mode-keymap is buffer-local and only gets
   ;; initialized after eshell is started - why?)
@@ -291,9 +306,9 @@
       :states           'normal
       "^"               'eshell-bol
       "S"               (general-lambda
-                         (eshell-bol)
-                         (kill-line)
-                         (evil-insert-state))))
+                          (eshell-bol)
+                          (kill-line)
+                          (evil-insert-state))))
   (add-hook 'eshell-first-time-mode-hook '°eshell-set-keys)
 
   ;; ewwwwwwwww keybinds
@@ -353,7 +368,7 @@
     :keymaps        'flymake-mode-map
     "!"             'flymake-diagnostic-buffer)
 
-  ;; keybinds for flymake diagnostics buffer
+  ;; flymake diagnostics buffer keybinds
   (general-def
     :states         'normal
     :keymaps        'flymake-diagnostics-buffer-mode-map
@@ -363,9 +378,9 @@
 
   ;; go-mode keybinds
   (general-def-leader
-   :states          'normal         
-   :keymaps         'go-mode-map
-   "ci"             'go-import-add)
+    :states          'normal
+    :keymaps         'go-mode-map
+    "ci"             'go-import-add)
 
   ;; (emacs-)lisp keybindings
   (general-def
@@ -416,6 +431,8 @@
     "Jz"            'magit-jump-to-stashes
     "Jt"            'magit-jump-to-tracked)
 
+  ;; messages mode
+
   ;; mu4e keybindings
   (general-def
     :states         'emacs
@@ -452,7 +469,7 @@
     "D"             (general-lambda (°mu4e-headers-handle-deferred 'trash))
     "M"             (general-lambda (°mu4e-headers-handle-deferred 'move))
     "$"             (general-lambda
-                     (mu4e-mark-execute-all t)))
+                      (mu4e-mark-execute-all t)))
 
   (general-def-leader
     :states         'emacs
@@ -484,8 +501,8 @@
     "T"             'mu4e-view-mark-pattern
     "%"             '°mu4e-view-mark-pattern
     "$"             (general-lambda
-                     (mu4e~view-in-headers-context
-                      (mu4e-mark-execute-all t))))
+                      (mu4e~view-in-headers-context
+                       (mu4e-mark-execute-all t))))
 
   (general-def-leader
     :states 'emacs
@@ -513,9 +530,9 @@
     "C-$"           'run-python
     "cB"            '°python-remove-breakpoints
     "S-<return>"    (general-lambda
-                     (if (string-match-p "^test_" (buffer-file-name))
-                         '°python-test
-                       'quickrun)))
+                      (if (string-match-p "^test_" (buffer-file-name))
+                          '°python-test
+                        'quickrun)))
 
   (general-def
     :states         'insert
