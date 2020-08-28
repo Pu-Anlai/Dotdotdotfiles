@@ -128,7 +128,11 @@
     "hv"            'helpful-variable
     "hk"            'helpful-key
     "hg"            (general-lambda
-                      (°split-window-and-do (info-emacs-manual)))
+                      (°split-window-and-do
+                       (info "elisp")))
+    "hG"            (general-lambda
+                      (°split-window-and-do
+                       (info-emacs-manual)))
     "hb"            'counsel-descbinds
     "hm"            'describe-mode
     "SPC"           'vertigo-set-digit-argument
@@ -242,8 +246,7 @@
     "M-P"           nil
     "M-p"           nil)
 
-  ;; keymap/mode-specific keybinds:
-
+  ;;; keymap/mode-specific keybinds:
   ;; company keybinds
   (general-def
     :keymaps        'company-active-map
@@ -355,6 +358,22 @@
     :states         'normal
     :keymaps        'fish-mode-map
     "hx"            'man-follow)
+
+  ;; Info-mode keybinds
+  (general-def
+    :states         'motion
+    :keymaps        'Info-mode-map
+    "p"             'Info-prev
+    "n"             'Info-next
+    "m"             'Info-menu
+    "K"             'Info-up
+    "q"             'kill-buffer-and-window)
+
+  (general-def-goleader
+    :states         'motion
+    :keymaps        'Info-mode-map
+    "n"             'Info-goto-node
+    "g"             'evil-goto-first-line)
 
   ;; flycheck-mode keybinds
   (general-def
