@@ -25,11 +25,11 @@
 (use-package company
   :hook (prog-mode . company-mode)
   :config
+  (company-tng-mode)
   (delq 'company-echo-metadata-frontend company-frontends)
   (setq company-minimum-prefix-length 3)
   (setq company-selection-wrap-around t)
   (setq company-idle-delay 0.1)
-  (push 'company-tng-frontend company-frontends)
 
   (defun °company-select-next ()
     "Navigate company-mode and also open the quickhelp popup."
@@ -224,12 +224,12 @@ If decorator syntax is found a line above the current, don't do any padding."
  'python-mode-hook
  (lambda ()
    ;; auto-fill
-   ;; (auto-fill-mode)
-   ;; (setq-local comment-auto-fill-only-comments t)
-   ;; (setq python-fill-docstring-style 'symmetric)
+   (auto-fill-mode)
+   (setq-local comment-auto-fill-only-comments t)
+   (setq python-fill-docstring-style 'symmetric)
    ;; ;; width settings
-   ;; (setq-local fill-column 79)
-   ;; (setq-local column-enforce-column 79)
+   (setq-local fill-column 79)
+   (setq-local column-enforce-column 79)
    (setq-local electric-pair-open-newline-between-pairs nil)
    (make-local-variable 'write-file-functions)
    (add-to-list 'write-file-functions (°nillify-func (eglot-format-buffer)))))
