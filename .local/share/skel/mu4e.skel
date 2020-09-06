@@ -12,6 +12,10 @@
   :config
   (setq message-send-mail-function 'smtpmail-send-it))
 
+;; I'm using this in my mu4e config
+(use-package s
+  :commands s-match)
+
 (use-package mu4e
   :commands (mu4e mu4e-user-agent)
   :straight nil
