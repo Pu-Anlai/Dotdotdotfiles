@@ -24,7 +24,9 @@
     "M-H"               'evil-window-move-far-left
     "M-J"               'evil-window-move-very-bottom
     "M-K"               'evil-window-move-very-top
-    "M-L"               'evil-window-move-far-right)
+    "M-L"               'evil-window-move-far-right
+    "C-¼"               '°vterm
+    "C-¤"               '°eshell)
 
   (general-def-leader
     :keymaps            'override
@@ -136,8 +138,6 @@
     "hb"            'counsel-descbinds
     "hm"            'describe-mode
     "SPC"           'vertigo-set-digit-argument
-    "$"             '°vterm
-    "C-$"           '°eshell
     "%"             '°counsel-ag-projectile
     "C-%"           '°counsel-ag-prompt-path
     "b"             (general-lambda
