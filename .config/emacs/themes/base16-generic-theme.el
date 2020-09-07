@@ -94,11 +94,11 @@
      (line-number-current-line                     :inverse-video t)
 
 ;;;; mode-line
-     (mode-line                                    :foreground  ,base04 :background  ,base00)
+     (mode-line                                    :foreground  ,base04 :background  ,base00 :box (:line-width 1 :color ,base02))
      (mode-line-buffer-id                          :foreground  ,base0B :background nil)
      (mode-line-emphasis                           :foreground  ,base06)
      (mode-line-highlight                          :foreground  ,base09 :slant italic)
-     (mode-line-inactive                           :foreground  ,base00 :background  ,base00 :box nil)
+     (mode-line-inactive                           :foreground  ,base00 :background  ,base00 :box (:line-width 1 :color ,base02))
 
 ;;; Third-party
 
@@ -409,8 +409,14 @@
      (message-header-cc                            :foreground nil :inherit message-header-to)
      (message-header-name                          :foreground  ,base0D :background nil)
      (message-header-newsgroups                    :foreground  ,base0C :background nil :slant normal)
+     (message-header-xheader                       :foreground  ,base0D)
      (message-separator                            :foreground  ,base0E)
-
+     (message-mml                                  :foreground  ,base0C)
+     (message-cited-text-1                         :foreground  ,base0B)
+     (message-cited-text-2                         :foreground  ,base0E)
+     (message-cited-text-3                         :foreground  ,base0A)
+     (message-cited-text-3                         :foreground  ,base03)
+     
 ;;;; mode-welt (my modeline)
      (mode-welt-evil-normal                        :foreground  ,base0B :weight bold :inherit mode-line)
      (mode-welt-evil-insert                        :foreground  ,base0D :weight bold :inherit mode-line)
