@@ -15,12 +15,10 @@
 (setq-default fill-column 80)
 (dolist (hook '(prog text conf telega-root))
   (add-hook
-   (intern (concat (symbol-name hook) "-mode-hook"))
+   (°concat-symbols hook '-mode-hook)
    #'hl-line-mode))
 
-;; window splitting settings
-(setq split-width-threshold 100)
-;; WHY is vertical splitting preferred over horizontal?
+;; window splitting settings --> REMOVE?
 (setq split-window-preferred-function '°split-window-sensibly)
 
 ;; keep track of window layout changes
@@ -117,18 +115,18 @@
   (let ((mlf '(:eval (mode-welt-align (list
                                        (mode-welt-evil-state-propertized)
                                        (mode-welt-project-name)
-                                       (mode-welt-buffer-name))
+                                       (propertize "%b" 'face 'mode-line-emphasis))
                                       (list
                                        (format-mode-line mode-line-misc-info)
                                        mode-name
                                        "C:%c")
                                       0 2))))
-    (setq-default mode-line-format mlf)
-    (setq mode-line-format mlf)))
+    (setq-default mode-line-format mlf)))
 
-;; for keeping track of the selected window in the modeline
+;; for keeping track of the selected window in the modeline:
 (add-hook 'post-command-hook #'mode-welt-update-selected-window)
-(add-hook 'emacs-startup-hook #'mode-welt-set-mode-line)
+
+(mode-welt-set-mode-line)
 
 (push (expand-file-name "themes" user-emacs-directory) custom-theme-load-path)
 (load-theme 'base16-generic t)

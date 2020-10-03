@@ -3,8 +3,7 @@
   :commands org-mode
   :config
   (setq org-log-done 'time)
-  (add-hook 'org-mode-hook (lambda ()
-                             (setq evil-auto-indent nil))))
+  (add-hook 'org-mode-hook #'visual-line-mode))
 
 (use-package evil-org
   :after org)
