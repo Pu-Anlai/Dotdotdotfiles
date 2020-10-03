@@ -275,6 +275,7 @@ mode $mode_music {
 # access i3blocks features without using the mouse
 mode $mode_blocks {
         bindsym s exec BLOCK_BUTTON=1 $i3blockletsdir/shutdown; mode "default"
+        bindsym w exec BLOCK_BUTTON=2 $i3blockletsdir/shutdown; mode "default"
         bindsym d exec BLOCK_BUTTON=3 $i3blockletsdir/time; mode "default"
         bindsym c exec BLOCK_BUTTON=1 $i3blockletsdir/clipboard; mode "default"
         bindsym n exec BLOCK_BUTTON=1 $i3blockletsdir/network; mode "default"
@@ -327,6 +328,6 @@ bar {
         }
 }
 
-exec --no-startup-id picom -f
+exec --no-startup-id picom -f -i 1 -e 1 -m 1
 exec --no-startup-id feh --bg-fill $HOME/Bilder/wallpaper.jpg
 exec --no-startup-id ibus-daemon -xrd

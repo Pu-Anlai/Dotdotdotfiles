@@ -5,6 +5,13 @@ sys_shutdown='systemctl poweroff'
 sys_reboot='systemctl reboot'
 sys_suspend='systemctl suspend'
 
+function bootwin {
+    if $(zenity --question --text='Zu Windows wechseln?'); then
+        sudo efibootmgr -n $(efibootmgr | perl -ne 'print if s/^Boot(\d+).*Windows Boot Manager/\1/')
+        systemctl reboot
+    fi
+}
+
 function yad_sd {
     yad --button=' _Herunterfahren':21 \
         --button=' _Neustarten':22 \
@@ -28,9 +35,7 @@ function yad_sd {
 }
 
 function zenity_sd {
-    zenity --question --text='System herunterfahren?'
-
-    if [[ $? = 0 ]]; then
+    if $(zenity --question --text='System herunterfahren?'); then
         eval $sys_shutdown
     fi
 }
@@ -70,4 +75,8 @@ if [[ $BLOCK_BUTTON = 1 ]]; then
     else
         nagbar_sd
     fi
+fi
+
+if [[ $BLOCK_BUTTON = 2 ]]; then
+    bootwin
 fi
