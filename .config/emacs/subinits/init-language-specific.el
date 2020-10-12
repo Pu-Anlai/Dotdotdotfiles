@@ -97,6 +97,10 @@ yas-choose-value on it."
                                ,(concat "Dear " (car (split-string name))))))))
         (yas-choose-value (cl-remove-duplicates name-list :test #'equal)))))
 
+  (defun °yas-content (snippet)
+    "Return plain-text content of SNIPPET."
+    (yas--template-content (yas-lookup-snippet snippet)))
+
   (defun °yas-func-padding (count &optional down)
     "Add COUNT empty lines above current position.
 
