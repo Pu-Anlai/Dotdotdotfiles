@@ -175,10 +175,12 @@
 
  (defun °mu4e-headers-quit-view-or-headers ()
    (interactive)
-   (let ((view-buf (mu4e-get-view-buffer)))
-     (if view-buf
+   (let ((view-win (get-buffer-window
+                    (or (mu4e-get-view-buffer) "") ; make sure to not default to current buffer
+                    'visible)))
+     (if view-win
          (progn
-           (select-window (get-buffer-window view-buf))
+           (select-window view-win)
            (mu4e~view-quit-buffer))
        (mu4e~headers-quit-buffer))))
 
