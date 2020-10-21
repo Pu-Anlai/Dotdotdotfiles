@@ -11,13 +11,13 @@ from contextlib import contextmanager
 
 class ConfigParser(configparser.ConfigParser):
     def __init__(self):
-        super().__init__(interpolation=None)
+        super().__init__(interpolation=None, strict=False)
         self.optionxform = str
 
 
 CONF_DIR = os.path.join(
     os.getenv("XDG_CONFIG_HOME", default=os.path.join(os.getenv("HOME"), ".config")),
-    "fzfly"
+    "fzfly",
 )
 XDG_DESKTOP_FILE_DIRS = [
     os.path.join("/", "usr", "share", "applications"),
@@ -29,6 +29,7 @@ try:
     os.mkdir(CONF_DIR)
 except FileExistsError:
     pass
+
 
 def get_config(conf_file):
     """Return configparser instance for conf_file."""
