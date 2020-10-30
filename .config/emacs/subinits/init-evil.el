@@ -1,11 +1,5 @@
 ;; -*- lexical-binding: t -*-
-;; undo-tree is a dependency but not available in melpa so get it from elpa (straight takes care of this automatically)
-(use-package undo-tree
-  :config
-  (setq undo-tree-enable-undo-in-region nil))
-
 (use-package evil
-  :after undo-tree
   :init
   (setq evil-search-module 'evil-search)
   :config
@@ -17,7 +11,9 @@
   (evil-mode 1)
   ;; sensible Y behavior
   (customize-set-variable 'evil-want-Y-yank-to-eol t)
-
+  ;; set undo backend to undo-fu
+  (evil-set-undo-system 'undo-fu)
+  
   ;; set initial states for specific modes
   (dolist (modestate '((dashboard-mode . emacs)
                        (edebug-mode . emacs)
@@ -26,6 +22,9 @@
     (evil-set-initial-state (car modestate) (cdr modestate)))
   (add-hook 'evil-insert-state-entry-hook (lambda () (blink-cursor-mode 1)))
   (add-hook 'evil-insert-state-exit-hook (lambda () (blink-cursor-mode -1))))
+
+(use-package undo-fu
+  :commands (evil-undo evil-redo))
 
 (use-package vertigo
   :commands vertigo-set-digit-argument

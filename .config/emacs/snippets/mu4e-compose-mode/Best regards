@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Best regards
+# key: brg
+# --
+`(if (eq 2 (length (split-string (°get-line)))) "B" "b")`est regards,

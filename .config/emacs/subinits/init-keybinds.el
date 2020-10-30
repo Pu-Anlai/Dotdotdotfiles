@@ -58,7 +58,6 @@
     "C-x"           'evil-numbers/dec-at-pt
     "ö"             '°evil-dry-open-below
     "Ö"             '°evil-dry-open-above
-    "U"             'undo-tree-visualize
     "_"             'goto-last-change
     "-"             'goto-last-change-reverse)
 
