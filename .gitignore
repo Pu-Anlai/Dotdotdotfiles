@@ -6,7 +6,6 @@
 !Code/Scripts/global/*
 
 !.config/
-.config/*
 
 !.config/aria2
 !.config/aria2/*
@@ -100,16 +99,19 @@
 !.config/youtube-dl
 !.config/youtube-dl/*
 
-!.local/bin
-!.local/bin/*
-.local/bin/dmenu
-
 !.local
+
+!.local/bin
+!.local/bin/fzfly
+!.local/bin/fzfly-desktop
+!.local/bin/merge-configs
+!.local/bin/mpull
+!.local/bin/pacupdate
+!.local/bin/playlistctl
+
 !.local/share
-.local/share/*
 
 !.local/share/applications/
-.local/share/applications/*
 !.local/share/applications/emacs.desktop
 
 !.local/share/qutebrowser
