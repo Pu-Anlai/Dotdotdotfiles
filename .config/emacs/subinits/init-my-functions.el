@@ -323,6 +323,16 @@ unless FOLDERS-ONLY is non-nil."
       (set-window-configuration layout))))
 
 ;;;###autoload
+(defun °select-printer ()
+  (interactive)
+  (let* ((stdout (string-trim (shell-command-to-string "lpstat -a")))
+         (lines (split-string stdout "[\n]+"))
+         (printers (mapcar (lambda (line) (car (split-string line))) lines))
+         (sel-printer (ivy-read "Select printer: " printers)))
+    (setq printer-name sel-printer)
+    (message (format "`printer-name' set to \"%s\"" printer-name))))
+
+;;;###autoload
 (defun °source-ssh-env ()
   "Read environment variables for the ssh environment from '~/.ssh/environment'."
   (let (pos1 pos2 (var-strs '("SSH_AUTH_SOCK" "SSH_AGENT_PID")))
