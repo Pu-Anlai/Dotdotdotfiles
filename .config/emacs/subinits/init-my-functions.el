@@ -325,8 +325,10 @@ unless FOLDERS-ONLY is non-nil."
 ;;;###autoload
 (defun °select-printer ()
   (interactive)
-  (let* ((stdout (string-trim (shell-command-to-string "lpstat -a")))
-         (lines (split-string stdout "[\n]+"))
+  (let* ((stdout (string-trim (shell-command-to-string "lpstat -a 2>/dev/null")))
+         (lines (if (string= stdout "")
+                    nil
+                  (split-string stdout "[\n]+")))
          (printers (mapcar (lambda (line) (car (split-string line))) lines))
          (sel-printer (ivy-read "Select printer: " printers)))
     (setq printer-name sel-printer)
