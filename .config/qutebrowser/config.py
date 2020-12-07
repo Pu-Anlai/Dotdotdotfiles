@@ -321,7 +321,7 @@ c.aliases[
 
 ## Miscellaneous settings
 # Start page
-c.url.start_pages = "https://www.punknews.org/"
+c.url.start_pages = "https://www.neues-deutschland.de/"
 # Where to show the downloaded files.
 c.downloads.position = "bottom"
 # Open new tabs in background
