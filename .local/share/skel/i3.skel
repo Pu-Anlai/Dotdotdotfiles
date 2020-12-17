@@ -217,7 +217,6 @@ bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
 
 # workspace assignments
 assign [class="qutebrowser"] $ws2
-assign [class="Inox"] $ws2
 assign [class="Firefox"] $ws2
 assign [class="Chromium"] $ws2
 assign [class="TelegramDesktop"] $ws3
@@ -225,10 +224,11 @@ assign [class="whats-app-*"] $ws3
 assign [class="Thunderbird"] $ws3
 assign [title="LibreOffice" window_type="splash"] $ws5
 assign [class="(?i).*libreoffice.*"] $ws5
-assign [class="Soffice"] $ws5
 assign [class="Emacs"] $ws4
-assign [class="jetbrains.*"] $ws5
-assign [class="Steam"] $ws6
+assign [class="jetbrains.*"] $ws4
+assign [class="Soffice"] $ws5
+assign [class="Gimp*"] $ws6
+assign [class="Steam"] $ws7
 
 # window arrangement fixes
 for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
