@@ -92,11 +92,6 @@ bindsym $mod+Shift+Pause exec systemctl suspend
 # start a program launcher
 bindsym $mod+r exec fzfly-desktop
 
-# start the password finder
-bindsym $mod+y exec $i3scriptsdir/pass_get
-bindsym $mod+Shift+y exec $i3scriptsdir/pass_get -l
-bindsym $mod+x exec $i3scriptsdir/pass_get -x
-
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -215,6 +210,13 @@ bindsym $mod+space [urgent=latest] focus
 bindsym $mod+Shift+Ctrl+r exec sh -c 'merge-configs && i3-msg restart'
 bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
 
+# volume control
+bindsym $mod+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym $mod+Shift+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym $mod+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym $mod+Shift+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym $mod+KP_Multiply exec pactl set-sink-volume @DEFAULT_SINK@ 100%
+
 # workspace assignments
 assign [class="qutebrowser"] $ws2
 assign [class="Firefox"] $ws2
@@ -296,6 +298,11 @@ mode $mode_insert {
         bindsym p exec $i3scriptsdir/i3insert p; mode "default"
         bindsym o exec $i3scriptsdir/i3insert o; mode "default"
         bindsym f exec $i3scriptsdir/i3insert f; mode "default"
+        # password retrieval
+        bindsym y exec $i3scriptsdir/pass_get; mode "default"
+        bindsym Shift+y exec $i3scriptsdir/pass_get -l; mode "default"
+        bindsym x exec $i3scriptsdir/pass_get -x; mode "default"
+
 
         bindsym Escape mode "default"
         bindsym $mod+i mode "default"
