@@ -204,7 +204,7 @@ function update_pacman_mirrorlist
 
     echo "Retrieving current copy..."
     set mirrorlist_temp (mktemp --suffix="-mirrorlist")
-    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "https://www.archlinux.org/mirrorlist/$PACUPDATE_MIRRORLIST_STRING" > "$mirrorlist_temp" 2>/dev/null
+    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "https://archlinux.org/mirrorlist/$PACUPDATE_MIRRORLIST_STRING" > "$mirrorlist_temp" 2>/dev/null
         or begin
             echo 'Error retrieving the mirrorlist. Is $PACUPDATE_MIRRORLIST_STRING set correctly?' >&2
             return 1
