@@ -163,7 +163,7 @@ function print_msg -a msg_id msg_file
                 string match -q 'X-List-Received-Date: *' -- $line
                     and set record_mode 2
             case 2
-                if string match -qr 'From (arch-)?announce@archlinux.org' -- $line
+                if string match -qr 'From (arch-)?announce@lists.archlinux.org' -- $line
                     break
                 else
                     set -a msg_chunk (html_unescape $line)
