@@ -16,36 +16,34 @@ set name (string replace -a ' ' '_' "$name")
 set class (string replace -a ' ' '_' "$class")
 
 
-function get_value -a pass key copy fallback
-    set -l value (pass show $pass); or return 1
+function get_value -a pass key fallback
+    pass show $pass >/dev/null 2>&1; or return 1
     # get the value for $key
-    set -l value (printf '%s\n' $value | string replace -rf '^'$key':\s?(.+)$' '$1')
-    test -z "$value"; and set value "$fallback"
+    pass field "$key" "$pass" 2>/dev/null | read value; or set value "$fallback"
     if test -n "$value"
-        if eval $copy
-            echo $value | xclip -selection clipboard -i
-            return 0
-        else
-            echo $value
-            return 0
-        end
+        echo $value
     else
         return 1
     end
 end
 
 
+function xdo_type
+    test -z "$argv"; and return 1
+    xdotool type --clearmodifiers "$argv"
+end
+
+
 function xdo_pass_entry -a pass
-    set -l user (get_value $pass "user" false "$PASS_FALLBACK_USER"); or return 1
+    set -l user (get_value $pass "user" "$PASS_FALLBACK_USER"); or return 1
     set -l pass_string (pass show $pass | head -n 1); or return 1
-    set -l field_div (get_value $pass "xdoDiv" false)
+    set -l field_div (get_value $pass "xdoDiv")
     test -z "$field_div"; and set field_div "Tab"
-    xdotool keyup Super
-    xdotool type --clearmodifiers $user
+    xdo_type $user
     xdotool keyup Super
     xdotool key --clearmodifiers (string split " " $field_div)
     xdotool keyup Super
-    xdotool type --clearmodifiers $pass_string
+    xdo_type $pass_string
     xdotool keyup Super
     xdotool key --clearmodifiers Return
 end
@@ -111,7 +109,10 @@ if test -n "$final_candidate"
     # handle different command flags
     switch $argv
         case "-l"
-            get_value $final_candidate "user" true "$PASS_FALLBACK_USER"; or exit 1
+            xdo_type (get_value $final_candidate "user" "$PASS_FALLBACK_USER"); or exit 1
+        case "-f"
+            set field (pass field -l $final_candidate | dmenu); or exit 1
+            xdo_type (get_value $final_candidate "$field"); or exit 1
         case "-x"
             xdo_pass_entry $final_candidate; or exit 1
         case "*"

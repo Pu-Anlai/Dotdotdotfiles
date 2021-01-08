@@ -299,8 +299,8 @@ mode $mode_insert {
         bindsym o exec $i3scriptsdir/i3insert o; mode "default"
         bindsym f exec $i3scriptsdir/i3insert f; mode "default"
         # password retrieval
-        bindsym y exec $i3scriptsdir/pass_get; mode "default"
-        bindsym Shift+y exec $i3scriptsdir/pass_get -l; mode "default"
+        bindsym y exec $i3scriptsdir/pass_get -l; mode "default"
+        bindsym Shift+y exec $i3scriptsdir/pass_get -f; mode "default"
         bindsym x exec $i3scriptsdir/pass_get -x; mode "default"
 
 
