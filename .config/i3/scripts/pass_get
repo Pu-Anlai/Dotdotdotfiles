@@ -5,13 +5,13 @@ test -z $PASSWORD_STORE_DIR; and set PASSWORD_STORE_DIR $HOME/.password-store
 test -z $PASS_FALLBACK_USER; and set PASS_FALLBACK_USER "User"
 
 # get name of currently active window
-test -z "$argv"; and set -l argv ""
-set -l active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
-set -l active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
-set -l name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
-set -l class_line (string match -r 'WM_CLASS\([^)]+\).+' (xprop -id $active_id))
-set -l name (string match -r '"[^"]+"$' "$name_line")
-set -l class (string match -r '"[^"]+"$' "$class_line")
+test -z "$argv"; and set argv ""
+set active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
+set active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
+set name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
+set class_line (string match -r 'WM_CLASS\([^)]+\).+' (xprop -id $active_id))
+set name (string match -r '"[^"]+"$' "$name_line")
+set class (string match -r '"[^"]+"$' "$class_line")
 set name (string replace -a ' ' '_' "$name")
 set class (string replace -a ' ' '_' "$class")
 
@@ -35,9 +35,9 @@ end
 
 
 function xdo_pass_entry -a pass
-    set -l user (get_value $pass "user" "$PASS_FALLBACK_USER"); or return 1
-    set -l pass_string (pass show $pass | head -n 1); or return 1
-    set -l field_div (get_value $pass "xdoDiv")
+    set user (get_value $pass "user" "$PASS_FALLBACK_USER"); or return 1
+    set pass_string (pass show $pass | head -n 1); or return 1
+    set field_div (get_value $pass "xdoDiv")
     test -z "$field_div"; and set field_div "Tab"
     xdo_type $user
     xdotool keyup Super
@@ -52,13 +52,13 @@ end
 function loop_candidates -S -a prop
     # loop through candidates and find one that matches $prop
     for password in $passes
-        set -l barepass (command basename $password)
+        set barepass (command basename $password)
         if string match -qie "$barepass" $prop
             set candidates $candidates $password
             continue
         end
 
-        set -l subs (string split "$PASS_SUBNAME_SPLIT_CHAR" "$barepass")
+        set subs (string split "$PASS_SUBNAME_SPLIT_CHAR" "$barepass")
         if [ ! "$subs" = "$barepass" ]
             for sub in $subs
                 if not contains $password $candidates;
@@ -73,19 +73,19 @@ end
 
 
 # get list of all pass files
-set -l passes (string replace -r '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
+set passes (string replace -r '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
 
 # loop through files and find one that matches based on name property or if
 # that doesn't work class property
-set -l candidates
+set candidates
 loop_candidates $name
 if test -z "$candidates"
     loop_candidates $class
 end
 
 # send candidate to pass; use dmenu to select one if there are too many
-set -l cand_num (count $candidates)
-set -l final_candidate
+set cand_num (count $candidates)
+set final_candidate
 
 if test $cand_num -eq 1
     # if there was only one password found set that to final candidate
