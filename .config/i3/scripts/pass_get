@@ -1,11 +1,12 @@
 #!/usr/bin/env fish
 
+argparse -x 'u,f' 'm/manual' 'u/user' 'f/field' 'x/xdo' 'X/Xdo' -- $argv
+
 test -z $PASS_SUBNAME_SPLIT_CHAR; and set PASS_SUBNAME_SPLIT_CHAR '%'
 test -z $PASSWORD_STORE_DIR; and set PASSWORD_STORE_DIR $HOME/.password-store
 test -z $PASS_FALLBACK_USER; and set PASS_FALLBACK_USER "User"
 
 # get name of currently active window
-test -z "$argv"; and set argv ""
 set active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
 set active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
 set name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
@@ -20,7 +21,7 @@ function get_value -a pass key fallback
     pass show $pass >/dev/null 2>&1; or return 1
     # get the value for $key
     pass field "$key" "$pass" 2>/dev/null | read value; or set value "$fallback"
-    if test -n "$value"
+    if [ -n "$value" ]
         echo $value
     else
         return 1
@@ -72,53 +73,89 @@ function loop_candidates -S -a prop
 end
 
 
+function handle_candidate -S -a candidate
+    # handle identified final candidate in the way specified by cmdline arguments
+
+    # -X is a special case, if it is passed, everything else is ignored
+    if [ -n "$_flag_X" ]
+        xdo_pass_entry $candidate; or return 1; and return 0
+    end
+
+    # otherwise retrieve requested info
+    set info
+    if [ -n "$_flag_u" ]
+        set info (get_value $candidate "user" "$PASS_FALLBACK_USER")
+        or begin
+            notify-send "Username for $candidate not found."
+            return 1
+        end
+    else if [ -n "$_flag_f" ]
+        set field (pass field -l $candidate | dmenu)
+        or begin
+            notify-send "No field for $candidate selected."
+            return 1
+        end
+        set info (get_value $candidate "$field")
+    else
+        # if neither of these flags is present just get the password itself (first line)
+        set info (pass show $candidate | head -n 1); or return 1
+    end
+
+    # handle info
+    if [ -z "$_flag_x" ]
+        # default: copy to clipboard
+        echo -n -- "$info" | xclip -selection clipboard; or return 1
+        and notify-send -u low "Copied information from $candidate to clipboard."
+        fish -c 'sleep 45; and echo -n "" | xclip -selection clipboard' & disown
+    else
+        notify-send -u low "Entering information from $candidate..."
+        xdo_type "$info"; or return 1
+    end
+end
+
+
+function interactive_select -a message
+    test -n "$message"; and notify-send "$message"
+    for candidate in $argv[2..-1]
+        printf '%s\n' $candidate
+    end | dmenu
+end
+
+
 # get list of all pass files
 set passes (string replace -r '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
 
 # loop through files and find one that matches based on name property or if
 # that doesn't work class property
+# skip this test if the manual flag was passed
 set candidates
-loop_candidates $name
-if test -z "$candidates"
-    loop_candidates $class
+if [ -z "$_flag_m" ]
+    loop_candidates $name
+    test -z "$candidates"; and loop_candidates $class
 end
 
 # send candidate to pass; use dmenu to select one if there are too many
 set cand_num (count $candidates)
 set final_candidate
 
-if test $cand_num -eq 1
+if [ "$_flag_m" ]
+    # select password manually if -m flag was specified
+    interactive_select "" $passes | read final_candidate
+else if [ $cand_num -eq 1 ]
     # if there was only one password found set that to final candidate
     set final_candidate $candidates
     notify-send "Found $final_candidate."
-else if test $cand_num -gt 1
+else if [ $cand_num -gt 1 ]
     # if there's more than one, select one with dmenu
-    notify-send 'Too many candidates.'
-    for candidate in $candidates
-        printf '%s\n' $candidate
-    end | dmenu | read final_candidate
+    interactive_select 'Too many candidates.' $candidates | read final_candidate
 else 
     # if there's none, also select one with dmenu
-    notify-send 'Nothing found. Please select manually.'
-    for candidate in $passes
-        printf '%s\n' $candidate
-    end | dmenu | read final_candidate
+    interactive_select 'Nothing found. Please select manually.' $passes | read final_candidate
 end
 
-if test -n "$final_candidate"
-    # handle different command flags
-    switch $argv
-        case "-l"
-            xdo_type (get_value $final_candidate "user" "$PASS_FALLBACK_USER"); or exit 1
-        case "-f"
-            set field (pass field -l $final_candidate | dmenu); or exit 1
-            xdo_type (get_value $final_candidate "$field"); or exit 1
-        case "-x"
-            xdo_pass_entry $final_candidate; or exit 1
-        case "*"
-            pass show -c $final_candidate; or exit 1
-    end
-    and notify-send -u low "Retrieved data from $final_candidate."
+if [ -n "$final_candidate" ]
+    handle_candidate $final_candidate; or exit 1
 else
     notify-send 'No password selected.'
+    exit 1
 end
