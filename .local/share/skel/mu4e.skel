@@ -216,7 +216,7 @@
   (defun °mu4e-main-update-all ()
       (interactive)
       (let
-          ((mu4e-get-mail-command (string-join (cons "mbsync" °mu4e~account-list) " ")))
+          ((mu4e-get-mail-command (string-join `("mbsync" ,@(mapcar #'mu4e-context-name mu4e-contexts)) " ")))
         (mu4e-update-mail-and-index nil)))
 
   (defun °mu4e-view-mark-toggle ()
