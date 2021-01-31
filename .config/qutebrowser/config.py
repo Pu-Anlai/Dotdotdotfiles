@@ -55,6 +55,9 @@ FONT_MONO = "Source Code Pro"
 
 merge_bookmarks()
 
+# no autoconfig
+config.load_autoconfig(False)
+
 ## Color settings
 # Background color of the completion widget category headers.
 c.colors.completion.category.bg = BASE00
@@ -321,7 +324,7 @@ c.aliases[
 
 ## Miscellaneous settings
 # Start page
-c.url.start_pages = "https://www.neues-deutschland.de/"
+c.url.start_pages = "https://www.freitag.de/"
 # Where to show the downloaded files.
 c.downloads.position = "bottom"
 # Open new tabs in background
@@ -388,13 +391,13 @@ config.bind(";x", "hint links userscript xdg-open")
 config.unbind("wO", mode="normal")
 config.bind("gw", "set-cmd-text :open -w {url:pretty}")
 # Buffer navigation
-config.bind("b", "set-cmd-text --space :buffer")
+config.bind("b", "set-cmd-text --space :tab-select")
 # Source config
 config.bind("<Ctrl-R>", "config-source")
 # Passthrough settings
 config.unbind("<Ctrl-v>")
-config.bind("I", "enter-mode passthrough")
-config.bind("<Escape>", "leave-mode", mode="passthrough")
+config.bind("I", "mode-enter passthrough")
+config.bind("<Escape>", "mode-leave", mode="passthrough")
 config.bind("<Shift-Escape>", "fake-key <Escape>", mode="passthrough")
 config.bind("<Shift-Escape>", "fake-key <Escape>")
 # emacsy input keybindings in command mode
@@ -404,7 +407,7 @@ config.bind("<Ctrl-b>", "rl-backward-char", mode="command")
 config.bind("<Ctrl-f>", "rl-forward-char", mode="command")
 config.bind("<Ctrl-Shift-b>", "rl-backward-word", mode="command")
 config.bind("<Ctrl-Shift-f>", "rl-forward-word", mode="command")
-config.bind("<Ctrl-q>", "open-editor", mode="insert")
+config.bind("<Ctrl-q>", "edit-text", mode="insert")
 # emacsy input keybindings in prompt mode
 config.bind("<Ctrl-a>", "rl-beginning-of-line", mode="prompt")
 config.bind("<Ctrl-e>", "rl-end-of-line", mode="prompt")
