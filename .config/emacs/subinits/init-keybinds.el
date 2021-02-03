@@ -486,6 +486,7 @@
     "T"             '°mu4e-headers-mark-pattern
     "D"             (general-lambda (°mu4e-headers-handle-deferred 'trash))
     "M"             (general-lambda (°mu4e-headers-handle-deferred 'move))
+    "V"             '°mu4e-search-sender
     "$"             (general-lambda
                       (mu4e-mark-execute-all t)))
 
@@ -517,6 +518,7 @@
     "G"             'evil-goto-line
     "t"             '°mu4e-view-mark-toggle
     "T"             'mu4e-view-mark-pattern
+    "V"             '°mu4e-search-sender
     "%"             '°mu4e-view-mark-pattern
     "$"             (general-lambda
                       (mu4e~view-in-headers-context

@@ -219,6 +219,14 @@
           ((mu4e-get-mail-command (string-join `("mbsync" ,@(mapcar #'mu4e-context-name mu4e-contexts)) " ")))
         (mu4e-update-mail-and-index nil)))
 
+  (defun °mu4e-search-sender ()
+    (interactive)
+    (let* ((from (mu4e-message-field (mu4e-message-at-point) :from))
+           (senders (string-join
+                     (mapcar (lambda (s) (concat "from:" (cdr s))) from)
+                     " or ")))
+      (mu4e~headers-search-execute senders t)))
+
   (defun °mu4e-view-mark-toggle ()
     (interactive)
     (mu4e~view-in-headers-context
