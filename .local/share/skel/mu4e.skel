@@ -225,6 +225,7 @@
            (senders (string-join
                      (mapcar (lambda (s) (concat "from:" (cdr s))) from)
                      " or ")))
+      (mu4e-mark-handle-when-leaving)
       (mu4e~headers-search-execute senders t)))
 
   (defun °mu4e-view-mark-toggle ()
