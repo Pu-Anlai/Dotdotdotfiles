@@ -123,7 +123,7 @@ end
 
 
 # get list of all pass files
-set passes (string replace -r '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
+set passes (string replace -fr '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
 
 # loop through files and find one that matches based on name property or if
 # that doesn't work class property
