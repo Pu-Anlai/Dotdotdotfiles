@@ -89,7 +89,7 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
     "Hide or show vterm window.
 Start terminal if it isn't running already."
     (interactive)
-    (let* ((vterm-buf "vterm")
+    (let* ((vterm-buf "*vterm*")
            (vterm-win (get-buffer-window vterm-buf)))
       (if vterm-win
           (progn
