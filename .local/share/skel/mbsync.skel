@@ -17,8 +17,8 @@ Trash Trash
 SubFolders Verbatim
 
 Channel posteo
-Master :posteo-remote:
-Slave :posteo-local:
+Far :posteo-remote:
+Near :posteo-local:
 Patterns *
 Create Both
 Remove Both
