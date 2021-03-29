@@ -224,6 +224,9 @@ assign [class="Chromium"] $ws2
 assign [class="TelegramDesktop"] $ws3
 assign [class="whats-app-*"] $ws3
 assign [class="Thunderbird"] $ws3
+assign [class="discord"] $ws3
+assign [class="zoom"] $ws3
+assign [class="Microsoft Teams - Preview"] $ws3
 assign [title="LibreOffice" window_type="splash"] $ws5
 assign [class="(?i).*libreoffice.*"] $ws5
 assign [class="Emacs"] $ws4
