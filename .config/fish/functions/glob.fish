@@ -33,7 +33,7 @@ function glob
         end
         test "$except"; and continue
 
-        if [ $flag "$f" ]
+        if [ $flag "$f" -a -e "$f" ]
             printf '%s\n' "$f"
         end
     end
