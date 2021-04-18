@@ -32,12 +32,12 @@ class Menu():
          self.status_line) = self._init_windows(self.stdscr)
         self.pages_dict = self._get_pages_dict()
 
+        self.play_pos = 0
+
         self.draw_current_page()
         self.mark_current_position()
         self.update_screen()
         self.event_loop()
-
-        self.play_pos = 0
 
     @property
     def current_page(self):
