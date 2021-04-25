@@ -173,6 +173,16 @@ bindsym $mod+p focus parent
 # focus the child container
 bindsym $mod+Shift+p focus child
 
+# bind function keys
+bindsym XF86MonBrightnessUp exec light -A 5; exec $i3b_up8
+bindsym XF86MonBrightnessDown exec light -U 5; exec $i3b_up8
+bindsym Shift+XF86MonBrightnessUp exec light -A 1; exec $i3b_up8
+bindsym Shift+XF86MonBrightnessDown exec light -U 1; exec $i3b_up8
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec $i3b_up9
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec $i3b_up9
+bindsym Shift+XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%; exec $i3b_up9
+bindsym Shift+XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -1%; exec $i3b_up9
+
 # define workspaces
 set $ws1 "1   "
 set $ws2 "2  "
