@@ -1,15 +1,17 @@
 #!/usr/bin/env fish
 
+set -q argv[1] argv[2] || return 1
+
 set -q PASSWORD_STORE_DIR; or set -l PASSWORD_STORE_DIR "$HOME/.password-store"
 
 set -l tmp_dir (mktemp -d "/dev/shm/XXXXXXXXXXXX")
 
 function cp_to_cell -a file -S
     set -l tmp_file (mktemp -u "/dev/shm/XXXXXXXXXXXX")
-    gpg -d -r 234E81E6 -o "$tmp_file" "$PASSWORD_STORE_DIR/$file" 2>/dev/null
+    gpg -d -r $argv[1] -o "$tmp_file" "$PASSWORD_STORE_DIR/$file" 2>/dev/null
     set -l new_file "$tmp_dir/$file"
     mkdir -p (dirname $new_file)
-    gpg -e -r EFBC72E8 -o "$new_file" "$tmp_file" 2>/dev/null
+    gpg -e -r $argv[2] -o "$new_file" "$tmp_file" 2>/dev/null
     # adb push $new_file "/sdcard/.password-store/$sub_dir/"(basename $file)
     rm -rf "$tmp_file"
 end

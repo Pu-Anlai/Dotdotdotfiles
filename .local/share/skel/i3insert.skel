@@ -19,9 +19,6 @@ function translate_char {
         s)
             echo "{{{ADDRESS_STREET}}}"
             ;;
-        S)
-            echo "{{{MAIL_SIGNATURE}}}"
-            ;;
         p)
             echo "{{{ADDRESS_ZIP}}}"
             ;;
