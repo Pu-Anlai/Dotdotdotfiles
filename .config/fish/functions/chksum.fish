@@ -12,7 +12,7 @@ function chksum
     set filehash ($_flag_binary[1] "$argv[-1]" | awk '{print $1}')
     or return
 
-    if [ "$filehash" = "$argv[-2]" ]
+    if [ (string lower "$filehash") = (string lower "$argv[-2]") ]
         echo "OK: Checksum matches." > /dev/stderr
         return 0
     else
