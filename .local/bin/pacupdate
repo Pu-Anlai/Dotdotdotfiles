@@ -37,7 +37,7 @@ function set_or_fallback -S -a var fallback
 end
 
 
-set_or_fallback PACUPDATE_MIRRORLIST_STRING "?country=all&protocol=http&protocol=https&ip_version=4"
+set_or_fallback PACUPDATE_MIRRORLIST_URL "https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4"
 set_or_fallback PACUPDATE_CURL_TIMEOUT 20
 set_or_fallback PACUPDATE_MIRRORLIST_INTERVAL 14
 set_or_fallback PACUPDATE_GIT_INTERVAL 14
@@ -204,9 +204,9 @@ function update_pacman_mirrorlist
 
     echo "Retrieving current copy..."
     set mirrorlist_temp (mktemp --suffix="-mirrorlist")
-    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "https://archlinux.org/mirrorlist/$PACUPDATE_MIRRORLIST_STRING" > "$mirrorlist_temp" 2>/dev/null
+    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "$PACUPDATE_MIRRORLIST_URL" > "$mirrorlist_temp" 2>/dev/null
         or begin
-            echo 'Error retrieving the mirrorlist. Is $PACUPDATE_MIRRORLIST_STRING set correctly?' >&2
+            echo 'Error retrieving the mirrorlist. Is $PACUPDATE_MIRRORLIST_URL set correctly?' >&2
             return 1
         end
 
