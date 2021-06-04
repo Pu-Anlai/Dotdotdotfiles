@@ -215,6 +215,11 @@
           ((mu4e-get-mail-command (string-join `("mbsync" ,@(mapcar #'mu4e-context-name mu4e-contexts)) " ")))
         (mu4e-update-mail-and-index nil)))
 
+  (defun °mu4e-message-field (msg field)
+    "Like `mu4e-message-field' but return nil if msg doesn't exist."
+    (when msg
+      (mu4e-message-field msg field)))
+
   (defun °mu4e-retrieve-recipient (msg)
     (let* ((fields '(:from :to :cc))
            (recipients

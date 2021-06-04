@@ -126,11 +126,6 @@ If DOWN is non-nil, then add lines below instead."
     "Return t if LINE is indented, else return nil."
     (if (string-match-p "^\s" line) t nil))
 
-  (defun °mu4e-message-field (msg field)
-    "Like `mu4e-message-field' but return nil if msg doesn't exist."
-    (when msg
-      (mu4e-message-field msg field)))
-
   (defun °yas-snippet-key ()
     "Retrieve the key of the snippet that's currently being edited."
     (save-excursion
