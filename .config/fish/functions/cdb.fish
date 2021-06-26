@@ -32,7 +32,7 @@ function cdb -d "Browse through directory bookmarks."
     any $FISH_CDB_BOOKMARKS || return 1
 
     printf '%s\n' $FISH_CDB_BOOKMARKS | \
-        fzf --expect=ctrl-alt-m --with-nth -1 -d "/" +m --preview="if [ -e {} ]; then echo -e \"\e[1;37m\$(basename {})\e[0m\"; ls {}; else echo \"Directory doesn't exist.\"; fi" | \
+        fzf --expect=ctrl-alt-m,return --with-nth -1 -d "/" +m --preview="if [ -e {} ]; then echo -e \"\e[1;37m\$(basename {})\e[0m\"; ls {}; else echo \"Directory doesn't exist.\"; fi" | \
         read -L exit_key directory
     if [ -e $directory ]
         cd $directory
@@ -40,5 +40,5 @@ function cdb -d "Browse through directory bookmarks."
         return 1
     end
 
-    [ "$exit_key" = "ctrl-alt-m" ] && cdp || true
+    [ "$exit_key" = "return" ] && cdp || true
 end
