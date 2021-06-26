@@ -1,6 +1,8 @@
 #!/usr/bin/env fish
 
-set -q argv[1] argv[2] || return 1
+set -q argv[1] argv[2] || exit 1
+set in_key $argv[1]
+set out_key $argv[2]
 
 set -q PASSWORD_STORE_DIR; or set -l PASSWORD_STORE_DIR "$HOME/.password-store"
 
@@ -8,10 +10,10 @@ set -l tmp_dir (mktemp -d "/dev/shm/XXXXXXXXXXXX")
 
 function cp_to_cell -a file -S
     set -l tmp_file (mktemp -u "/dev/shm/XXXXXXXXXXXX")
-    gpg -d -r $argv[1] -o "$tmp_file" "$PASSWORD_STORE_DIR/$file" 2>/dev/null
+    gpg -d -r $in_key -o "$tmp_file" "$PASSWORD_STORE_DIR/$file" 2>/dev/null
     set -l new_file "$tmp_dir/$file"
     mkdir -p (dirname $new_file)
-    gpg -e -r $argv[2] -o "$new_file" "$tmp_file" 2>/dev/null
+    gpg -e -r $out_key -o "$new_file" "$tmp_file" 2>/dev/null
     # adb push $new_file "/sdcard/.password-store/$sub_dir/"(basename $file)
     rm -rf "$tmp_file"
 end
@@ -22,7 +24,7 @@ for line in (pass grep "portable: true")
     set line (string replace -ra '\e\[(K|[\d;]+m)' '' $line)
     if not string match -qe "portable: true" $line
         set -l file (string trim -c ':' $line)".gpg"
-        set portable_files $portable_files $file
+        set -a portable_files $file
     end
 end
 
@@ -36,6 +38,5 @@ for file in $PASSWORD_STORE_DIR/non-random/*.gpg
 end
 
 # push everything to phone
+adb shell "mkdir -p /sdcard/.password-store/"
 adb push $tmp_dir/* "/sdcard/.password-store/"
-
-rm -rf "$tmp_dir"
