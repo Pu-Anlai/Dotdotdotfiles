@@ -64,16 +64,6 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
 (use-package restart-emacs
   :commands restart-emacs)
 
-(use-package telega
-  :commands telega
-  :config
-  (°add-hook-to-mode
-   'evil-insert-state-entry-hook
-   (lambda ()
-     (unless (eq (line-number-at-pos) (count-lines (point-min) (point-max)))
-       (end-of-buffer)))
-   'telega-chat-mode))
-
 (use-package visual-regexp-steroids
   :commands (vr/replace vr/query-replace vr/isearch-forward vr/isearch-backward)
   :after pcre2el
