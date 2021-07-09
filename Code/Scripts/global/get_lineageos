@@ -17,8 +17,8 @@ while true
     end
 end
 
-mv "$file_name" /tmp/
+mv "$file_name" "$base_dir"/
 cd "$base_dir"
 rm -r "$tmp_dir"
 
-echo "$file_name downloaded to /tmp/"
+echo "$file_name downloaded to $base_dir."
