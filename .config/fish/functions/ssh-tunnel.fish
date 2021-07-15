@@ -10,7 +10,7 @@ function ssh-tunnel
         end
     end
 
-    string match -eq "$HOME/.ssh/cloud" (ssh-add -l); or ssh-add $HOME/.ssh/cloud; or return 1
+    string match -eq "$HOME/.ssh/do.cloud_ed25519" (ssh-add -l); or ssh-add $HOME/.ssh/do.cloud_ed25519; or return 1
 
     set -l ssh_pid (pgrep -f "ssh -TND $argv do.cloud")
 

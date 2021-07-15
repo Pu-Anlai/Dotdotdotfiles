@@ -1,10 +1,13 @@
 # pylint: disable=C0111,E266,E501
 import os
+from random import choice
 from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
 from qutebrowser.config.config import ConfigContainer  # noqa: F401
 
 config = config  # type: ConfigAPI # noqa: F821 pylint: disable=E0602,C0103
 c = c  # type: ConfigContainer # noqa: F821 pylint: disable=E0602,C0103
+
+start_pages = ["https://www.freitag.de/", "https://www.punknews.org/"]
 
 
 def get_rgba(hexcode, alpha):
@@ -324,7 +327,7 @@ c.aliases[
 
 ## Miscellaneous settings
 # Start page
-c.url.start_pages = "https://www.freitag.de/"
+c.url.start_pages = choice(start_pages)
 # Where to show the downloaded files.
 c.downloads.position = "bottom"
 # Open new tabs in background
