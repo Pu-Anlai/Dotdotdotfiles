@@ -2,7 +2,7 @@
 
 call plug#begin()
     Plug 'dag/vim-fish'
-    Plug 'jeffkreeftmeijer/vim-dim'
+    Plug 'jeffkreeftmeijer/vim-dim', { 'branch': 'main' }
     Plug 'machakann/vim-highlightedyank'
     Plug 'Raimondi/delimitmate'
     Plug 'tpope/vim-commentary'
