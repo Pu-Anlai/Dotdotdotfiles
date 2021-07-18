@@ -4,6 +4,8 @@ set base_folder "$HOME/Musik/Zwischenspeicher"
 set record_folder $base_folder/Alben
 mkdir -p "$record_folder"
 
+which oggenc >/dev/null || exit 1
+
 
 function process_record_folder -a folder
     set ogg_folder "$record_folder/ogg/"(basename "$folder")
