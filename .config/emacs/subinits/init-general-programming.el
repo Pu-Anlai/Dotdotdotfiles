@@ -38,16 +38,18 @@
   (defun °yas-choose-greeting (name lang)
     "Create a list of possible greetings from NAME and LANG and call
 yas-choose-value on it."
-    (setq name (capitalize name))
+    (setq name (capitalize (or name "")))
     (cl-flet
         ((ncat (x) (concat x " " (°last-name name))))
       (let
           ((name-list (pcase lang
                         ('de `(,@(mapcar #'ncat '("Liebe Frau" "Lieber Herr"))
-                               ,(concat "Guten Tag " name)))
+                               ,(concat "Guten Tag " name)
+                               "Guten Tag"))
                         ('en `(,@(mapcar #'ncat '("Dear Ms." "Dear Mr."))
                                ,(concat "Dear " name)
-                               ,(concat "Dear " (car (split-string name))))))))
+                               ,(concat "Dear " (car (split-string name)))
+                               "Hello")))))
         (yas-choose-value (cl-remove-duplicates name-list :test #'equal)))))
 
   (defun °yas-content (snippet)
