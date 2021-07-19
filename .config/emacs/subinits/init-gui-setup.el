@@ -41,92 +41,33 @@
   (add-hook hook #'electric-pair-mode))
 
 ;; modeline
-;; register all the mode-welt faces (defined in the theme)
-(dolist (state '(normal insert visual replace operator motion emacs inactive))
-  (custom-declare-face (°concat-symbols 'mode-welt-evil- state) nil nil))
+(use-package telephone-line
+  :init
+  (telephone-line-defsegment °telephone-line-buffer-modified-segment ()
+    (unless buffer-read-only
+      (if (buffer-modified-p)
+          (telephone-line-raw "!")
+        (telephone-line-raw "-"))))
 
-(defvar mode-welt-selected-window (frame-selected-window)
-  "Holds the currently selected window to implement custom inactive faces.")
+  (setq telephone-line-lhs
+        '((evil     .   (°telephone-line-buffer-modified-segment
+                         telephone-line-evil-tag-segment))
+          (accent   .   (telephone-line-projectile-segment))
+          (nil      .   (telephone-line-buffer-name-segment)))
+        telephone-line-rhs
+        '((nil      .   (telephone-line-misc-info-segment))
+          (accent   .   (telephone-line-simple-major-mode-segment))
+          (evil     .   (telephone-line-position-segment)))
 
-(defun mode-welt-update-selected-window ()
-  (while-no-input
-    (let ((win (frame-selected-window)))
-      (unless (minibuffer-window-active-p win)
-        (setq mode-welt-selected-window win)))))
+        telephone-line-primary-left-separator 'telephone-line-halfsin-left
+        telephone-line-secondary-left-separator 'telephone-line-halfsin-hollow-left
+        telephone-line-primary-right-separator 'telephone-line-halfsin-right
+        telephone-line-secondary-right-separator 'telephone-line-halfsin-hollow-right
 
-(defun mode-welt-space-barf (length)
-  "Return as string consisting only of the number of spaces provided by LENGTH."
-  (format (concat "%" (number-to-string length) "s") ""))
-
-(defun mode-welt-align (left right &optional pad-left pad-right)
-  "Use the width of the window to align LEFT to the left and RIGHT to the right.
-  Return the formatted string. Both values should be lists of strings. PAD-LEFT
-  and PAD-RIGHT should be integer values and indicate additional padding on the
-  sides of the modeline."
-  (let* ((pad-left (or pad-left 0))
-         (pad-right (or pad-right 0))
-         (str-left (mapconcat #'identity (remq nil left) "  "))
-         (str-right (mapconcat #'identity (remq nil right) "  "))
-         (lr-lengths (mapcar (lambda (str) (length (format-mode-line str)))
-                      (list str-left str-right)))
-         (space-size (- (window-total-width) (apply #'+ lr-lengths) (+ pad-left pad-right)))
-         (space (mode-welt-space-barf space-size)))
-    (concat
-     (mode-welt-space-barf pad-left)
-     str-left
-     space
-     str-right
-     (mode-welt-space-barf pad-right))))
-
-(defun mode-welt-evil-state-propertized ()
-  "Create a string of the current evil state with the respective mode-welt face
-  applied."
-  (let ((face (if (eq mode-welt-selected-window (frame-selected-window))
-                  (°concat-symbols 'mode-welt-evil- evil-state)
-                'mode-welt-evil-inactive)))
-    (concat
-     (propertize "%*%+" 'face `(:inherit ,face :inverse-video t))
-     (propertize
-     (upcase (symbol-name evil-state))
-     'face
-     face))))
-
-(defun mode-welt-project-name ()
-  (cond
-   ((not (buffer-file-name)) ; buffer is not a file
-    nil)
-   ((and (fboundp 'projectile-project-name)
-         (projectile-project-p)) ; buffer is part of a project
-    (let*
-        ((branch (car (vc-git-branches)))
-         (branch-str (unless (string= branch "master")
-                       (concat "[" branch "]"))))
-      (concat (projectile-project-name) branch-str)))
-   (t ; buffer is a file but not part of a project
-    (file-name-base (directory-file-name (file-name-directory (buffer-file-name)))))))
-
-(defun mode-welt-buffer-name ()
-  (propertize "%+%b%+" 'face (if (buffer-modified-p)
-                               'mode-line-highlight
-                             'mode-line-emphasis)))
-
-(defun mode-welt-set-mode-line ()
-  "Set my modeline."
-  (let ((mlf '(:eval (mode-welt-align (list
-                                       (mode-welt-evil-state-propertized)
-                                       (mode-welt-project-name)
-                                       (propertize "%b" 'face 'mode-line-emphasis))
-                                      (list
-                                       (format-mode-line mode-line-misc-info)
-                                       mode-name
-                                       "C:%c")
-                                      0 2))))
-    (setq-default mode-line-format mlf)))
-
-;; for keeping track of the selected window in the modeline:
-(add-hook 'post-command-hook #'mode-welt-update-selected-window)
-
-(mode-welt-set-mode-line)
+        telephone-line-height 24)
+  :config
+  (telephone-line-mode 1)
+  (column-number-mode 1))
 
 (push (expand-file-name "themes" user-emacs-directory) custom-theme-load-path)
 (load-theme 'base16-generic t)
