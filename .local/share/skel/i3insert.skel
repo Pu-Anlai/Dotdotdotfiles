@@ -1,6 +1,25 @@
 # %-LOCATION:$HOME/.config/i3/scripts/i3insert-% -*-sh-*-
 #!/bin/bash
 # DO EDITS HERE: $HOME/.local/share/skel/i3insert.skel
+function dotool {
+    local tool
+    session_type=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type| cut -d= -f2)
+
+    if command -v xdotool >/dev/null 2>&1 && [ "$session_type" = "x11" ]; then
+        tool=xdotool
+    elif command -v ydotool >/dev/null 2>&1; then
+        tool=ydotool
+    else
+        notify-send "No suitable input application found."
+        exit 1
+    fi
+
+    if [ "$1" = "keyup" -a "$tool" = "ydotool" ]; then
+        $tool key --up "${@:1}"
+    else
+        $tool "$@"
+    fi
+}
 
 function translate_char {
     case $1 in
@@ -31,9 +50,9 @@ function translate_char {
     esac
 }
 
-function X_insert_text {
-    xdotool keyup $1
-    xdotool type "$(translate_char $1)"
+function insert_text {
+    dotool keyup $1
+    dotool type "$(translate_char $1)"
 }
 
-X_insert_text $1
+insert_text $1

@@ -15,6 +15,31 @@ set name (string match -r '"[^"]+"$' "$name_line")
 set class (string match -r '"[^"]+"$' "$class_line")
 set name (string replace -a ' ' '_' "$name")
 set class (string replace -a ' ' '_' "$class")
+set xytool
+
+
+function is_x11
+    # check whether display server is x11
+    set login_type (loginctl show-session (loginctl | grep (whoami) | awk '{print $1}') -p Type| cut -d= -f2)
+    test "$login_type" = "x11" && return 0 || return 1
+end
+
+
+function dotool -a cmd
+    test "$xytool" = "xdotool" && set clearmod "--clearmodifiers"
+    switch $cmd
+        case type key
+            $xytool $cmd $clearmod $argv[2..]
+        case keyup
+            if [ $xytool = "ydotool" ]
+                $xytool key --up $argv[2..]
+            else
+                $xytool $cmd $argv[2..]
+            end
+        case '*'
+            $xytool $cmd $argv[2..]
+    end
+end
 
 
 function get_value -a pass key fallback
@@ -29,9 +54,9 @@ function get_value -a pass key fallback
 end
 
 
-function xdo_type
+function do_type
     test -z "$argv"; and return 1
-    xdotool type --clearmodifiers "$argv"
+    dotool type "$argv"
 end
 
 
@@ -40,13 +65,13 @@ function xdo_pass_entry -a pass
     set pass_string (pass show $pass | head -n 1); or return 1
     set field_div (get_value $pass "xdoDiv")
     test -z "$field_div"; and set field_div "Tab"
-    xdo_type $user
-    xdotool keyup Super
-    xdotool key --clearmodifiers (string split " " $field_div)
-    xdotool keyup Super
-    xdo_type $pass_string
-    xdotool keyup Super
-    xdotool key --clearmodifiers Return
+    do_type $user
+    dotool keyup Super
+    dotool key (string split " " $field_div)
+    dotool keyup Super
+    do_type $pass_string
+    dotool keyup Super
+    dotool key Return
 end
 
 
@@ -111,7 +136,7 @@ function handle_candidate -S -a candidate
         fish -c 'sleep 45; and echo -n "" | xclip -selection clipboard' & disown
     else
         notify-send -u low "Entering information from $candidate..."
-        xdo_type "$info"; or return 1
+        do_type "$info"; or return 1
     end
 end
 
@@ -123,6 +148,15 @@ function interactive_select -a message
     end | dmenu
 end
 
+
+if command -q xdotool && is_x11
+    set xytool xdotool
+else if command -q ydotool
+    set xytool ydotool
+else
+    notify-send "No suitable input application found."
+    exit 1
+end
 
 # get list of all pass files
 set passes (string replace -fr '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
