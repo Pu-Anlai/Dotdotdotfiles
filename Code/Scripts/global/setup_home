@@ -10,6 +10,16 @@ function install_from_aur
     end
 end
 
+function ask_for_continue -a prompt
+    test -z "$prompt" && echo "$prompt"
+    read -P "Continue? [y] " -n 1 answer
+    if [ ! (echo "$answer" | tr 'Y' 'y') = 'y' ]
+        return 1
+    else
+        return 0
+    end
+end
+
 function print_bold
     echo ''
     echo -e "\033[1m"$argv"\033[0m"
@@ -23,29 +33,23 @@ function install_auracle
     makepkg -sri
 end
 
-function download_google_fonts
-    # abort if all fonts are already installed
-    set -l installed 0
-    set -l fc_out (fc-list : family)
-    for font in $argv
-        string match -qe $font $fc_out; and set installed (math $installed + 1)
-    end
-    test (count $argv) -eq $installed; and return
-
-    print_bold "Installing Google fonts..."
-    cd (mktemp -d -p $tmp_dir)
-    set -l dl_string (string join '|' $argv | string replace -a ' ' '%20')
-    curl -O -J 'https://fonts.google.com/download?family='$dl_string
-    7z x fonts.zip
-    mkdir -p $HOME/.local/share/fonts
-    cp **.?tf $HOME/.local/share/fonts
-end
-
 function install_sudo
     print_bold "Installing sudo..."
     su -c 'pacman -S --needed sudo'
     echo "Now configure sudo so the current user can use it to gain superuser privileges. Afterwards, run this script again."
     exit
+end
+
+function systemd_enable
+    argparse 'user' -- "$argv"
+    systemctl is-enabled --quiet $argv && return
+    if [ -n "$_flag_user" ]
+        print_bold "Enabling systemd user service "$argv"..."
+        systemctl $_flag_user enable --now $argv
+    else
+        print_bold "Enabling systemd service "$argv"..."
+        sudo systemctl enable --now $argv
+    end
 end
 
 print_bold "This script assumes the following:"
@@ -58,12 +62,10 @@ if [ -z "$AURMAKE_FOLDER" ]
     set -x AURMAKE_FOLDER "$HOME/Downloads/AUR"
 end
 
-read -P "Continue? [y] " -n 1 answer
-if [ ! (echo "$answer" | tr 'Y' 'y') = 'y' ]
-    exit
-end
+ask_for_continue || exit
 
 # install sudo first
+print_bold "Installing sudo..."
 command -s sudo >/dev/null 2>&1; or install_sudo
 
 # make sure there's a writable folder at /var/cache/pacman/makepkg
@@ -80,54 +82,58 @@ sudo pacman -S --needed git fontconfig p7zip base-devel
 print_bold "Merge configuration files..."
 ~/.local/bin/merge-configs
 
-# some AUR stuff, if it's not installed already
-print_bold "Building specific AUR packages..."
+# ensure auracle is present
 command -s auracle >/dev/null 2>&1; or install_auracle
-install_from_aur i3lock-color
-install_from_aur unclutter-xfixes-git
-install_from_aur ttf-mononoki
-install_from_aur otf-font-awesome-4
-install_from_aur ttf-merriweather
-install_from_aur ttf-quicksand
 
-print_bold "Downloading essential packages from the official repositiories..."
+# make i3 or sway install
+read -P "Enter i3 or sway depending on which window manager (including extensions) to install.  Any other input will skip this step." choice
+switch $choice
+    case i3
+        sudo pacman -S --needed i3-gaps xorg-xset xorg-xkbcomp xss-lock dunst xdotool numlockx
+        systemd_enable --user dunst
+        install_from_aur i3lock-color
+        install_from_aur unclutter-xfixes-git
+    case sway
+        sudo pacman -S --needed sway mako
+        systemd_enable --user mako
+        install_from_aur ydotool
+    case '*'
+        true
+end
+
+ask_for_continue "Install additional fonts?" && begin
+    install_from_aur ttf-mononoki
+    install_from_aur otf-font-awesome-4
+    install_from_aur ttf-merriweather
+    install_from_aur ttf-quicksand
+    sudo pacman -S --needed ttf-liberation ttf-freefont noto-fonts-cjk
+    set font_installed
+end
+
+print_bold "Downloading some additional packages from the official repositiories..."
 # some basic packages and globally acessible fonts
+
 sudo pacman -S --needed \
-    adobe-source-code-pro-fonts \
     alacritty \
     alsa-utils \
     arc-gtk-theme \
     dnscrypt-proxy \
-    dunst \
     elinks \
     feh \
-    firejail \
     fzf \
-    i3-gaps \
     i3blocks \
-    i3lock-color \
     ibus \
     mpv \
-    noto-fonts-cjk \
-    numlockx \
     openssh \
     pass \
-    picom \
     smartmontools \
     syncthing \
-    ttf-freefont \
-    ttf-liberation \
-    xorg-xkbcomp \
-    xorg-xset \
-    xss-lock \
     zathura
+
+ask_for_continue "Install compositor for X?" && sudo pacman -S --needed picom
 
 # backend for zathura
 sudo pacman -S --asdeps zathura-pdf-poppler
-
-# setup firejail
-print_bold "Creating firejail config..."
-sudo firecfg
 
 # once more why not
 print_bold "Merge configuration files..."
@@ -137,20 +143,16 @@ print_bold "Merge configuration files..."
 print_bold "Deleting temporary directories..."
 rm -rf $tmp_dir
 
-print_bold "Updating font cache..."
-fc-cache -fv
+if set -q font_installed
+    print_bold "Updating font cache..."
+    fc-cache -fv
+end
 
-print_bold "Starting systemd-timesyncd..."
-sudo systemctl enable --now systemd-timesyncd
+systemd_enable systemd-timesyncd
 
-print_bold "Starting dnscrypt-proxy..."
-sudo systemctl enable --now dnscrypt-proxy
+systemd_enable dnscrypt-proxy
 
-print_bold "Enabling user systemd services..."
-systemctl --user enable --now dunst
-
-print_bold "Enabling smartd monitoring service..."
-sudo systemctl enable --now smartd
+systemd_enable smartd
 
 read -P "Enter 'amd' or 'intel' to install the respective microcode package or neither to skip this step. " answer
 switch $answer
@@ -160,28 +162,6 @@ switch $answer
         sudo pacman -S intel-ucode
 end
 
-read -P "If you want to skip setting up iptables, say so now. " answer
-if [ -z "$answer" ]
-    sudo iptables -N TCP
-    sudo iptables -N UDP
-    sudo iptables -P FORWARD DROP
-    sudo iptables -P OUTPUT ACCEPT
-    sudo iptables -P INPUT DROP
-    sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-    sudo iptables -A INPUT -i lo -j ACCEPT
-    sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
-    sudo iptables -A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
-    sudo iptables -A INPUT -p udp -m conntrack --ctstate NEW -j UDP
-    sudo iptables -A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP
-    sudo iptables -A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
-    sudo iptables -A INPUT -p tcp -j REJECT --reject-with tcp-reset
-    sudo iptables -t raw -I PREROUTING -m rpfilter --invert -j DROP
-    sudo iptables -A INPUT -j REJECT --reject-with icmp-proto-unreachable
-    sudo iptables-save -f /etc/iptables/iptables.rules
-    sudo systemctl enable --now iptables
-end
-
-
 print_bold "Done!"
 print_bold "\nLeft to do:"
 print_bold "\tSet up password store"
@@ -190,4 +170,4 @@ print_bold "\tSet up SSH"
 print_bold "\tSet up Syncthing"
 print_bold "\tSet up dnscrypt-proxy"
 print_bold "\tSet up bootloader for microcode (if necessary)"
-print_bold "\tInstall a display manager"
+print_bold "\tInstall a display manager or similar"
