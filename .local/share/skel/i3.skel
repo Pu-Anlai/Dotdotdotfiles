@@ -59,13 +59,10 @@ no_focus [class="mpv"]
 # first the border
 hide_edge_borders smart
 new_window pixel 5
-
 # next the title font
 font pango:$font 8
-
 # Format the window title beyond the font
 for_window [class=".*"] title_format "     %title"
-
 # Gaps
 gaps inner 9
 gaps outer -2
@@ -133,17 +130,6 @@ bindsym $mod+Mod1+Left focus output left
 bindsym $mod+Mod1+Down focus output down
 bindsym $mod+Mod1+Up focus output up
 bindsym $mod+Mod1+Right focus output right
-
-# move workspaces between displays
-bindsym $mod+Mod1+Shift+h move workspace to output left
-bindsym $mod+Mod1+Shift+j move workspace to output down
-bindsym $mod+Mod1+Shift+k move workspace to output up
-bindsym $mod+Mod1+Shift+l move workspace to output right
-# alternatively, you can use the cursor keys:
-bindsym $mod+Mod1+Shift+Left move workspace to output left
-bindsym $mod+Mod1+Shift+Down move workspace to output down
-bindsym $mod+Mod1+Shift+Up move workspace to output up
-bindsym $mod+Mod1+Shift+Right move workspace to output right
 
 # split in horizontal orientation
 bindsym $mod+odiaeresis split h
@@ -234,6 +220,17 @@ bindsym $mod+Shift+Ctrl+9 move container to workspace $ws9; workspace $ws9
 bindsym $mod+Shift+Ctrl+0 move container to workspace $ws10; workspace $ws10
 bindsym $mod+Shift+Ctrl+Tab move container to workspace back_and_forth; workspace back_and_forth
 
+# move workspaces between displays
+bindsym $mod+Mod1+Shift+h move workspace to output left
+bindsym $mod+Mod1+Shift+j move workspace to output down
+bindsym $mod+Mod1+Shift+k move workspace to output up
+bindsym $mod+Mod1+Shift+l move workspace to output right
+# alternatively, you can use the cursor keys:
+bindsym $mod+Mod1+Shift+Left move workspace to output left
+bindsym $mod+Mod1+Shift+Down move workspace to output down
+bindsym $mod+Mod1+Shift+Up move workspace to output up
+bindsym $mod+Mod1+Shift+Right move workspace to output right
+
 # jump to urgent window
 bindsym $mod+space [urgent=latest] focus
 # restart/reload i3 inplace
@@ -277,7 +274,7 @@ set $mode_music " music"
 set $mode_blocks " blocks"
 set $mode_insert " insert"
 
-# resize window (you can also use the mouse for that)
+# resize window (you can also use the mouse for this)
 mode $mode_resize {
         bindsym h resize shrink width 8 px or 3 ppt
         bindsym j resize grow height 8 px or 3 ppt

@@ -33,22 +33,19 @@ client.background       $base07
 
 set $font {{{FONT_SANS}}}
 set $i3scriptsdir $HOME/.config/i3/scripts
-set $i3b_up $HOME/.config/i3/scripts/i3b_up
 set $i3blockletsdir $HOME/.config/i3blocks/blocklets
 set $mod Mod4
 set $i3b_up10 "pkill -RTMIN+10 i3blocks"
+set $i3b_up9 "pkill -RTMIN+9 i3blocks"
+set $i3b_up8 "pkill -RTMIN+8 i3blocks"
+set $i3b_up7 "pkill -RTMIN+7 i3blocks"
+set $i3b_up6 "pkill -RTMIN+6 i3blocks"
+set $i3b_up5 "pkill -RTMIN+5 i3blocks"
+set $i3b_up4 "pkill -RTMIN+4 i3blocks"
+set $i3b_up3 "pkill -RTMIN+3 i3blocks"
+set $i3b_up2 "pkill -RTMIN+2 i3blocks"
+set $i3b_up1 "pkill -RTMIN+1 i3blocks"
 
-# define workspaces
-set $ws1 "1   "
-set $ws2 "2  "
-set $ws3 "3  "
-set $ws4 "4  "
-set $ws5 "5  "
-set $ws6 "6  "
-set $ws7 "7  "
-set $ws8 "8  "
-set $ws9 "9  "
-set $ws10 "10  "
 
 # custom settings
 {{{custom}}}
@@ -59,21 +56,20 @@ set $ws10 "10  "
 focus_on_window_activation urgent
 # don't move focus with mouse
 focus_follows_mouse no
+# application specific focus settings
+no_focus [class="mpv"]
 
 ## configure window decorations
 # first the border
 hide_edge_borders smart
-default_border pixel 5
-
+new_window pixel 5
 # next the title font
 font pango:$font 8
-
 # Format the window title beyond the font
 for_window [class=".*"] title_format "     %title"
-
 # Gaps
-gaps inner 15
-gaps outer -6
+gaps inner 9
+gaps outer -2
 smart_gaps on
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -82,18 +78,10 @@ floating_modifier $mod
 # set cursor hiding timeout
 seat seat0 hide_cursor 10000
 
-# application specific appearance settings
-no_focus [class="mpv"]
-for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
-for_window [class="Zenity"] floating enable
-for_window [class="Yad"] floating enable
-for_window [class="Pinentry"] floating enable
-
-
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec i3-sensible-terminal
 # start a terminal on workspace 1
-bindsym $mod+Shift+Return workspace $ws1 ; exec termite
+bindsym $mod+Shift+Return workspace $ws1 ; exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+q kill
@@ -105,10 +93,8 @@ bindsym --release button2 kill
 bindsym $mod+Pause exec $i3scriptsdir/screen_off
 bindsym $mod+Shift+Pause exec systemctl suspend
 
-# start the password finder
-bindsym $mod+y exec $i3scriptsdir/pass_get
-bindsym $mod+Shift+y exec $i3scriptsdir/pass_get -l
-bindsym $mod+x exec $i3scriptsdir/pass_get -x
+# start a program launcher
+bindsym $mod+r exec fzfly-desktop
 
 # change focus
 bindsym $mod+h focus left
@@ -120,7 +106,6 @@ bindsym $mod+Ctrl+h focus parent; focus left; focus child
 bindsym $mod+Ctrl+j focus parent; focus down; focus child
 bindsym $mod+Ctrl+k focus parent; focus up; focus child
 bindsym $mod+Ctrl+l focus parent; focus right; focus child
-
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
@@ -136,12 +121,22 @@ bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
-
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
+
+# change display focus
+bindsym $mod+Mod1+h focus output left
+bindsym $mod+Mod1+j focus output down
+bindsym $mod+Mod1+k focus output up
+bindsym $mod+Mod1+l focus output right
+# alternatively, you can use the cursor keys:
+bindsym $mod+Mod1+Left focus output left
+bindsym $mod+Mod1+Down focus output down
+bindsym $mod+Mod1+Up focus output up
+bindsym $mod+Mod1+Right focus output right
 
 # split in horizontal orientation
 bindsym $mod+odiaeresis split h
@@ -170,6 +165,28 @@ bindsym $mod+p focus parent
 
 # focus the child container
 bindsym $mod+Shift+p focus child
+
+# bind function keys
+bindsym XF86MonBrightnessUp exec light -A 5; exec $i3b_up8
+bindsym XF86MonBrightnessDown exec light -U 5; exec $i3b_up8
+bindsym Shift+XF86MonBrightnessUp exec light -A 1; exec $i3b_up8
+bindsym Shift+XF86MonBrightnessDown exec light -U 1; exec $i3b_up8
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec $i3b_up9
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec $i3b_up9
+bindsym Shift+XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%; exec $i3b_up9
+bindsym Shift+XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -1%; exec $i3b_up9
+
+# define workspaces
+set $ws1 "1   "
+set $ws2 "2  "
+set $ws3 "3  "
+set $ws4 "4  "
+set $ws5 "5  "
+set $ws6 "6  "
+set $ws7 "7  "
+set $ws8 "8  "
+set $ws9 "9  "
+set $ws10 "10  "
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -210,33 +227,61 @@ bindsym $mod+Shift+Ctrl+9 move container to workspace $ws9; workspace $ws9
 bindsym $mod+Shift+Ctrl+0 move container to workspace $ws10; workspace $ws10
 bindsym $mod+Shift+Ctrl+Tab move container to workspace back_and_forth; workspace back_and_forth
 
+# move workspaces between displays
+bindsym $mod+Mod1+Shift+h move workspace to output left
+bindsym $mod+Mod1+Shift+j move workspace to output down
+bindsym $mod+Mod1+Shift+k move workspace to output up
+bindsym $mod+Mod1+Shift+l move workspace to output right
+# alternatively, you can use the cursor keys:
+bindsym $mod+Mod1+Shift+Left move workspace to output left
+bindsym $mod+Mod1+Shift+Down move workspace to output down
+bindsym $mod+Mod1+Shift+Up move workspace to output up
+bindsym $mod+Mod1+Shift+Right move workspace to output right
+
 # jump to urgent window
 bindsym $mod+space [urgent=latest] focus
 # restart/reload i3 inplace
 bindsym $mod+Shift+Ctrl+r exec sh -c 'merge-configs && i3-msg restart'
 bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
 
+# volume control
+bindsym $mod+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym $mod+Shift+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym $mod+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym $mod+Shift+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym $mod+KP_Multiply exec pactl set-sink-volume @DEFAULT_SINK@ 100%
+
 # workspace assignments
 assign [class="qutebrowser"] $ws2
-assign [class="Inox"] $ws2
 assign [class="Firefox"] $ws2
 assign [class="Chromium"] $ws2
 assign [class="TelegramDesktop"] $ws3
 assign [class="whats-app-*"] $ws3
 assign [class="Thunderbird"] $ws3
+assign [class="discord"] $ws3
+assign [class="zoom"] $ws3
+assign [class="Microsoft Teams - Preview"] $ws3
 assign [title="LibreOffice" window_type="splash"] $ws5
 assign [class="(?i).*libreoffice.*"] $ws5
-assign [class="Soffice"] $ws5
 assign [class="Emacs"] $ws4
-assign [class="jetbrains.*"] $ws5
-assign [class="Steam"] $ws6
+assign [class="jetbrains.*"] $ws4
+assign [class="Soffice"] $ws5
+assign [class="Gimp*"] $ws6
+assign [class="Steam"] $ws7
+
+# window arrangement fixes
+for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
+for_window [class="Yad"] floating enable
+for_window [class="Pinentry"] floating enable
+for_window [instance="fzfly"] fullscreen enable global
 
 ## modes
 set $mode_resize " resize"
 set $mode_music " music"
 set $mode_blocks " blocks"
+set $mode_insert " insert"
 
-# resize window (you can also use the mouse for that)
+# resize window (you can also use the mouse for this)
 mode $mode_resize {
         bindsym h resize shrink width 8 px or 3 ppt
         bindsym j resize grow height 8 px or 3 ppt
@@ -256,9 +301,9 @@ mode $mode_resize {
 # control mpd
 mode $mode_music {
         bindsym space exec mpc toggle
-        bindsym l exec mpc next; exec $i3b_up 10 0
-        bindsym h exec mpc prev; exec $i3b_up 10 0
-        bindsym r exec mpc random; exec $i3b_up 10 0
+        bindsym l exec mpc next; exec $i3b_up10
+        bindsym h exec mpc prev; exec $i3b_up10
+        bindsym r exec mpc random; exec $i3b_up10
         bindsym Tab exec $i3scriptsdir/mpd_toggle
 
         # back to normal: Enter or Escape
@@ -268,19 +313,53 @@ mode $mode_music {
 
 # access i3blocks features without using the mouse
 mode $mode_blocks {
-        bindsym s exec BLOCK_BUTTON=1 $i3blockletsdir/shutdown.sh; mode "default"
-        bindsym d exec BLOCK_BUTTON=1 $i3blockletsdir/time.sh; mode "default"
-        bindsym c exec BLOCK_BUTTON=1 $i3blockletsdir/clipboard.sh; mode "default"
-        bindsym n exec BLOCK_BUTTON=1 $i3blockletsdir/network.sh; mode "default"
+        bindsym s exec BLOCK_BUTTON=1 $i3blockletsdir/shutdown; mode "default"
+        bindsym w exec BLOCK_BUTTON=2 $i3blockletsdir/shutdown; mode "default"
+        bindsym d exec BLOCK_BUTTON=3 $i3blockletsdir/time; mode "default"
+        bindsym c exec BLOCK_BUTTON=1 $i3blockletsdir/clipboard; mode "default"
+        bindsym n exec BLOCK_BUTTON=1 $i3blockletsdir/network; mode "default"
+        bindsym b exec BLOCK_BUTTON=1 $i3blockletsdir/battery; mode "default"
 
         bindsym Escape mode "default"
         bindsym $mod+b mode "default"
+}
+
+# insert text
+mode $mode_insert {
+        bindsym m exec $i3scriptsdir/i3insert m; mode "default"
+        bindsym Shift+n exec $i3scriptsdir/i3insert N; mode "default"
+        bindsym n exec $i3scriptsdir/i3insert n; mode "default"
+        bindsym v exec $i3scriptsdir/i3insert v; mode "default"
+        bindsym s exec $i3scriptsdir/i3insert s; mode "default"
+        bindsym Shift+s exec $i3scriptsdir/i3insert S; mode "default"
+        bindsym p exec $i3scriptsdir/i3insert p; mode "default"
+        bindsym o exec $i3scriptsdir/i3insert o; mode "default"
+        bindsym f exec $i3scriptsdir/i3insert f; mode "default"
+        # password retrieval
+        bindsym less exec $i3scriptsdir/pass_get -X; mode "default"
+        bindsym y exec $i3scriptsdir/pass_get -ux; mode "default"
+        bindsym Ctrl+y exec $i3scriptsdir/pass_get -uxm; mode "default"
+        bindsym Shift+y exec $i3scriptsdir/pass_get -u; mode "default"
+        bindsym Ctrl+Shift+y exec $i3scriptsdir/pass_get -um; mode "default"
+        bindsym x exec $i3scriptsdir/pass_get -x; mode "default"
+        bindsym Ctrl+x exec $i3scriptsdir/pass_get -xm; mode "default"
+        bindsym Shift+x exec $i3scriptsdir/pass_get; mode "default"
+        bindsym Ctrl+Shift+x exec $i3scriptsdir/pass_get; mode "default"
+        bindsym c exec $i3scriptsdir/pass_get -fx; mode "default"
+        bindsym Ctrl+c exec $i3scriptsdir/pass_get -fxm; mode "default"
+        bindsym Shift+c exec $i3scriptsdir/pass_get -f; mode "default"
+        bindsym Ctrl+Shift+c exec $i3scriptsdir/pass_get -fm; mode "default"
+
+
+        bindsym Escape mode "default"
+        bindsym $mod+i mode "default"
 }
 
 # bind modes to keys
 bindsym $mod+plus mode $mode_resize
 bindsym $mod+m mode $mode_music
 bindsym $mod+b mode $mode_blocks
+bindsym $mod+i mode $mode_insert
 
 # Start swaybar to display a workspace bar
 bar {
@@ -306,4 +385,5 @@ bar {
 output * bg $HOME/Bilder/wallpaper.jpg fill
 
 # startup programs
-exec mako
+exec --no-startup-id mako
+exec --no-startup-id ibus-daemon -xrd
