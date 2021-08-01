@@ -7,6 +7,11 @@
 
 !.config/
 
+!.config/alacritty
+!.config/alacritty/alacritty.yml
+!.config/alacritty/sizes.yml
+!.config/alacritty/overlay.yml
+
 !.config/aria2
 !.config/aria2/*
 

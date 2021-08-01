@@ -335,7 +335,7 @@ c.tabs.background = True
 # Don't store cookies because I don't like them
 c.content.cookies.store = False
 # Set editor
-c.editor.command = ["termite", "-e", 'nvim -c "normal {line}G{column0}l" {file}']
+c.editor.command = ["alacritty", "-e", 'nvim -c "normal {line}G{column0}l" {file}']
 # Which tab to select when the focused tab is removed.
 c.tabs.select_on_remove = "last-used"
 # Confirm exit when there's downloads running
