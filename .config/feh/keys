@@ -5,8 +5,8 @@ scroll_left         h
 jump_fwd            C-d
 jump_back           C-u
 remove              x
-prev_img            K
-next_img            J
+prev_img            K Up
+next_img            J Down
 zoom_in             L
 zoom_out            H
 delete              X
