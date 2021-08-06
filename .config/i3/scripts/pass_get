@@ -20,7 +20,8 @@ set xytool
 
 function is_x11
     # check whether display server is x11
-    set login_type (loginctl show-session (loginctl | grep (whoami) | awk '{print $1}') -p Type| cut -d= -f2)
+    set session (loginctl show-user (whoami) -p Sessions | string match -r '(?<==)\d+')
+    set login_type (loginctl show-session $session -p Type | cut -d= -f2)
     test "$login_type" = "x11" && return 0 || return 1
 end
 
