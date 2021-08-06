@@ -118,7 +118,6 @@ sudo pacman -S --needed \
     alsa-utils \
     arc-gtk-theme \
     dnscrypt-proxy \
-    elinks \
     feh \
     fzf \
     i3blocks \
