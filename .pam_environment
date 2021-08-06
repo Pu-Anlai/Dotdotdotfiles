@@ -46,6 +46,6 @@ __BASE0E                            DEFAULT=d3869b
 __BASE0F                            DEFAULT=d65d0e
 
 # setup font settings
-FONT_SANS                           DEFAULT="Quicksand Medium"
+FONT_SANS                           DEFAULT="Gidole"
 FONT_SERIF                          DEFAULT=Merriweather
 FONT_MONO                           DEFAULT="Office Code Pro"

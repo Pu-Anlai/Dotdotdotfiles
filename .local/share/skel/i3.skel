@@ -60,7 +60,7 @@ no_focus [class="mpv"]
 hide_edge_borders smart
 new_window pixel 5
 # next the title font
-font pango:$font 8
+font pango:$font 9
 # Format the window title beyond the font
 for_window [class=".*"] title_format "     %title"
 # Gaps
@@ -359,7 +359,7 @@ bindsym $mod+i mode $mode_insert
 bar {
         status_command i3blocks
         position top
-        font pango:$font, FontAwesome 11
+        font pango:$font, FontAwesome
 
         colors {
             background $base00

@@ -105,7 +105,7 @@ ask_for_continue "Install additional fonts?" && begin
     install_from_aur ttf-mononoki
     install_from_aur otf-font-awesome-4
     install_from_aur ttf-merriweather
-    install_from_aur ttf-quicksand
+    install_from_aur ttf-gidole
     sudo pacman -S --needed ttf-liberation ttf-freefont noto-fonts-cjk
     set font_installed
 end
