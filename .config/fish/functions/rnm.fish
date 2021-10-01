@@ -4,7 +4,7 @@ function rnm
     set file_error 0
 
     for file in $argv
-        if [ ! -f "$file" ]
+        if [ ! -f "$file" -a ! -d "$file" ]
             echo "No file $file."
             set file_error 1
         else
