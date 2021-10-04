@@ -31,7 +31,7 @@ function __fish_set_universal_variables
     set -Ux LESS_TERMCAP_us (printf "\e[01;35m")
 
     # use nvim as a pager for man pages
-    set -Ux MANPAGER "nvim -c 'set ft=man' -"
+    set -Ux MANPAGER "nvim +Man! "
 
     # set folder for aurmake
     set -Ux AURMAKE_FOLDER ~/Downloads/AUR

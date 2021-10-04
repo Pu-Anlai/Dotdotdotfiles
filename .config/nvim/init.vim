@@ -85,6 +85,7 @@ set guicursor=i-ci-ve:ver20-blinkwait700-blinkoff400-blinkon250
             \,r-cr:hor20-blinkon0,o:hor50-blinkon0
 
 " color options
+set background=light
 colorscheme dim
 
 " always use system clipboard (you know, like emacs)
