@@ -12,6 +12,9 @@ BROWSER                             DEFAULT=qutebrowser
 # define style for QT applications
 QT_STYLE_OVERRIDE                   DEFAULT=adwaita
 
+# set Java options
+JDK_JAVA_OPTIONS                    DEFAULT="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+
 # setup ibus as default input method for all applications
 GTK_IM_MODULE                       DEFAULT=ibus
 XMODIFIERS                          DEFAULT=\@im=ibus
@@ -46,6 +49,6 @@ __BASE0E                            DEFAULT=d3869b
 __BASE0F                            DEFAULT=d65d0e
 
 # setup font settings
-FONT_SANS                           DEFAULT="Gidole"
+FONT_SANS                           DEFAULT=Gidole
 FONT_SERIF                          DEFAULT=Merriweather
 FONT_MONO                           DEFAULT="Office Code Pro"

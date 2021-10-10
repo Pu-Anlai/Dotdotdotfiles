@@ -448,7 +448,7 @@ end
 
 function get_warnings_from_log -a old_log new_log
     set new_lines (get_added_lines "$old_log" "$new_log")
-    set warnings (string match -re '^\[[^\]]+\] \[ALPM\] warning:\s+' '' -- $new_lines)
+    set warnings (string replace -rf '^\[[^\]]+\] \[ALPM\] (warning):\s+' '$1' -- $new_lines)
 
     if any $warnings
         echo_important "Pacman issued these warnings:"
@@ -466,7 +466,6 @@ function install_repo_updates
     set pacman_log (string replace -rf '^LogFile\s+=\s+(\S+)' '$1' < /etc/pacman.conf
         or echo "/var/log/pacman.log")
     set pacman_old_log (mktemp --suffix=".log.old")
-    set pacman_new_log (mktemp --suffix=".log.new")
     cp $pacman_log $pacman_old_log
         or return 1
 
@@ -474,8 +473,8 @@ function install_repo_updates
     sudo pacman -Su
         or return 1
 
-    get_added_lines $pacman_old_log $pacman_log > $pacman_new_log
-    # TODO: process new log entries
+    get_warnings_from_log $pacman_old_log $pacman_log
+    # TODO: process new log entries -- test
 end
 
 
