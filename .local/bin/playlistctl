@@ -2,21 +2,22 @@
 
 import curses
 from collections import namedtuple
+from functools import partial
 from mpd import MPDClient
 
 # $value represents what is returned when hitting enter, $str_ represents the
 # menu entry as it appears to the user
-MenuEntry = namedtuple('MenuEntry', ['value', 'str_'])
+MenuEntry = namedtuple("MenuEntry", ["value", "str_"])
 
 # $first is the number of the first entry, $last the number of the final entry
 # + 1 (for use with range())
-MenuPage = namedtuple('MenuPage', ['first', 'last'])
+MenuPage = namedtuple("MenuPage", ["first", "last"])
 
-INFO_STR = 's = Replace | a = Append | Space = Play | q = Quit'
+INFO_STR = "s = Replace | a = Append | Space = Play | q = Quit"
 
 
-class Menu():
-    """Menu class with navigation methods. Each menu entry must be an
+class Menu:
+    """Menu class with navigation methods. Each menu entry must be a
     MenuEntry. Constructing requires a list of MenuEntry objects and a stdscr
     object from curses.wrapper."""
 
@@ -27,9 +28,9 @@ class Menu():
 
         self.current_pos = 0
         self.current_page_num = 0
-        (self.base_win,
-         self.sub_win,
-         self.status_line) = self._init_windows(self.stdscr)
+        (self.base_win, self.sub_win, self.status_line) = self._init_windows(
+            self.stdscr
+        )
         self.pages_dict = self._get_pages_dict()
 
         self.play_pos = 0
@@ -37,11 +38,44 @@ class Menu():
         self.draw_current_page()
         self.mark_current_position()
         self.update_screen()
+        self.key_bindings = {
+            ord(" "): (self.mpd_client.pause,),
+            ord("j"): (self.move_selection, 1),
+            ord("k"): (self.move_selection, -1),
+            4: (self.move_selection, 10),
+            21: (self.move_selection, -10),
+            ord("g"): (self.move_selection_top,),
+            ord("G"): (self.move_selection_end,),
+            ord("H"): (self.move_selection_high,),
+            ord("M"): (self.move_selection_middle,),
+            ord("L"): (self.move_selection_low,),
+            ord("s"): (self.load_playlist,),
+            ord("S"): (partial(self.load_playlist, play=True),),
+            ord("a"): (partial(self.load_playlist, append=True),),
+            ord("A"): (partial(self.load_playlist, append=True, play=True),),
+        }
         self.event_loop()
 
     @property
     def current_page(self):
         return self.pages_dict[self.current_page_num]
+
+    @property
+    def current_entry(self):
+        return self.entry_dict[self.current_pos]
+
+    def movement(func):
+        """Decorator for movement."""
+
+        def return_func(self, *args, **kwargs):
+            self.sub_win.clear()
+            r = func(self, *args, **kwargs)
+            self.draw_current_page()
+            self.mark_current_position()
+            self.update_screen()
+            return r
+
+        return return_func
 
     def _init_windows(self, stdscr):
         """Draw initial interface and return objects for the base window and
@@ -49,9 +83,7 @@ class Menu():
         stdscr.clear()
         curses.curs_set(0)
 
-        base_win = curses.newwin(curses.LINES - 4,
-                                 curses.COLS - 2,
-                                 1, 1)
+        base_win = curses.newwin(curses.LINES - 4, curses.COLS - 2, 1, 1)
         base_win.box()
 
         status_line = curses.newwin(1, curses.COLS, curses.LINES - 2, 0)
@@ -61,9 +93,7 @@ class Menu():
         status_line.chgat(0, 0, curses.A_REVERSE)
 
         base_win_height, base_win_width = base_win.getmaxyx()
-        sub_win = base_win.derwin(base_win_height - 2,
-                                  base_win_width - 2,
-                                  1, 1)
+        sub_win = base_win.derwin(base_win_height - 2, base_win_width - 2, 1, 1)
 
         # make windows available to all methods
 
@@ -109,9 +139,9 @@ class Menu():
 
         padding = int((line_width - len(msg)) / 2)
         if len(msg) > line_width:
-            formatted_msg = '{}…'.format(msg[:line_width - 1])
+            formatted_msg = "{}…".format(msg[: line_width - 1])
         else:
-            formatted_msg = '{0}{1}{0}'.format(' ' * padding, msg)
+            formatted_msg = "{0}{1}{0}".format(" " * padding, msg)
 
         return formatted_msg
 
@@ -131,9 +161,9 @@ class Menu():
         # reset cursor position
         self.sub_win.move(y_pos, x_pos)
 
+    @movement
     def move_selection(self, steps):
         """Move selection $steps forwards or backwards."""
-        self.sub_win.clear()
         new_pos = self.current_pos + steps
 
         # move specified step closer to zero until the new position is within
@@ -148,13 +178,10 @@ class Menu():
             # if after adjusting the step there's nothing left, don't move
             # selection
             return
-        if new_pos in range(self.current_page.first,
-                            self.current_page.last):
+        if new_pos in range(self.current_page.first, self.current_page.last):
             # if new position is still on the same page, move selection to the
             # new position
             self.current_pos = new_pos
-            self.draw_current_page()
-            self.mark_current_position()
         else:
             # if new position is on a different page, find that page, draw it
             # and move selection to the new position
@@ -164,10 +191,32 @@ class Menu():
                     self.current_page_num = page_num
                     break
 
-            self.draw_current_page()
-            self.mark_current_position()
+    @movement
+    def move_selection_end(self):
+        """Move selection to last entry on last page."""
+        self.current_pos = len(self.entry_dict) - 1
+        self.current_page_num = len(self.pages_dict) - 1
 
-        self.update_screen()
+    @movement
+    def move_selection_top(self):
+        """Move selection to first entry on first page."""
+        self.current_pos = 0
+        self.current_page_num = 0
+
+    @movement
+    def move_selection_high(self):
+        """Move to first entry on current page."""
+        self.current_pos = self.current_page.first
+
+    @movement
+    def move_selection_middle(self):
+        """Move to first entry on current page."""
+        self.current_pos = int(self.current_page.last / 2)
+
+    @movement
+    def move_selection_low(self):
+        """Move to first entry on current page."""
+        self.current_pos = self.current_page.last - 1
 
     def update_screen(self):
         """Refresh all windows and redraw screen."""
@@ -177,14 +226,14 @@ class Menu():
         self.status_line.noutrefresh()
         curses.doupdate()
 
-    def load_playlist(self, playlist, append=True, play=False):
+    def load_playlist(self, append=False, play=False):
         self.play_pos = 0
         if not append:
             self.mpd_client.clear()
         else:
             self.play_pos = len(self.mpd_client.playlist())
 
-        self.mpd_client.load(playlist)
+        self.mpd_client.load(self.current_entry.value)
 
         if play:
             self.mpd_client.play(self.play_pos)
@@ -193,30 +242,12 @@ class Menu():
         """Wait for input and process it."""
         while True:
             key_input = self.stdscr.getch()
-
-            if key_input == ord('j') or key_input == curses.KEY_DOWN:
-                self.move_selection(1)
-            elif key_input == ord('k') or key_input == curses.KEY_UP:
-                self.move_selection(-1)
-            # 4 = Ctrl+d / 21 = Ctrl+U
-            elif key_input == 4:
-                self.move_selection(10)
-            elif key_input == 21:
-                self.move_selection(-10)
-            elif key_input == ord('s'):
-                self.load_playlist(self.entry_dict[self.current_pos].value,
-                                   append=False)
-            elif key_input == ord('S'):
-                self.load_playlist(self.entry_dict[self.current_pos].value,
-                                   append=False, play=True)
-            elif key_input == ord('a'):
-                self.load_playlist(self.entry_dict[self.current_pos].value)
-            elif key_input == ord('A'):
-                self.load_playlist(self.entry_dict[self.current_pos].value,
-                                   play=True)
-            elif key_input == ord(' '):
-                self.mpd_client.play(self.play_pos)
-            elif key_input == ord('q'):
+            try:
+                cmd = self.key_bindings[key_input]
+                cmd[0](*cmd[1:])
+            except KeyError:
+                pass
+            if key_input == ord("q"):
                 break
 
 
@@ -227,10 +258,10 @@ def get_mpd_client(host, port):
 
 
 def playlist_to_entry(playlist_item):
-    return MenuEntry(value=playlist_item['playlist'],
-                     str_=playlist_item['playlist'])
+    return MenuEntry(value=playlist_item["playlist"], str_=playlist_item["playlist"])
 
 
 mpd_c = get_mpd_client("localhost", 6600)
-entries = list(map(playlist_to_entry, mpd_c.listplaylists()))
+playlists = sorted(mpd_c.listplaylists(), key=lambda x: x["playlist"].upper())
+entries = list(map(playlist_to_entry, playlists))
 curses.wrapper(Menu, entries, mpd_c)
