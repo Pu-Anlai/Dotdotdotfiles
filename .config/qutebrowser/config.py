@@ -312,7 +312,7 @@ c.url.searchengines = {
     "le": "https://dict.leo.org/german-english/{}",
     "lf": "https://dict.leo.org/französisch-deutsch/{}",
     "mel": "http://melpa.org/#/?q={}",
-    "py": "https://docs.python.org/3.7/search.html?q={}",
+    "py": "https://docs.python.org/3/search.html?q={}",
     "ug": "https://www.ultimate-guitar.com/search.php?search_type=title&value={}",
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "wd": "https://de.wikipedia.org/w/index.php?search={}",
