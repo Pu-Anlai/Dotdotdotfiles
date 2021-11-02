@@ -3,6 +3,13 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
+;; abbreviation settings
+;; expand abbreviation upon exiting insert stat
+(add-hook 'evil-insert-state-exit-hook #'expand-abbrev)
+
+;; mode associations
+(push '(".gitignore" . prog-mode) auto-mode-alist)
+
 ;; pos-tip setup for use by both company and flymake
 (use-package pos-tip
   :after company
