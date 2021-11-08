@@ -327,7 +327,7 @@ c.aliases[
 
 ## Miscellaneous settings
 # Start page
-c.url.start_pages = choice(start_pages)
+c.url.start_pages = [choice(start_pages), "https://www.amd.com/de/direct-buy/de"]
 # Where to show the downloaded files.
 c.downloads.position = "bottom"
 # Open new tabs in background
