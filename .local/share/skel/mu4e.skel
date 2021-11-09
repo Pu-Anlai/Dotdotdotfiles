@@ -243,7 +243,11 @@
       (mu4e-message-field msg field)))
 
   (defun °°mu4e-push-to-account-list (&rest r)
-    (cl-pushnew (mu4e-context-name (mu4e-context-determine (mu4e-message-at-point))) °°mu4e-account-list))
+    (cl-pushnew (mu4e-context-name
+                 (or
+                  (mu4e-context-determine (mu4e-message-at-point t))
+                  (mu4e-context-current)))
+                °°mu4e-account-list))
 
   (defun °°mu4e-remove-from-account-list (&rest r)
     (setq °°mu4e-account-list
