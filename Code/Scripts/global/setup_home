@@ -89,7 +89,7 @@ command -s auracle >/dev/null 2>&1; or install_auracle
 read -P "Enter i3 or sway depending on which window manager (including extensions) to install.  Any other input will skip this step. " choice
 switch $choice
     case i3
-        sudo pacman -S --needed i3-gaps xorg-xset xorg-xkbcomp xss-lock dunst xdotool numlockx
+        sudo pacman -S --needed i3-gaps xorg-xset xorg-xkbcomp xss-lock dunst xdotool numlockx xorg-server
         systemd_enable --user dunst
         install_from_aur i3lock-color
         install_from_aur unclutter-xfixes-git

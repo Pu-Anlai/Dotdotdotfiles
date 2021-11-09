@@ -29,7 +29,7 @@ function safe_write -a write_file
     set target_lines $argv[2..-1]
 
     if [ -z "$target_lines" ]
-        echo "Skipping merge for $write_file..." >&2
+        echo -e "\tSkipping merge for \e[1m$write_file\e[0m..." >&2
         return 1
     else if [ "$ACTIVE_PATH" = "$VENDOR_SKEL_FILES_PATH" ]
         sudo mkdir -p (dirname "$write_file")
@@ -53,13 +53,13 @@ function process_skel -a skel_file
     set custom (eval echo $custom)
 
     if [ -n "$custom" -a ! -f "$custom" ]
-        echo "$skel_file points to a custom file that does not exist." >&2
-        echo "Skipping custom file merging..." >&2
+        echo -e "\e[1m$skel_file\e[0m points to a custom file that does not exist." >&2
+        echo -e "\tSkipping custom file merging..." >&2
         set custom ''
     end
 
     if [ -z "$location" ]
-        echo "$skel_file has no line specifying its target location." >&2
+        echo -e "\e[1m$skel_file\e[0m has no line specifying its target location." >&2
         return 1
     end
 
@@ -103,7 +103,7 @@ function main
     end
 
     if [ ! -d "$ACTIVE_PATH" ]
-        echo "$ACTIVE_PATH is not a valid path..."
+        echo -e "\e[1m$ACTIVE_PATH\e[0m is not a valid path..." >&2
         return 1
     end
 

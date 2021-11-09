@@ -3,7 +3,7 @@ function mergevars -S
 
     set -l infile $argv
     if [ ! -f $infile ]
-        echo "$infile is not a file." >&2
+        echo -e "\e[1m$infile\e[0m is not a file." >&2
         return 1
     end
 
@@ -16,7 +16,7 @@ function mergevars -S
         if not contains $v $_flag_i
             # check if var is set
             if not set -q $v
-                echo "Variable $v for file $infile not specified." >&2
+                echo -e "Variable \e[1m$v\e[0m for file \e[1m$infile\e[0m not specified." >&2
                 return 1
             end
 
@@ -26,7 +26,7 @@ function mergevars -S
 
     # abort if there are no fields
     if not count $vars > /dev/null; and test -z "$_flag_q"
-        echo "No variable fields in file $infile or all relevant fields ignored." >&2
+        echo -e "No variable fields in file \e[1m$infile\e[0m or all relevant fields ignored." >&2
     end
 
     # do the actual replacing
