@@ -1,4 +1,10 @@
 function cdp -d "Browse through the file system with fzf."
+    if [ -d "$argv" ]
+        cd "$argv"
+    else
+        echo "$argv is not a directory." >&2
+    end
+
     set orig_destination (pwd)
     true
     while true
