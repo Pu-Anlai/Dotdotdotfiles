@@ -6,7 +6,7 @@ function plctl
 
     # start mpdscribble if it isn't running
     if not pgrep mpdscribble >/dev/null
-        mpdscribble
+        mpdscribble --conf ~/.config/mpdscribble.conf
     end
 
     command playlistctl

@@ -214,10 +214,13 @@ def_key "d"
 
 def_key "d"
   delete_stored_playlist
-#
-#def_key "insert"
-#  select_item
-#
+
+def_key "t"
+  select_item
+
+def_key "T"
+  select_range
+
 #def_key "space"
 #  add_item_to_playlist
 #
@@ -424,9 +427,6 @@ def_key "d"
 #
 #def_key "l"
 #  show_lyrics
-#
-#def_key "ctrl-v"
-#  select_range
 #
 #def_key "v"
 #  reverse_selection

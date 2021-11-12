@@ -6,33 +6,31 @@ from mpd import MPDClient
 
 
 def start_mpd():
-    sprocess = subprocess.run(
-        ['systemctl', '--user', 'is-active', 'mpd.service']
-    )
+    sprocess = subprocess.run(["systemctl", "--user", "is-active", "mpd.service"])
     if sprocess.returncode != 0:
-        subprocess.run(['systemctl', '--user', 'start', 'mpd.service'])
+        subprocess.run(["systemctl", "--user", "start", "mpd.service"])
 
-    sprocess = subprocess.run(['pgrep', 'mpdscribble'])
+    sprocess = subprocess.run(["pgrep", "mpdscribble"])
     if sprocess.returncode != 0:
-        subprocess.run(['mpdscribble'])
+        subprocess.run(["mpdscribble"])
 
 
 def random_toggle(mpd_client):
-    if mpd_client.status()['random'] == '0':
+    if mpd_client.status()["random"] == "0":
         mpd_client.random(1)
-        subprocess.run(['notify-send', 'Random mode turned on.'])
-    elif mpd_client.status()['random'] == '1':
+        subprocess.run(["notify-send", "Random mode turned on."])
+    elif mpd_client.status()["random"] == "1":
         mpd_client.random(0)
-        subprocess.run(['notify-send', 'Random mode turned off.'])
+        subprocess.run(["notify-send", "Random mode turned off."])
 
 
 # initialize mpd connection
 mpd_client = MPDClient()
 try:
-    mpd_client.connect('127.0.0.1', 6600)
+    mpd_client.connect("127.0.0.1", 6600)
 except ConnectionRefusedError:
     start_mpd()
-    subprocess.run(['notify-send', 'MPD server started.'])
+    subprocess.run(["notify-send", "MPD server started."])
 
 # parse start-up parameter
 try:
@@ -40,11 +38,14 @@ try:
 except IndexError:
     sys.exit(1)
 
-if command == 'playpause':
+if command == "playpause":
     mpd_client.pause()
-elif command == 'next':
+elif command == "next":
     mpd_client.next()
-elif command == 'previous':
+elif command == "previous":
     mpd_client.previous()
-elif command == 'random_toggle':
+elif command == "random_toggle":
     random_toggle(mpd_client)
+elif command == "querysong":
+    song = mpd_client.currentsong()
+    print("{artist} - {title}".format(**song))

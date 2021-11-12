@@ -539,7 +539,7 @@
                   (°ispell-cycle-dicts)
                   (flyspell-buffer))
     "D"         (general-lambda
-                  (ispell-change-dictionary)
+                  (call-interactively #'ispell-change-dictionary)
                   (flyspell-buffer))
     "a"         'mail-add-attachment)
 
