@@ -57,7 +57,7 @@ function __fish_set_user_abbreviations
     abbr --add str string
     abbr --add uctl udisksctl
     abbr --add v nvim
-    abbr --add ytd youtube-dl
+    abbr --add ytd yt-dlp
     abbr --add z zathura
     set -U fish_user_abbreviations_set
 end
