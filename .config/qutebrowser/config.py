@@ -317,7 +317,7 @@ c.url.searchengines = {
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "wd": "https://de.wikipedia.org/w/index.php?search={}",
     "wv": "https://en.wikivoyage.org/wiki/index.php?search={}",
-    "yt": "https://www.youtube.com/results?search_query={}",
+    "yt": "https://www.yewtu.be/results?search_query={}",
 }
 
 # Aliases

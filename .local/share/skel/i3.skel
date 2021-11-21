@@ -298,6 +298,12 @@ mode $mode_music {
         bindsym h exec mpc prev; exec $i3b_up10
         bindsym r exec mpc random; exec $i3b_up10
         bindsym Tab exec $i3scriptsdir/mpd_toggle
+        # volume control
+        bindsym plus exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+        bindsym Shift+plus exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+        bindsym minus exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+        bindsym Shift+minus exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+        bindsym Shift+0 exec pactl set-sink-volume @DEFAULT_SINK@ 100%
 
         # back to normal: Enter or Escape
         bindsym Escape mode "default"
