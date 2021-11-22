@@ -237,13 +237,6 @@ bindsym $mod+space [urgent=latest] focus
 bindsym $mod+Shift+Ctrl+r exec sh -c 'merge-configs && i3-msg restart'
 bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
 
-# volume control
-bindsym $mod+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym $mod+Shift+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym $mod+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym $mod+Shift+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -10%
-bindsym $mod+KP_Multiply exec pactl set-sink-volume @DEFAULT_SINK@ 100%
-
 # workspace assignments
 assign [class="qutebrowser"] $ws2
 assign [class="Firefox"] $ws2
@@ -299,11 +292,11 @@ mode $mode_music {
         bindsym r exec mpc random; exec $i3b_up10
         bindsym Tab exec $i3scriptsdir/mpd_toggle
         # volume control
-        bindsym plus exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-        bindsym Shift+plus exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-        bindsym minus exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-        bindsym Shift+minus exec pactl set-sink-volume @DEFAULT_SINK@ -10%
-        bindsym Shift+0 exec pactl set-sink-volume @DEFAULT_SINK@ 100%
+        bindsym plus exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec $i3b_up9
+        bindsym Shift+plus exec pactl set-sink-volume @DEFAULT_SINK@ +10%; exec $i3b_up9
+        bindsym minus exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec $i3b_up9
+        bindsym Shift+minus exec pactl set-sink-volume @DEFAULT_SINK@ -10%; exec $i3b_up9
+        bindsym Shift+0 exec pactl set-sink-volume @DEFAULT_SINK@ 100%; exec $i3b_up9
 
         # back to normal: Enter or Escape
         bindsym Escape mode "default"
