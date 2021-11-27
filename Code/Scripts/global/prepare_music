@@ -10,7 +10,7 @@ which oggenc >/dev/null || exit 1
 function process_record_folder -a folder
     set ogg_folder "$record_folder/ogg/"(basename "$folder")
     # return if the folder already exists
-    test -d "$ogg_folder" && return
+    test -e "$ogg_folder" && return
     mkdir -p "$ogg_folder"
 
     set_color -o; echo "Preparing "(basename "$folder")"..."; set_color normal
@@ -18,6 +18,8 @@ function process_record_folder -a folder
 
     oggenc -q 6 *.flac || return 1
     mv *.ogg "$ogg_folder"/
+
+    replaygain "$ogg_folder"/*.ogg
     
     set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
 end

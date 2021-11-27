@@ -8,11 +8,11 @@ function aurmake -w cower -d 'Build specified AUR package'
 
     # building packages
     for pkg in $pkgs
-        # parsing `auracle buildorder`
-        for dep in (auracle buildorder $pkg | string match 'AUR*')
-            set dep (string split ' ' $dep)
-            if not contains $dep[-1] $aur_deps
-                set -a aur_deps $dep[-1]
+        set dep_list (auracle buildorder $pkg); or return 1
+
+        for dep in (string join \n $dep_list | awk '$1 == "AUR" {rc=1; print $NF}; END {exit !rc}')
+            if not contains $dep $aur_deps
+                set -a aur_deps $dep
             end
         end
 
