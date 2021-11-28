@@ -135,15 +135,16 @@ If decorator syntax is found a line above the current, don't do any padding."
 (use-package eglot
   :hook ((python-mode go-mode) . eglot-ensure)
   :init
+  ;; work around for wrong project version being loaded
+  (use-package project)
   (setq eglot-workspace-configuration
-        '((:pyls . (:plugins (:pycodestyle (:enabled nil))))))
-  (load-library "project"))
+        '((:pyls . (:plugins (:pycodestyle (:enabled nil)))))))
 
 ;; autocompletion
 (use-package company
-  :hook (prog-mode . company-mode)
+  :hook ((prog-mode . company-mode)
+         (company-mode . company-tng-mode))
   :config
-  (company-tng-mode)
   (delq 'company-echo-metadata-frontend company-frontends)
   (setq company-minimum-prefix-length 3)
   (setq company-selection-wrap-around t)
@@ -163,7 +164,7 @@ If decorator syntax is found a line above the current, don't do any padding."
   (mapc #'evil-declare-not-repeat #'(°company-select-next °company-select-previous)))
 
 (use-package company-flx
-  :after company
+  :hook (company-mode . company-flx-mode)
   :config
   (setq company-flx-limit 250)
   (company-flx-mode 1))
