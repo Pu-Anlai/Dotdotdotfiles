@@ -10,13 +10,6 @@
 ;; mode associations
 (push '(".gitignore" . prog-mode) auto-mode-alist)
 
-;; pos-tip setup for use by both company and flymake
-(use-package pos-tip
-  :after company
-  :config
-  (setq x-gtk-use-system-tooltips nil)
-  (add-hook 'focus-out-hook #'pos-tip-hide))
-
 ;; syntax checking
 (use-package flymake
   :config
@@ -145,34 +138,26 @@ If decorator syntax is found a line above the current, don't do any padding."
   :hook ((prog-mode . company-mode)
          (company-mode . company-tng-mode))
   :config
-  (delq 'company-echo-metadata-frontend company-frontends)
-  (setq company-minimum-prefix-length 3)
-  (setq company-selection-wrap-around t)
-  (setq company-idle-delay 0.1)
+  (setq company-minimum-prefix-length 3
+        company-selection-wrap-around t
+        company-idle-delay 0.01
+        company-echo-delay 0.5)
 
-  (defun °company-select-next ()
-    "Navigate company-mode and also open the quickhelp popup."
-    (interactive)
-    (company-quickhelp-manual-begin)
-    (company-select-next))
-
-  (defun °company-select-previous ()
-    "Navigate company-mode and also open the quickhelp popup."
-    (interactive)
-    (company-quickhelp-manual-begin)
-    (company-select-previous))
   (mapc #'evil-declare-not-repeat #'(°company-select-next °company-select-previous)))
+
+(use-package company-box
+  :after company
+  ;; load tng-mode first so it doesn't overwrite company-frontends
+  :hook (company-tng-mode . company-box-mode)
+  :config
+  (setq company-frontends '(company-tng-frontend company-box-frontend))
+  (setq company-box-doc-delay 0))
 
 (use-package company-flx
   :hook (company-mode . company-flx-mode)
   :config
   (setq company-flx-limit 250)
   (company-flx-mode 1))
-
-(use-package company-quickhelp
-  :after (company pos-tip)
-  :config
-  (setq company-quickhelp-delay 0))
 
 (use-package magit
   :commands magit-status

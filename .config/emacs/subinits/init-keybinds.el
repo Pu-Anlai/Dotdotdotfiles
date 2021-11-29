@@ -258,8 +258,8 @@
     "M-<return>"    (general-lambda
                       (company-abort)
                       (newline 1 t))
-    "C-n"           '°company-select-next
-    "C-p"           '°company-select-previous)
+    "C-n"           'company-select-next
+    "C-p"           'company-select-previous)
 
   (general-def
     :states         'insert
