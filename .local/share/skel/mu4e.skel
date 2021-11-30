@@ -146,20 +146,33 @@
   (add-hook 'mu4e-compose-mode-hook
             (defun °setup-mu4e-compose-settings ()
               (visual-line-mode)
+              ;; switch plain-word dict when changing regular ispell dict
+              (add-hook 'ispell-change-dictionary-hook
+                        (lambda ()
+                          (setq-local ispell-alternate-dictionary (°join-path nil "/" "usr" "share" "dict"
+                                                                              (pcase (or ispell-local-dictionary ispell-dictionary)
+                                                                                ("de_DE" "german")
+                                                                                ("en_AU" "british-english")
+                                                                                (- "words")))))
+                        nil t)
+              ;; decide which dict to used based on the extension of the
+              ;; parent message's email adress, use de_DE if there is no
+              ;; parent message
               (let*
                   ((sender1 (cdr (car
                                   (ignore-errors
                                     (mu4e-message-field mu4e-compose-parent-message :from)))))
                    (ext (or (car (ignore-errors (s-match "\.[^\.]+?$" sender1)))
                             ".de")))
-                ;; decide which dict to used based on the extension of the
-                ;; parent message's email adress, use de_DE if there is no
-                ;; parent message
                 (setq ispell-local-dictionary (if (string= ext ".de")
                                                   "de_DE"
                                                 "en_AU"))
                 (flyspell-mode)
-                (message "Ispell Dictionary set to %s." ispell-local-dictionary))))
+                (message "Ispell Dictionary set to %s." ispell-local-dictionary))
+              ;; setup company-mode for word autocompletion
+              (company-mode)
+              (setq-local company-backends '(company-ispell))
+              (setq-local company-minimum-prefix-length 6)))
 
   (defun °mu4e-compose-edit-anything ()
     (interactive)
