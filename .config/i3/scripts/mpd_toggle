@@ -6,10 +6,4 @@ else
     systemctl --user start mpd.service
 end
 
-if pgrep mpdscribble >/dev/null
-    killall mpdscribble
-else
-    mpdscribble --conf ~/.config/mpdscribble.conf
-end
-
 eval (dirname (status current-filename))/i3b_up 10 0

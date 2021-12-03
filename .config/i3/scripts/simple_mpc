@@ -10,11 +10,6 @@ def start_mpd():
     if sprocess.returncode != 0:
         subprocess.run(["systemctl", "--user", "start", "mpd.service"])
 
-    sprocess = subprocess.run(["pgrep", "mpdscribble"])
-    if sprocess.returncode != 0:
-        subprocess.run(["mpdscribble"])
-
-
 def random_toggle(mpd_client):
     if mpd_client.status()["random"] == "0":
         mpd_client.random(1)

@@ -4,10 +4,5 @@ function plctl
         systemctl --user start mpd.service
     end
 
-    # start mpdscribble if it isn't running
-    if not pgrep mpdscribble >/dev/null
-        mpdscribble --conf ~/.config/mpdscribble.conf
-    end
-
     command playlistctl
 end
