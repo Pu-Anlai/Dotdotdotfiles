@@ -49,7 +49,7 @@ function nagbar_sd {
 }
 
 function dmenu_sd {
-    options=$(printf '%s\n' '  Bereitschaft' '  Neustarten' '  Herunterfahren')
+    options=$(printf '%s\n' '  Herunterfahren' '  Neustarten' '  Bereitschaft')
     response=$(echo -e "$options" | dmenu -p shutdown -i)
 
     case $response in
