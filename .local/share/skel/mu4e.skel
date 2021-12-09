@@ -1,7 +1,6 @@
 ;; %-LOCATION:$HOME/.config/emacs/subinits/init-mu4e.el-% %-CUSTOM:$HOME/.config/mu4e-contexts-% -*-emacs-lisp-*-
 ;; DO EDITS HERE: $HOME/.local/share/skel/mu4e.skel
 ;; -*- lexical-binding: t -*-
-(require 'subr-x)
 ;; set mu4e as emacs default mail program
 (setq mail-user-agent #'mu4e-user-agent)
 
@@ -17,13 +16,98 @@
   :commands s-match)
 
 (use-package mu4e
-  :commands (mu4e mu4e-user-agent)
   :straight nil
+  :general
+  (:keymaps         'override
+   "<f2>"           'mu4e
+   "S-<f2>"         (general-l (°split-window-and-do (mu4e))))
+  (:states          'emacs
+   :keymaps         'mu4e-main-mode-map
+   "J"              'mu4e~headers-jump-to-maildir)
+  (general-leader
+    :states         'emacs
+    :keymaps        'mu4e-main-mode-map
+    "U"             '°mu4e-main-update-all)
+  (:states          'emacs
+   :keymaps         'mu4e-headers-mode-map
+   "q"              '°mu4e-headers-quit-view-or-headers
+   "J"              'mu4e~headers-jump-to-maildir
+   "j"              'mu4e-headers-next
+   "k"              'mu4e-headers-prev
+   "E"              '°mu4e-compose-edit-anything
+   "G"              'evil-goto-line
+   "C-j"            'mu4e-headers-next-unread
+   "C-k"            'mu4e-headers-prev-unread
+   "C-d"            (general-l
+                      (evil-scroll-down0))
+   "C-u"            (general-l
+                      (evil-scroll-up0))
+   "/"              'mu4e-headers-search-edit
+   "S"              'mu4e-headers-change-sorting
+   "<tab>"          'mu4e-headers-toggle-include-related
+   "<backtab>"      'mu4e-headers-toggle-threading
+   "t"              '°mu4e-headers-mark-toggle
+   "%"              'mu4e-headers-mark-pattern
+   "T"              '°mu4e-headers-mark-pattern
+   "D"              (general-l (°mu4e-headers-handle-deferred'trash))
+   "M"              (general-l (°mu4e-headers-handle-deferred 'move))
+   "V"              '°mu4e-search-sender
+   "$"              (general-l
+                      (mu4e-mark-execute-all t)))
+  (general-leader
+    :states         'emacs
+    :keymaps        'mu4e-headers-mode-map
+    "%"             'mu4e-headers-mark-pattern
+    "/"             'mu4e-headers-search-narrow
+    "d"             'mu4e-headers-mark-for-delete)
+  (general-goleader
+    :states         'emacs
+    :keymaps        'mu4e-headers-mode-map
+    "g"             'evil-goto-first-line)
+  (:states          'emacs
+   :keymaps         'mu4e-view-mode-map
+   "C-d"            'scroll-up-command
+   "C-u"            'scroll-down-command
+   "E"              '°mu4e-compose-edit-anything
+   "k"              'mu4e-scroll-down
+   "j"              'mu4e-scroll-up
+   "f"              'link-hint-open-link
+   "n"              'mu4e-view-headers-next
+   "p"              'mu4e-view-headers-prev
+   "gg"             'evil-goto-first-line
+   "G"              'evil-goto-line
+   "t"              '°mu4e-view-mark-toggle
+   "T"              'mu4e-view-mark-pattern
+   "V"              '°mu4e-search-sender
+   "%"              '°mu4e-view-mark-pattern
+   "$"              (general-l
+                      (mu4e~view-in-headers-context
+                       (mu4e-mark-execute-all t))))
+  (general-leader
+    :states         'emacs
+    :keymaps        'mu4e-view-mode-map
+    "/"             'mu4e-view-search-narrow
+    "d"             'mu4e-view-mark-for-delete)
+  (general-leader
+    :states         'normal
+    :keymaps        'mu4e-compose-mode-map
+    "!"             'message-send-and-exit
+    "K"             'mu4e-message-kill-buffer
+    "d"             (general-l
+                      (°ispell-cycle-dicts)
+                      (flyspell-buffer))
+    "D"             (general-l
+                      (call-interactively #'ispell-change-dictionary)
+                      (flyspell-buffer))
+    "a"             'mail-add-attachment)
+
   :config
+  (require 'subr-x)
+  (require 'xdg)
   (setq mu4e-context-policy nil)
   (setq mu4e-compose-context-policy nil)
   (defvar °°mu4e-account-list nil
-    "List of contexts that have seen modifications. This will be passed to \"mbsync\" on exiting Emacs.")
+    "List of contexts that have seen modifications.  This will be passed to \"mbsync\" on exiting Emacs.")
 
   ;; set up private context
   (setq mu4e-contexts
@@ -50,9 +134,9 @@
                                                ("/posteo/Privat"            . ?p)
                                                ("/posteo/Sent"              . ?s)
                                                ("/posteo/Transaktionen"     . ?t)))))
-        ;; room for additional contexts
-        {{{custom}}}
-        ))
+          ;; room for additional contexts
+          {{{custom}}}
+          ))
 
   ;; add context to °°mu4e-account-list after each modification to the database
   ;; (if they're not already there)
@@ -70,16 +154,16 @@
                  (if °°mu4e-account-list
                      (progn
                        (message
-                       (concat "Syncing mail accounts ("
-                               (string-join °°mu4e-account-list ", ")
-                               ")..."))
-                      (let* ((cmd (string-join (cons "mbsync" °°mu4e-account-list) " "))
-                             (result (call-process-shell-command cmd)))
-                       
-                       (mu4e-update-index)
-                       (not
-                        (unless (eql result 0)
-                          (display-warning 'mbsync "Error syncing mail accounts" :error)))))
+                        (concat "Syncing mail accounts ("
+                                (string-join °°mu4e-account-list ", ")
+                                ")..."))
+                       (let* ((cmd (string-join (cons "mbsync" °°mu4e-account-list) " "))
+                              (result (call-process-shell-command cmd)))
+                         
+                         (mu4e-update-index)
+                         (not
+                          (unless (eql result 0)
+                            (display-warning 'mbsync "Error syncing mail accounts" :error)))))
                    t)))
 
   ;; context on startup
@@ -171,7 +255,7 @@
                 (message "Ispell Dictionary set to %s." ispell-local-dictionary))
               ;; setup company-mode for word autocompletion
               (company-mode)
-              (setq-local company-backends '(company-ispell))
+              (setq-local company-backends '(company-capf company-ispell))
               (setq-local company-minimum-prefix-length 6)))
 
   (defun °mu4e-compose-edit-anything ()

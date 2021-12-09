@@ -59,6 +59,11 @@
      (compilation-mode-line-fail                   :foreground  ,base08)
      (compilation-mode-line-run                    :foreground  ,base0D)
 
+;;;; completion
+     (completions-annotations                       :foreground  ,base04)
+     (completions-common-part                       :foreground  ,base0D)
+     (completions-first-difference                  :foreground  ,base07)
+
 ;;;; custom
      (custom-variable-tag                          :foreground  ,base0D)
      (custom-group-tag                             :foreground  ,base0D)

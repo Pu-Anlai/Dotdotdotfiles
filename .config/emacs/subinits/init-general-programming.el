@@ -6,12 +6,31 @@
 ;; abbreviation settings
 ;; expand abbreviation upon exiting insert stat
 (add-hook 'evil-insert-state-exit-hook #'expand-abbrev)
+(setq save-abbrevs 'silently)
 
 ;; mode associations
 (push '(".gitignore" . prog-mode) auto-mode-alist)
 
 ;; syntax checking
 (use-package flymake
+  :after evil
+  :hook ((go-mode python-mode) . flymake-mode)
+  :general
+  (:states          'normal
+   :keymaps         'flymake-mode-map
+   "M--"            'flymake-goto-next-error
+   "M-_"            'flymake-goto-prev-error)
+  (general-goleader
+    :states         'normal
+    :keymaps        'flymake-mode-map
+    "!"             'flymake-diagnostic-buffer)
+  ;; flymake diagnostics buffer keybinds
+  (:states          'normal
+   :keymaps         'flymake-diagnostics-buffer-mode-map
+   "j"              'next-line
+   "k"              'previous-line
+   "RET"            'flymake-goto-diagnostic)
+
   :config
   (setq flymake-no-changes-timeout nil
         flymake-fringe-indicator-position 'right-fringe)
@@ -19,20 +38,38 @@
 
 (use-package yasnippet
   :hook ((go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
+  :general
+  (:keymaps         '(yas-keymap yas/keymap)
+   "M-j"            'yas-next-field-or-maybe-expand
+   "M-k"            'yas-prev-field
+   "M-S-j"          'yas-skip-and-clear-field)
+  (general-leader
+    :states         'normal
+    :keymaps        'snippet-mode-map
+    "YY"            'yas-load-snippet-buffer-and-close
+    "Yy"            'yas-load-snippet-buffer)
+  (general-leader
+    :keymaps        '(go-mode-map fish-mode-map python-mode-map mu4e-compose-mode-map)
+    :states         'normal
+    "Yn"            'yas-new-snippet
+    "Ye"            'yas-visit-snippet-file
+    "Yi"            'yas-insert-snippet
+    "Yt"            'yas-describe-tables)
+
   :config
   (yas-reload-all)
   ;; bind this here because yas-maybe-expand needs to be loaded first
-  (general-def
+  (general-define-key
     :states         'insert
     :keymaps        'yas-minor-mode-map
     "SPC"           yas-maybe-expand
-    "<return>"      yas-maybe-expand)
+    "<return>"      yas-maybe-expand)  
 
   ;; expansion for some python snippets
-  (general-def
-    :keymaps    'python-mode-map
-    :states     'insert
-    ":"         yas-maybe-expand)
+  (general-define-key
+   :keymaps         'python-mode-map
+   :states          'insert
+   ":"              yas-maybe-expand)
 
   ;; yas related functions
   (defun °yas-choose-greeting (name lang)
@@ -127,9 +164,22 @@ If decorator syntax is found a line above the current, don't do any padding."
 ;; language server
 (use-package eglot
   :hook ((python-mode go-mode) . eglot-ensure)
+  :general
+  (general-leader
+    :states         'motion
+    :keymaps        'eglot-mode-map
+    "hx"            'eglot-help-at-point)
+  (general-goleader
+    :states         'motion
+    :keymaps        'eglot-mode-map
+    "d"             'xref-find-definitions
+    "="             'eglot-format-buffer
+    "*"             'xref-find-references)
+  (general-goleader
+    :states          'visual
+    :keymaps         'eglot-mode-map
+    "="              'eglot-format)
   :init
-  ;; work around for wrong project version being loaded
-  (use-package project)
   (setq eglot-workspace-configuration
         '((:pyls . (:plugins (:pycodestyle (:enabled nil)))))))
 
@@ -137,6 +187,26 @@ If decorator syntax is found a line above the current, don't do any padding."
 (use-package company
   :hook ((prog-mode . company-mode)
          (company-mode . company-tng-mode))
+  :general
+  (:keymaps         'company-active-map
+   "<tab>"          nil
+   "<return>"       (general-l
+                      (unless (company-tooltip-visible-p)
+                        (company-complete)
+                        (company-pseudo-tooltip-hide))
+                      (newline 1 t))
+   "M-<return>"     (general-l
+                      (company-abort)
+                      (newline 1 t))
+   "C-n"            'company-select-next
+   "C-p"            'company-select-previous) 
+  (:states          'insert
+   :keymaps         'company-search-map
+   "<return>"       (general-l
+                      (company-complete)
+                      (company-pseudo-tooltip-hide)
+                      (newline 1 t)))
+
   :config
   (setq company-minimum-prefix-length 3
         company-selection-wrap-around t
@@ -160,22 +230,54 @@ If decorator syntax is found a line above the current, don't do any padding."
   (company-flx-mode 1))
 
 (use-package magit
-  :commands magit-status
   :hook ((magit-mode . °source-ssh-env)
          (with-editor-mode . evil-insert-state))
+  :general
+  (:states          'emacs
+   :keymaps         'magit-mode-map
+   "j"              'magit-section-forward
+   "k"              'magit-section-backward
+   "p"              'magit-push
+   "d"              'magit-delete-thing
+   "D"              'magit-diff
+   "Ju"             'magit-jump-to-unstaged
+   "Js"             'magit-jump-to-staged
+   "Jn"             'magit-jump-to-untracked
+   "Jz"             'magit-jump-to-stashes
+   "Jt"             'magit-jump-to-tracked)
+  (general-goleader
+    :states         'normal
+    "G"             'magit-status)
+  (:states          'normal
+   :keymaps         'magit-mode-map
+   "q"              'quit-window)
+
   :config
   (defun °force-git-access ()
     (interactive)
-    (let ((index-file (concat
-                       (projectile-project-root) (file-name-as-directory ".git") "index.lock")))
+    (let ((index-file (°join-path nil
+                       (project-root (project-current)) (file-name-as-directory ".git") "index.lock")))
       (when (yes-or-no-p (concat "Really delete " index-file "?"))
         (delete-file index-file)))))
 
-(use-package projectile
-  :hook (prog-mode . projectile-mode))
+(use-package project
+  :general
+  (:keymaps         'motion
+   "C-q"            'project-switch-project
+   "Q"              'project-find-file))
 
 (use-package quickrun
-  :commands quickrun
+  :general
+  (general-leader
+    :keymaps        'normal
+    "RET"           'quickrun)
+  (general-leader
+    :keymaps        'visual
+    "RET"           'quickrun-region)
+  (:states          'normal
+   :keymaps         'quickrun--mode-map
+   "q"              'quit-window)
+
   :config
   (setq quickrun-focus-p nil))
 

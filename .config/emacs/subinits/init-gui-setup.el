@@ -49,10 +49,13 @@
           (telephone-line-raw "!")
         (telephone-line-raw "-"))))
 
+  (telephone-line-defsegment °telephone-line-project-segment ()
+    (file-name-nondirectory (directory-file-name (project-root (project-current)))))
+  
   (setq telephone-line-lhs
         '((evil     .   (°telephone-line-buffer-modified-segment
                          telephone-line-evil-tag-segment))
-          (accent   .   (telephone-line-projectile-segment))
+          (accent   .   (°telephone-line-project-segment))
           (nil      .   (telephone-line-buffer-name-segment)))
         telephone-line-rhs
         '((nil      .   (telephone-line-misc-info-segment))

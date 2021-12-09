@@ -28,7 +28,19 @@
 ;; require essential custom functions
 (require 'init-my-essential-functions)
 
-;; set up autoloads for all other custom functions
+;; initial general.el setup here, all keybinds in the respective packages or in
+;; init-keybinds.el
+(use-package general
+  :config
+  (general-auto-unbind-keys)
+  (general-create-definer general-leader
+    :prefix "SPC")
+  (general-create-definer general-goleader
+    :prefix "g"))
+
+(require 'init-evil)
+
+;; set up autoloads for all non-essential custom functions
 (setq generated-autoload-file (expand-file-name "custom-autoloads.el" emacs-subinit-dir))
 (defun °update-my-function-autoloads ()
   (update-file-autoloads (expand-file-name "init-my-functions.el" emacs-subinit-dir) t))
@@ -50,16 +62,14 @@
 (unless (require 'init-mu4e nil t)
   (message "Error loading mu4e."))
 
-(require 'init-ivy)
-
-(require 'init-evil)
-
-(require 'init-emacs-extensions)
+(require 'init-completion)
 
 (require 'init-general-programming)
 
-(require 'init-keybinds)
-
 (require 'init-language-specific)
+
+(require 'init-emacs-extensions)
+
+(require 'init-additional-keybinds)
 
 (run-hooks '°post-init-custom-hook)

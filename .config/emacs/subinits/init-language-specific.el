@@ -2,21 +2,96 @@
 
 ;; language specific major modes and their settings
 ;; elisp helpers
+(use-package edebug
+  :general
+  (:states          'emacs
+   :keymaps         'edebug-mode-map
+   "SPC"            'edebug-step-mode))
+
 (use-package evil-cleverparens
   :after evil-surround
-  :commands (evil-cp-delete
-             evil-cp-delete-line
-             evil-cp-change
-             evil-cp-change-line
-             evil-cp-change-whole-line)
+  :general
+  ;; include other lisp-specific keybinds evil bindings that don't belong to
+  ;; cleverparens here as well
+  (:states          'normal
+   :keymaps         'lisp-mode-shared-map
+   "D"              'evil-cp-delete-line
+   "C"              'evil-cp-change-line
+   "c"              'evil-cp-change
+   "d"              'evil-cp-delete
+   "S"              'evil-cp-change-whole-line
+   "^"              '°evil-lisp-first-non-blank
+   "A"              '°evil-lisp-append-line
+   "I"              '°evil-lisp-insert-line
+   "o"              '°evil-lisp-open-below
+   "O"              '°evil-lisp-open-above)
+  (:states          'visual
+   :keymaps         'lisp-mode-shared-map
+   "c"              'evil-cp-change)
+  (general-leader
+    :states         'normal
+    :keymaps        'lisp-mode-shared-map
+    "A"             'evil-append-line
+    "I"             'evil-insert-line
+    "^"             'evil-first-non-blank
+    "o"             'evil-open-below
+    "O"             'evil-open-above
+    "p"             '°evil-lisp-paste-with-newline-below
+    "P"             '°evil-lisp-paste-with-newline-above)
+
   :config
   (evil-cp--enable-surround-operators))
 
-(use-package pcre2el
-  :defer t)
-
 (use-package suggest
   :commands suggest)
+
+;; properly allign keyword lists (by Fuco1)
+(eval-after-load "lisp-mode"
+  '(defun lisp-indent-function (indent-point state)
+     "Override of lisp-indent-function.  See original file for documentation"
+     (let ((normal-indent (current-column))
+           (orig-point (point)))
+       (goto-char (1+ (elt state 1)))
+       (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
+       (cond
+        ((and (elt state 2)
+              (or (not (looking-at "\\sw\\|\\s_"))
+                  (looking-at ":")))
+         (if (not (> (save-excursion (forward-line 1) (point))
+                     calculate-lisp-indent-last-sexp))
+             (progn (goto-char calculate-lisp-indent-last-sexp)
+                    (beginning-of-line)
+                    (parse-partial-sexp (point)
+                                        calculate-lisp-indent-last-sexp 0 t)))
+         (backward-prefix-chars)
+         (current-column))
+        ((and (save-excursion
+                (goto-char indent-point)
+                (skip-syntax-forward " ")
+                (not (looking-at ":")))
+              (save-excursion
+                (goto-char orig-point)
+                (looking-at ":")))
+         (save-excursion
+           (goto-char (+ 2 (elt state 1)))
+           (current-column)))
+        (t
+         (let ((function (buffer-substring (point)
+                                           (progn (forward-sexp 1) (point))))
+               method)
+           (setq method (or (function-get (intern-soft function)
+                                          'lisp-indent-function)
+                            (get (intern-soft function) 'lisp-indent-hook)))
+           (cond ((or (eq method 'defun)
+                      (and (null method)
+                           (> (length function) 3)
+                           (string-match "\\`def" function)))
+                  (lisp-indent-defform state indent-point))
+                 ((integerp method)
+                  (lisp-indent-specform method state
+                                        indent-point normal-indent))
+                 (method
+                  (funcall method indent-point state)))))))))
 
 ;; shell scripting
 ;; make shell scripts executable after save if they include a shebang
@@ -24,6 +99,11 @@
 
 (use-package fish-mode
   :defer t
+  :general
+  (general-leader
+    :states         'normal
+    :keymaps        'fish-mode-map
+    "hx"            'man-follow)
   :config
   (setq fish-enable-auto-indent t))
 
@@ -45,10 +125,15 @@
 
 ;; markdown
 (use-package markdown-mode
-  :defer t)
+  :commands markdown-mode)
 
 (use-package flymd
   :after markdown-mode
+  :general
+  (general-leader
+    :states         'normal
+    :keymaps        'flymd-map
+    "RET"           'flymd-flyit)
   :config
   (setq flymd-output-directory temporary-file-directory))
 
@@ -70,6 +155,14 @@
 ;; golang settings
 (use-package go-mode
   :commands go-mode
+  :general
+  (:states          'normal
+   :keymaps         'godoc-mode-map
+   "q"              'quit-window
+   (general-leader
+    :states         'normal
+    :keymaps        'go-mode-map
+     "ci"           'go-import-add))
   :config
   (add-hook
    'go-mode-hook
