@@ -353,31 +353,6 @@ unless FOLDERS-ONLY is non-nil."
            var-strs))))))
 
 ;;;###autoload
-(defun °split-window-sensibly (&optional window)
-  "Prefer horizontal splits for state-of-the-art widescreen monitors. Also don't
-  split when there's 3 or more windows open."
-  (if (or
-       (>= (count-windows) 3)
-       (> (length (get-buffer-window-list)) 1))
-      nil
-    (let* ((window (or window (selected-window)))
-           (window-size-h (window-size window))
-           (window-size-w (window-size window t))
-           (frame-size-h (window-size (frame-root-window)))
-           (frame-size-w (window-size (frame-root-window) t)))
-      (or
-       (and
-        (> window-size-w split-width-threshold)
-        (eq frame-size-w window-size-w)
-        (with-selected-window window
-          (split-window-right)))
-       (and
-        (eq frame-size-h window-size-h)
-        (with-selected-window window
-          (split-window-below)))))))
-
-
-;;;###autoload
 (defun °straight-update ()
   "Fetch, merge and rebuild all straight packages."
   (interactive)
