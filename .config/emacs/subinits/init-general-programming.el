@@ -188,8 +188,7 @@ If decorator syntax is found a line above the current, don't do any padding."
   :hook ((prog-mode . company-mode)
          (company-mode . company-tng-mode))
   :general
-  (:keymaps         'company-active-map
-   "<tab>"          nil
+  (:keymaps         'company-tng-map
    "<return>"       (general-l
                       (unless (company-tooltip-visible-p)
                         (company-complete)
@@ -206,7 +205,12 @@ If decorator syntax is found a line above the current, don't do any padding."
                       (company-complete)
                       (company-pseudo-tooltip-hide)
                       (newline 1 t)))
-
+  (general-unbind
+   :keymaps         '(company-active-map company-tng-map)
+    "<tab>"
+    "TAB"
+    "<backtab>")
+  
   :config
   (setq company-minimum-prefix-length 3
         company-selection-wrap-around t
