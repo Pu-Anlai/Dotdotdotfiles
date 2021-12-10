@@ -41,11 +41,11 @@
 
 ;; functions
 ;;;###autoload
-(defun °add-hook-to-mode (hook function mode &optional append)
-  "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option APPEND."
+(defun °add-hook-to-mode (hook function mode &optional depth)
+  "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option DEPTH."
   (add-hook (°concat-symbols mode '-hook)
             (lambda ()
-              (add-hook hook function append t))))
+              (add-hook hook function depth t))))
 
 ;;;###autoload
 (defun °dired-mark-toggle ()

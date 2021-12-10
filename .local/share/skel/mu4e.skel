@@ -227,21 +227,19 @@
         message-citation-line-function #'message-insert-formatted-citation-line
         message-citation-line-format "\nAm %A, den %x um %X schrieb %f:"
         message-kill-buffer-on-exit t)
+  (defun °mu4e-compose-change-plaintext-dictionary ()
+    (setq-local ispell-alternate-dictionary
+                (°join-path nil "/" "usr" "share" "dict"
+                            (pcase (or ispell-local-dictionary ispell-dictionary)
+                              ("de_DE" "german")
+                              ("en_AU" "british-english")
+                              (- "words")))))
+  ;; initial setup for mu4e-compose-mode
   (add-hook 'mu4e-compose-mode-hook
-            (defun °setup-mu4e-compose-settings ()
+            (defun °mu4e-compose-setup ()
               (visual-line-mode)
-              ;; switch plain-word dict when changing regular ispell dict
-              (add-hook 'ispell-change-dictionary-hook
-                        (lambda ()
-                          (setq-local ispell-alternate-dictionary (°join-path nil "/" "usr" "share" "dict"
-                                                                              (pcase (or ispell-local-dictionary ispell-dictionary)
-                                                                                ("de_DE" "german")
-                                                                                ("en_AU" "british-english")
-                                                                                (- "words")))))
-                        nil t)
-              ;; decide which dict to used based on the extension of the
-              ;; parent message's email adress, use de_DE if there is no
-              ;; parent message
+              ;; decide which dict to use based on the extension of the parent
+              ;; message's email adress, use de_DE if there is no parent message
               (let*
                   ((sender1 (cdr (car
                                   (ignore-errors
@@ -253,6 +251,12 @@
                                                 "en_AU"))
                 (flyspell-mode)
                 (message "Ispell Dictionary set to %s." ispell-local-dictionary))
+              ;; choose plaintext dictionary based on selected ispell dict
+              (°mu4e-compose-change-plaintext-dictionary)
+              ;; also change plaintext dictionary every time ispell dictionary
+              ;; is changed
+              (add-hook 'ispell-change-dictionary-hook #'°mu4e-compose-change-plaintext-dictionary)
+              
               ;; setup company-mode for word autocompletion
               (company-mode)
               (setq-local company-backends '(company-capf company-ispell))
