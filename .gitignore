@@ -100,8 +100,8 @@
 !.config/xkb
 !.config/xkb/custom.xkb
 
-!.config/youtube-dl
-!.config/youtube-dl/*
+!.config/yt-dlp
+!.config/yt-dlp/*
 
 !.local
 
