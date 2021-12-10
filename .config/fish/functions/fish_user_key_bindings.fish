@@ -38,11 +38,14 @@ function fish_user_key_bindings
     bind -M insert \eo 'mkdir -p (string replace -r \'^~\' $HOME -- (commandline -t))'
 
     # update history but keep commandline
-    bind -M insert \e\cH 'history merge'
+    bind -M insert \cH 'history merge'
 
     # clear terminal screen
-    bind -M insert \e\cL 'cls; commandline -f repaint'
+    bind -M insert \cX 'cls; commandline -f repaint'
 
     # toggle shadow mode
     bind -M insert \e\? 'if set -q fish_private_mode; exec fish; else; exec fish --private; end'
+
+    # unbind Ctrl+L for alacritty
+    bind --erase -M insert --preset \cL
 end

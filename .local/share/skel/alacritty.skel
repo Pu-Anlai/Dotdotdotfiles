@@ -232,22 +232,22 @@ colors:
     #  foreground: '#1d1f21'
 
   # Keyboard regex hints
-  #hints:
+  hints:
     # Fist character in the hint label
     #
     # Allowed values are CellForeground/CellBackground, which reference the
     # affected cell, or hexadecimal colors like #ff00ff.
-    #start:
-    #  foreground: '#1d1f21'
-    #  background: '#e9ff5e'
+    start:
+     background: '{{{__BASE05_HASH}}}' # base05
+     foreground: '{{{__BASE00_HASH}}}' # base00
 
     # All characters after the first one in the hint label
     #
     # Allowed values are CellForeground/CellBackground, which reference the
     # affected cell, or hexadecimal colors like #ff00ff.
-    #end:
-    #  foreground: '#e9ff5e'
-    #  background: '#1d1f21'
+    end:
+     background: '{{{__BASE05_HASH}}}' # base05
+     foreground: '{{{__BASE00_HASH}}}' # base00
 
   # Line indicator
   #
@@ -452,9 +452,9 @@ cursor:
 #
 # Terminal hints can be used to find text in the visible part of the terminal
 # and pipe it to other applications.
-#hints:
+hints:
   # Keys used for the hint labels.
-  #alphabet: "jfkdls;ahgurieowpq"
+  alphabet: "jfkdlsöaurieowpq"
 
   # List with all available hints
   #
@@ -480,17 +480,17 @@ cursor:
   #       Select the hint's text.
   #   - MoveViModeCursor
   #       Move the vi mode cursor to the beginning of the hint.
-  #enabled:
-  # - regex: "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
-  #           [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
-  #   command: xdg-open
-  #   post_processing: true
+  enabled:
+  - regex: "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+            [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+    command: xdg-open
+    post_processing: true
   #   mouse:
   #     enabled: true
   #     mods: None
-  #   binding:
-  #     key: U
-  #     mods: Control|Shift
+    binding:
+      key: L
+      mods: Control
 
 # Mouse bindings
 #
