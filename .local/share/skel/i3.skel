@@ -1,4 +1,4 @@
-# %-LOCATION:$HOME/.config/i3/config-% %-CUSTOM:$HOME/.config/i3/custom-% -*-conf-*-
+# %-LOCATION:$HOME/.config/i3/config-% -*-conf-*-
 # DO EDITS HERE: $HOME/.local/share/skel/i3.skel
 
 # Base16 color setup
@@ -43,9 +43,7 @@ set $i3b_up3 "pkill -RTMIN+3 i3blocks"
 set $i3b_up2 "pkill -RTMIN+2 i3blocks"
 set $i3b_up1 "pkill -RTMIN+1 i3blocks"
 
-# custom settings
-{{{custom}}}
-# end of custom settings
+include custom
 
 ## focus settings
 # never let windows take focus
