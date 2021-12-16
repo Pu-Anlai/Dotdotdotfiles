@@ -106,11 +106,18 @@
 (use-package vertigo
   :general
   (:keymaps         'motion
-   "<S-SPC><S-SPC>" '°vertigo-reuse-last-arg)
-  (general-leader
-    :keymaps        'motion
-    "SPC"           'vertigo-set-digit-argument)
+   "<S-SPC>"        'vertigo-set-digit-argument
+   "<C-S-SPC>"      '°vertigo-reuse-last-arg)
+  (:keymaps         'operator
+    "<S-SPC>"       'vertigo-evil-set-digit-argument)
   :config
+  (evil-define-motion vertigo-evil-set-digit-argument (count)
+    "Evil vertigo motion. Count has no effect."
+    (let (cmd)
+      (setq cmd
+            (evil-read-motion nil (vertigo--run (lambda (x) x) "Set digit arg: " t)))
+      (funcall (car cmd) (nth 1 cmd))))
+
   (setq vertigo-home-row '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?ö))
   (setq vertigo-cut-off 9)
   (evil-declare-motion #'vertigo-set-digit-argument)
