@@ -18,6 +18,9 @@
    (°concat-symbols hook '-mode-hook)
    #'hl-line-mode))
 
+;; window splitting settings --> REMOVE?
+(setq split-window-preferred-function '°split-window-sensibly)
+
 ;; keep track of window layout changes
 (defun °°first-push-to-window-layout-stack (&rest args)
   (unless (eql (count-windows) 1)
