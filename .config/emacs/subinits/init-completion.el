@@ -6,7 +6,9 @@
     "M-j"           'next-history-element)
   :init
   (setq completion-styles (append completion-styles '(flex))
-        completion-ignore-case t)
+        completion-ignore-case t
+        read-buffer-completion-ignore-case t
+        read-file-name-completion-ignore-case t)
   (vertico-mode))
 
 (use-package embark
