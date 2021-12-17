@@ -89,7 +89,7 @@
            :regexp t :select t :popup t :align below :size 0.2)
           ('inferior-python-mode
            :select t :popup t :align below :size 0.2)
-          ('vterm-mode
-           :select t :popup t :align below :size 0.2))))
+          ("*vterm*"
+           :regexp t :select t :popup t :align below :size 0.2))))
 
 (provide 'init-gui-setup)

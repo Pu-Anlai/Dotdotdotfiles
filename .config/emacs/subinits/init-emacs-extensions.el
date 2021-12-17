@@ -190,7 +190,12 @@ Start terminal if it isn't running already."
             (delete-window))
         (if (get-buffer vterm-buf)
             (pop-to-buffer vterm-buf)
-          (vterm-other-window))))))
+          (vterm-other-window)))))
+
+  ;; delete vterm window on exit
+  (add-hook 'vterm-exit-functions
+            (lambda (buf event)
+              (delete-window (get-buffer-window buf)))))
 
 
 (provide 'init-emacs-extensions)
