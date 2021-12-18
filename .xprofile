@@ -1,4 +1,4 @@
 xset -b &
 numlockx on &
 unclutter -b &
-xkbcomp ~/.config/xkb/custom.xkb "$DISPLAY" &
+xkbcomp -I$HOME/.config/xkb $HOME/.config/xkb/custom.xkb "$DISPLAY" &

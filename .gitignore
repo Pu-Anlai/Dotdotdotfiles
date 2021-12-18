@@ -101,6 +101,10 @@
 
 !.config/xkb
 !.config/xkb/custom.xkb
+!.config/xkb/types
+!.config/xkb/types/custom
+!.config/xkb/symbols
+!.config/xkb/symbols/custom
 
 !.config/yt-dlp
 !.config/yt-dlp/*
