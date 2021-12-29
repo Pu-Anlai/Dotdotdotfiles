@@ -1,5 +1,5 @@
 function ffcut
-    argparse -n ffcut -N 1 -X 1 's/=' 't/=' -- $argv
+    argparse -n ffcut -N 1 -X 1 's/ss=' 't/to=' -- $argv
     test -f "$argv"
     and test -n "$_flag_s"
     and test -n "$_flag_t"
