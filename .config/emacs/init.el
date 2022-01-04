@@ -28,6 +28,9 @@
 ;; require essential custom functions
 (require 'init-my-essential-functions)
 
+;; setup gui early to avoid modeline troubles
+(require 'init-gui-setup)
+
 ;; initial general.el setup here, all keybinds in the respective packages or in
 ;; init-keybinds.el
 (use-package general
@@ -51,9 +54,6 @@
   (kill-buffer (find-buffer-visiting generated-autoload-file)))
 ;; and now load it
 (load generated-autoload-file)
-
-;; setup gui early to avoid modeline troubles
-(require 'init-gui-setup)
 
 ;; load up org-mode with workarounds
 (require 'init-org-mode)
