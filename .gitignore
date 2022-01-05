@@ -73,10 +73,6 @@
 !.config/ncmpcpp/config
 !.config/ncmpcpp/bindings
 
-!.config/neomutt
-!.config/neomutt/*
-.config/neomutt/neomuttrc
-
 !.config/nvim
 !.config/nvim/init.vim
 !.config/nvim/autoload/
@@ -120,9 +116,6 @@
 
 !.local/share
 
-!.local/share/applications/
-!.local/share/applications/emacs.desktop
-
 !.local/share/qutebrowser
 !.local/share/qutebrowser/userscripts
 !.local/share/qutebrowser/userscripts/*
@@ -135,10 +128,8 @@
 
 !.audiotools.cfg
 !.bashrc
-!.ctags
 !.gitignore
 !.pam_environment
 !.profile
-!.urlview
 !.XCompose
 !.xprofile
