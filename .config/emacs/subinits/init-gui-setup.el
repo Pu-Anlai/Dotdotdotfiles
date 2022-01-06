@@ -40,6 +40,18 @@
 (dolist (hook '(prog-mode-hook text-mode-hook))
   (add-hook hook #'electric-pair-mode))
 
+(use-package dimmer
+  :init
+  (defun °dimmer-mode (&rest args)
+    (dimmer-mode t)
+    (advice-remove #'split-window #'°dimmer-mode)
+    (remove-hook 'minibuffer-setup-hook #'°dimmer-mode))
+
+  ;; load package when splitting window or entering minibuffer
+  (advice-add #'split-window :before #'°dimmer-mode)
+  (add-hook 'minibuffer-setup-hook #'°dimmer-mode)
+  :commands dimmer-mode)
+
 ;; modeline
 (use-package telephone-line
   :init
