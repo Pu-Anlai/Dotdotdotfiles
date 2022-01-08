@@ -39,14 +39,146 @@
          (evil-paste-after 1)
          (indent-according-to-mode)))))
 
-;; functions
+;; evil related-functions
 ;;;###autoload
-(defun °add-hook-to-mode (hook function mode &optional depth)
-  "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option DEPTH."
-  (add-hook (°concat-symbols mode '-hook)
-            (lambda ()
-              (add-hook hook function depth t))))
+(defun °evil-dry-open-below (count)
+  "Open LINE number of lines below but stay in current line."
+  (interactive "p")
+  (save-excursion
+    (end-of-line)
+    (open-line count)))
 
+;;;###autoload
+(defun °evil-dry-open-above (count)
+  "Open LINE number of lines above but stay in current line."
+  (interactive "p")
+  ;; this does not work with save-excursion if it's done at the beginning of
+  ;; the buffer
+  (let ((col (current-column)))
+    (beginning-of-line)
+    (open-line count)
+    (forward-line count)
+    (move-to-column col)))
+
+;;;###autoload
+(defun °evil-search-visual-selection (direction count)
+  "Search for visually selected text in buffer.
+DIRECTION can be forward or backward.  Don't know what COUNT does."
+  (when (> (mark) (point))
+    (exchange-point-and-mark))
+  (when (eq direction 'backward)
+    (setq count (+ (or count 1) 1)))
+  (let ((regex (format "\\<%s\\>" (regexp-quote (buffer-substring (mark) (point))))))
+    (setq evil-ex-search-count count
+          evil-ex-search-direction direction
+          evil-ex-search-pattern
+          (evil-ex-make-search-pattern regex)
+          evil-ex-search-offset nil
+          evil-ex-last-was-search t)
+    ;; update search history unless this pattern equals the
+    ;; previous pattern
+    (unless (equal (car-safe evil-ex-search-history) regex)
+      (push regex evil-ex-search-history))
+    (evil-push-search-history regex (eq direction 'forward))
+    (evil-ex-delete-hl 'evil-ex-search)
+    (evil-exit-visual-state)
+    (when (fboundp 'evil-ex-search-next)
+      (evil-ex-search-next count))))
+
+;;;###autoload (autoload '°evil-paste-with-newline-above "init-my-functions")
+(°defun-newline-paste
+ °evil-paste-with-newline-above
+ (evil-open-above 1))
+
+;;;###autoload (autoload '°evil-paste-with-newline-below "init-my-functions")
+(°defun-newline-paste
+ °evil-paste-with-newline-below
+ (evil-open-below 1))
+
+;;;###autoload (autoload '°evil-lisp-paste-with-newline-above "init-my-functions")
+(°defun-newline-paste
+ °evil-lisp-paste-with-newline-above
+ (°evil-lisp-open-above 1))
+
+;;;###autoload (autoload '°evil-lisp-paste-with-newline-below "init-my-functions")
+(°defun-newline-paste
+ °evil-lisp-paste-with-newline-below
+ (°evil-lisp-open-below 1))
+
+;; lisp related functions
+;;;###autoload
+(defun °evil-lisp-append-line (count)
+  (interactive "p")
+  (°°evil-lisp-end-of-depth-in-line)
+  (setq evil-insert-count count)
+  (evil-insert-state 1))
+
+(defun °°evil-lisp-end-of-depth-in-line ()
+  "Go to last point of current syntax depth on the current line."
+  ;; if we're on a parens move into its scope
+  (unless (eq (length (°get-line)) 0) ; don't move if on empty line
+    (when (not (°°in-string-p))
+      (forward-char))
+    (let ((depth (°°syntax-depth))
+          (line-end (save-excursion
+                      (end-of-line)
+                      (point))))
+
+      (unless
+          (catch 'end-of-line
+            (while (>= (°°syntax-depth) depth)
+              (forward-char)
+              (when (eq (point) line-end)
+                (throw 'end-of-line t))))
+        (backward-char)))))
+
+;;;###autoload
+(defun °evil-lisp-insert-line (count)
+  (interactive "p")
+  (°°evil-lisp-start-of-depth-in-line)
+  (when (looking-at "\s")
+    (°evil-lisp-first-non-blank))
+  (setq evil-insert-count count)
+  (evil-insert-state 1))
+
+;;;###autoload
+(defun °evil-lisp-first-non-blank ()
+    (interactive)
+  (evil-first-non-blank)
+  (while (and (equal (thing-at-point 'char) "(")
+              (not (°°in-string-p)))
+    (evil-forward-char)))
+
+;;;###autoload
+(defun °evil-lisp-open-above (count)
+  (interactive "p")
+  (°°evil-lisp-start-of-depth-in-line)
+  (save-excursion
+    (newline 1)
+    (indent-according-to-mode))
+  (indent-according-to-mode)
+  (setq evil-insert-count count
+        evil-insert-lines t)
+  (evil-insert-state 1))
+
+;;;###autoload
+(defun °evil-lisp-open-below (count)
+  (interactive "p")
+  (°°evil-lisp-end-of-depth-in-line)
+  (newline 1)
+  (indent-according-to-mode)
+  (setq evil-insert-count count
+        evil-insert-lines t)
+  (evil-insert-state 1))
+
+(defun °°evil-lisp-start-of-depth-in-line ()
+  "Go to first point of current syntax depth on the current line."
+  (let ((depth (°°syntax-depth)))
+    (evil-beginning-of-line)
+    (while (not (eq depth (°°syntax-depth)))
+      (evil-forward-char))))
+ 
+;; functions related to other packages
 ;;;###autoload
 (defun °dired-mark-toggle ()
   "Toggle mark for currently selected file."
@@ -71,6 +203,58 @@ Start eshell if it isn't running already."
         (select-window (get-buffer-window "*eshell*"))
         (delete-window))
     (eshell)))
+
+;;;###autoload
+(defun °ispell-cycle-dicts ()
+  "Cycle through the dicts in `°ispell-dicts-in-use'."
+  (interactive)
+  (ispell-change-dictionary
+   (catch 'dict
+     (while t
+       (nconc °ispell-dicts-in-use (list (pop °ispell-dicts-in-use)))
+       (unless (string= ispell-current-dictionary (car °ispell-dicts-in-use))
+         (throw 'dict (car °ispell-dicts-in-use)))))))
+
+;;;###autoload
+(defun °python-remove-breakpoints ()
+  "Remove all breakpoint declarations in buffer."
+  (interactive)
+  (let ((counter 0))
+    (save-excursion
+      (goto-char 0)
+      (while (re-search-forward "^[[:space:]]*breakpoint()[[:space:]]*\n" nil t)
+        (replace-match "")
+        (setq counter (1+ counter))))
+    (message "%s breakpoint%s removed." counter (if (= counter 1) "" "s"))))
+
+;;;###autoload
+(defun °python-test ()
+  "Run pytest."
+  (interactive)
+  (let ((old-py-path (getenv "PYTHONPATH"))
+        (new-py-path (projectile-project-root)))
+    (setenv "PYTHONPATH" new-py-path)
+    (quickrun :source `((:command . "pytest")
+                        (:default-directory . ,new-py-path)
+                        (:exec . ("pytest"))))
+    (setenv "PYTHONPATH" old-py-path)))
+
+;;;###autoload
+(defun °straight-update ()
+  "Fetch, merge and rebuild all straight packages."
+  (interactive)
+  (when (y-or-n-p "Fetch package remotes and rebuild modified packages? ")
+    (straight-pull-all)
+    (straight-check-all)
+    (restart-emacs)))
+
+;; general functions
+;;;###autoload
+(defun °add-hook-to-mode (hook function mode &optional depth)
+  "Add FUNCTION to HOOK but limit it to MODE.  See `add-hook' for option DEPTH."
+  (add-hook (°concat-symbols mode '-hook)
+            (lambda ()
+              (add-hook hook function depth t))))
 
 ;;;###autoload
 (defun °eval-visual-region ()
@@ -113,138 +297,6 @@ Start eshell if it isn't running already."
         (setq reg-start (point))))
     (eval-region reg-start reg-end t)))
 
-;; evil-related-functions
-;;;###autoload
-(defun °evil-dry-open-below (count)
-  "Open LINE number of lines below but stay in current line."
-  (interactive "p")
-  (save-excursion
-    (end-of-line)
-    (open-line count)))
-
-;;;###autoload
-(defun °evil-dry-open-above (count)
-  "Open LINE number of lines above but stay in current line."
-  (interactive "p")
-  ;; this does not work with save-excursion if it's done at the beginning of
-  ;; the buffer
-  (let ((col (current-column)))
-    (beginning-of-line)
-    (open-line count)
-    (forward-line count)
-    (move-to-column col)))
-
-;; lisp related functions
-;;;###autoload
-(defun °evil-lisp-append-line (count)
-  (interactive "p")
-  (°°evil-lisp-end-of-depth)
-  (setq evil-insert-count count)
-  (evil-insert-state 1))
-
-(defun °°evil-lisp-end-of-depth ()
-  "Go to last point of current syntax depth on the current line."
-  ;; if we're on a parens move into its scope
-  (unless (eq (length (°get-line)) 0) ; don't move if on empty line
-    (when (and (not (°°in-string-p))
-               (or (mapcar #'looking-at '("(" ")"))))
-      (forward-char))
-    (let ((depth (°°syntax-depth)))
-      (end-of-line)
-      (while (not (eq depth (°°syntax-depth)))
-        (backward-char)))))
-
-;;;###autoload
-(defun °evil-lisp-insert-line (count)
-  (interactive "p")
-  (°°evil-lisp-start-of-depth)
-  (when (looking-at "\s")
-    (°evil-lisp-first-non-blank))
-  (setq evil-insert-count count)
-  (evil-insert-state 1))
-
-;;;###autoload
-(defun °evil-lisp-first-non-blank ()
-    (interactive)
-  (evil-first-non-blank)
-  (while (and (equal (thing-at-point 'char) "(")
-              (not (°°in-string-p)))
-    (evil-forward-char)))
-
-;;;###autoload
-(defun °evil-lisp-open-above (count)
-  (interactive "p")
-  (°°evil-lisp-start-of-depth)
-  (save-excursion
-    (newline 1)
-    (indent-according-to-mode))
-  (indent-according-to-mode)
-  (setq evil-insert-count count
-        evil-insert-lines t)
-  (evil-insert-state 1))
-
-;;;###autoload
-(defun °evil-lisp-open-below (count)
-  (interactive "p")
-  (°°evil-lisp-end-of-depth)
-  (newline 1)
-  (indent-according-to-mode)
-  (setq evil-insert-count count
-        evil-insert-lines t)
-  (evil-insert-state 1))
-
-(defun °°evil-lisp-start-of-depth ()
-  "Go to first point of current syntax depth on the current line."
-  (let ((depth (°°syntax-depth)))
-    (evil-beginning-of-line)
-    (while (not (eq depth (°°syntax-depth)))
-      (evil-forward-char))))
-
-;;;###autoload (autoload '°evil-paste-with-newline-above "init-my-functions")
-(°defun-newline-paste
- °evil-paste-with-newline-above
- (evil-open-above 1))
-
-;;;###autoload (autoload '°evil-paste-with-newline-below "init-my-functions")
-(°defun-newline-paste
- °evil-paste-with-newline-below
- (evil-open-below 1))
-
-;;;###autoload (autoload '°evil-lisp-paste-with-newline-above "init-my-functions")
-(°defun-newline-paste
- °evil-lisp-paste-with-newline-above
- (°evil-lisp-open-above 1))
-
-;;;###autoload (autoload '°evil-lisp-paste-with-newline-below "init-my-functions")
-(°defun-newline-paste
- °evil-lisp-paste-with-newline-below
- (°evil-lisp-open-below 1))
- 
-;;;###autoload
-(defun °evil-search-visual-selection (direction count)
-  "Search for visually selected text in buffer.
-DIRECTION can be forward or backward.  Don't know what COUNT does."
-  (when (> (mark) (point))
-    (exchange-point-and-mark))
-  (when (eq direction 'backward)
-    (setq count (+ (or count 1) 1)))
-  (let ((regex (format "\\<%s\\>" (regexp-quote (buffer-substring (mark) (point))))))
-    (setq evil-ex-search-count count
-          evil-ex-search-direction direction
-          evil-ex-search-pattern
-          (evil-ex-make-search-pattern regex)
-          evil-ex-search-offset nil
-          evil-ex-last-was-search t)
-    ;; update search history unless this pattern equals the
-    ;; previous pattern
-    (unless (equal (car-safe evil-ex-search-history) regex)
-      (push regex evil-ex-search-history))
-    (evil-push-search-history regex (eq direction 'forward))
-    (evil-ex-delete-hl 'evil-ex-search)
-    (evil-exit-visual-state)
-    (when (fboundp 'evil-ex-search-next)
-      (evil-ex-search-next count))))
-
 ;;;###autoload
 (defun °get-line ()
   "Uniform way to get content of current line."
@@ -253,17 +305,6 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
 (defun °°in-string-p ()
   "Returns t if point is within a string according to syntax-ppss.  Otherwise nil."
   (not (eq (nth 3 (syntax-ppss)) nil)))
-
-;;;###autoload
-(defun °ispell-cycle-dicts ()
-  "Cycle through the dicts in `°ispell-dicts-in-use'."
-  (interactive)
-  (ispell-change-dictionary
-   (catch 'dict
-     (while t
-       (nconc °ispell-dicts-in-use (list (pop °ispell-dicts-in-use)))
-       (unless (string= ispell-current-dictionary (car °ispell-dicts-in-use))
-         (throw 'dict (car °ispell-dicts-in-use)))))))
 
 ;;;###autoload
 (defun °join-path (folders-only &rest elements)
@@ -289,30 +330,6 @@ unless FOLDERS-ONLY is non-nil."
       (if rpre
           (concat (nth rpre °last-name-prefixes) " " lname)
         lname))))
-
-;;;###autoload
-(defun °python-remove-breakpoints ()
-  "Remove all breakpoint declarations in buffer."
-  (interactive)
-  (let ((counter 0))
-    (save-excursion
-      (goto-char 0)
-      (while (re-search-forward "^[[:space:]]*breakpoint()[[:space:]]*\n" nil t)
-        (replace-match "")
-        (setq counter (1+ counter))))
-    (message "%s breakpoint%s removed." counter (if (= counter 1) "" "s"))))
-
-;;;###autoload
-(defun °python-test ()
-  "Run pytest."
-  (interactive)
-  (let ((old-py-path (getenv "PYTHONPATH"))
-        (new-py-path (projectile-project-root)))
-    (setenv "PYTHONPATH" new-py-path)
-    (quickrun :source `((:command . "pytest")
-                        (:default-directory . ,new-py-path)
-                        (:exec . ("pytest"))))
-    (setenv "PYTHONPATH" old-py-path)))
 
 ;;;###autoload
 (defun °restore-window-layout ()
@@ -376,15 +393,6 @@ unless FOLDERS-ONLY is non-nil."
         (with-selected-window window
           (split-window-below)))))))
 
-
-;;;###autoload
-(defun °straight-update ()
-  "Fetch, merge and rebuild all straight packages."
-  (interactive)
-  (when (y-or-n-p "Fetch package remotes and rebuild modified packages? ")
-    (straight-pull-all)
-    (straight-check-all)
-    (restart-emacs)))
 
 ;;;###autoload
 (defun °sudo-find-file ()
