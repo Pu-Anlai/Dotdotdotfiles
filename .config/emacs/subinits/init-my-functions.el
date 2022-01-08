@@ -110,36 +110,32 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
 (defun °evil-lisp-append-line (count)
   (interactive "p")
   (°°evil-lisp-end-of-depth-in-line)
-  (setq evil-insert-count count)
-  (evil-insert-state 1))
+  (evil-insert count))
 
 (defun °°evil-lisp-end-of-depth-in-line ()
   "Go to last point of current syntax depth on the current line."
   ;; if we're on a parens move into its scope
   (unless (eq (length (°get-line)) 0) ; don't move if on empty line
-    (when (not (°°in-string-p))
-      (forward-char))
     (let ((depth (°°syntax-depth))
           (line-end (save-excursion
                       (end-of-line)
                       (point))))
 
-      (unless
-          (catch 'end-of-line
-            (while (>= (°°syntax-depth) depth)
+      (when
+          (catch 'end-of-depth
+            (while (< (point) line-end)
               (forward-char)
-              (when (eq (point) line-end)
-                (throw 'end-of-line t))))
+              (when (< (°°syntax-depth) depth)
+                (throw 'end-of-depth t))))
         (backward-char)))))
 
 ;;;###autoload
 (defun °evil-lisp-insert-line (count)
   (interactive "p")
-  (°°evil-lisp-start-of-depth-in-line)
+  (°°evil-lisp-beginning-of-depth-in-line)
   (when (looking-at "\s")
     (°evil-lisp-first-non-blank))
-  (setq evil-insert-count count)
-  (evil-insert-state 1))
+  (evil-insert count))
 
 ;;;###autoload
 (defun °evil-lisp-first-non-blank ()
@@ -152,7 +148,7 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
 ;;;###autoload
 (defun °evil-lisp-open-above (count)
   (interactive "p")
-  (°°evil-lisp-start-of-depth-in-line)
+  (°°evil-lisp-beginning-of-depth-in-line)
   (save-excursion
     (newline 1)
     (indent-according-to-mode))
@@ -171,13 +167,21 @@ DIRECTION can be forward or backward.  Don't know what COUNT does."
         evil-insert-lines t)
   (evil-insert-state 1))
 
-(defun °°evil-lisp-start-of-depth-in-line ()
+(defun °°evil-lisp-beginning-of-depth-in-line ()
   "Go to first point of current syntax depth on the current line."
-  (let ((depth (°°syntax-depth)))
-    (evil-beginning-of-line)
-    (while (not (eq depth (°°syntax-depth)))
-      (evil-forward-char))))
- 
+  (let ((depth (°°syntax-depth))
+        (line-beginning (save-excursion
+                      (beginning-of-line)
+                      (point))))
+
+    (when
+        (catch 'beginning-of-depth
+          (while (> (point) line-beginning)
+            (backward-char)
+            (when (< (°°syntax-depth) depth)
+              (throw 'beginning-of-depth t))))
+      (forward-char))))
+
 ;; functions related to other packages
 ;;;###autoload
 (defun °dired-mark-toggle ()
