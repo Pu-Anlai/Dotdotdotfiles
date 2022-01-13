@@ -1,5 +1,3 @@
-abbr -a -g abbra fish_add_user_abbreviation
-abbr -a -g aliasa fish_add_user_alias
 abbr -a -g aur auracle
 abbr -a -g aurd auracle download
 abbr -a -g auri auracle info
@@ -27,7 +25,7 @@ abbr -a -g gri grep -i
 abbr -a -g gst git status
 abbr -a -g jctl journalctl
 abbr -a -g lo libreoffice
-abbr -a -g mc 'merge-configs; and fish_update_user_settings'
+abbr -a -g mc merge-configs
 abbr -a -g mksri makepkg -sri
 abbr -a -g nd nextd
 abbr -a -g o open
@@ -43,7 +41,6 @@ abbr -a -g pm pacman
 abbr -a -g p pass
 abbr -a -g psag 'ps -A | grep -i'
 abbr -a -g psa ps -A
-abbr -a -g py2 python2
 abbr -a -g py python
 abbr -a -g q exit
 abbr -a -g sctlpo systemctl poweroff
