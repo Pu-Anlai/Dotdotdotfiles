@@ -260,6 +260,15 @@ Start eshell if it isn't running already."
             (lambda ()
               (add-hook hook function depth t))))
 
+(defun °delete-this-file ()
+  "Delete file in current buffer."
+  (interactive)
+  (let* ((buf (current-buffer))
+         (file (buffer-file-name buf)))
+    (when (yes-or-no-p (concat "Delete file " file "? "))
+      (kill-buffer buf)
+      (delete-file file))))
+
 ;;;###autoload
 (defun °eval-visual-region ()
   "Evaluate region."
