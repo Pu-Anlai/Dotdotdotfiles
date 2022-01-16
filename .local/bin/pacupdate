@@ -185,7 +185,7 @@ function get_added_lines -a file1 file2
 end
 
 
-function update_pacman_mirrorlist
+function check_update_pacman_mirrorlist
     echo_head --nolb "Pacman mirrorlist outdated?"
     set last_update_mirrorlist (get_cache_var last_update_mirrorlist)
     # convert PACUPDATE_MIRRORLIST_INTERVAL to seconds
@@ -202,6 +202,11 @@ function update_pacman_mirrorlist
         return 0
     end
 
+    update_pacman_mirrorlist; or return 1
+end
+
+
+function update_pacman_mirrorlist
     echo "Retrieving current copy..."
     set mirrorlist_temp (mktemp --suffix="-mirrorlist")
     curl -m "$PACUPDATE_CURL_TIMEOUT" -s "$PACUPDATE_MIRRORLIST_URL" > "$mirrorlist_temp" 2>/dev/null
@@ -552,7 +557,7 @@ end
 
 function main
     test_sudo
-    and update_pacman_mirrorlist
+    and check_update_pacman_mirrorlist
     and check_mailing_list
     and check_repo_updates
     and check_aur_updates
