@@ -20,7 +20,7 @@ set $base0E {{{__BASE0E_HASH}}}
 set $base0F {{{__BASE0F_HASH}}}
 
 # input setup
-input * xkb_file {{{HOME}}}/.config/xkb/custom.xkb
+input "type:keyboard" xkb_file {{{HOME}}}/.config/xkb/custom.xkb
 
 # Basic color configuration using the Base16 variables for windows and borders.
 # Property Name         Border  BG      Text    Indicator Child Border
@@ -75,7 +75,7 @@ no_focus [class="mpv"]
 ## configure window decorations
 # first the border
 hide_edge_borders smart
-new_window pixel 5
+default_border pixel 5
 # next the title font
 font pango:$font 8
 # Format the window title beyond the font
