@@ -27,7 +27,7 @@ bold "Mounting /dev/mapper/$blkdev at /mnt..."
 mount /dev/mapper/$blkdev /mnt
 
 prompt "Creating top-level subvolumes..."
-for sub in @ @home @swap @snp var/var var/cache var/log; do
+for sub in @ @home @snp; do
     btrfs -v subvolume create /mnt/$sub
 done
 
@@ -37,19 +37,19 @@ umount -v -R /mnt
 prompt "Mounting top-level subvolumes..."
 mount -v -o compress=zstd,subvol=@ /dev/mapper/$blkdev /mnt
 
-for sub in home swap snp; do
-    mkdir -pv $sub
+for sub in home snp; do
+    mkdir -pv /mnt/$sub
     mount -v -o compress=zstd,subvol=@$sub /dev/mapper/$blkdev /mnt/$sub
 done
 
-prompt "Mounting /var sub-directory subvolumes..."
+prompt "Creating /var sub-directory subvolumes..."
 mkdir -pv /mnt/var
 for sub in var cache log; do
-    mkdir -pv $sub
     btrfs -v subvolume create /mnt/var/$sub
 done
 
-prompt "Creating swap file..."
+prompt "Creating swap subvolume and file..."
+btrfs -v subvolume create /mnt/swap
 cd /mnt/swap
 truncate -s 0 ./swapfile
 chattr -V +C ./swapfile
