@@ -112,6 +112,7 @@
 !.local/bin/fzfly-desktop
 !.local/bin/merge-configs
 !.local/bin/mpull
+!.local/bin/longless
 !.local/bin/pacupdate
 !.local/bin/playlistctl
 
