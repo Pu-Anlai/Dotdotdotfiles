@@ -1,13 +1,40 @@
 #!/usr/bin/env fish
 
-set -q BACKUP_FOLDER || exit 1
-set ext_drive "$MEDIA/Megahulle/"
+set -q BACKUP_LOCAL BACKUP_EXTERNAL || exit 1
+test -d "$BACKUP_LOCAL" || exit 1
+test -d "$BACKUP_EXTERNAL" || exit 1
+
+argparse 'i/init' -- $argv
+
+function initialize_folders
+    echo "Creating backups on this machine..."
+    sync_folder "$BACKUP_EXTERNAL"/Backup/Musik/ "$BACKUP_LOCAL"/Musik/
+    sync_folder "$BACKUP_EXTERNAL"/Backup/Bilder/ "$BACKUP_LOCAL"/Bilder/Erlebnisse/
+end
+
+function sync_folder -a origin target
+    rsync --mkpath -nrltvxP --out-format=%i\t%n "$origin" "$target" | grep "^deleting" | cut -f2- | while read line
+        set -a deletions $line
+    end
+
+    if [ -n "$deletions" ]
+        set -p deletions (set_color -o; echo "The following files will be deleted:"; set_color normal)
+        printf '%s\n' $deletions | longless
+        read -P 'Type "yes" if you want to continue: ' answer
+        test "$answer" != "yes" && exit 1
+    end
+    rsync --mkpath -rltvxP "$origin" "$target"
+end
 
 function ext_backup
     echo "Backing up to external drive..."
-    rsync -rltvxP --delay-updates --delete-delay "$HOME"/Musik/ "$ext_drive"/Gebrauch/Musik/
-    rsync -rltvxP --delay-updates "$BACKUP_FOLDER"/Musik/ "$ext_drive"/Backup/Musik/
-    rsync -rltvxP --delay-updates "$HOME"/Bilder/Erlebnisse/ "$ext_drive"/Backup/Bilder/
+    sync_folder "$HOME"/Musik/ "$BACKUP_EXTERNAL"/Gebrauch/Musik/
+    sync_folder "$BACKUP_LOCAL"/Musik/ "$BACKUP_EXTERNAL"/Backup/Musik/
+    sync_folder "$BACKUP_LOCAL"/Bilder/Erlebnisse/ "$BACKUP_EXTERNAL"/Backup/Bilder/
 end
 
-[ -d $ext_drive ]; and ext_backup
+if [ -n "$_flag_i" ]
+    initialize_folders
+else
+    ext_backup
+end
