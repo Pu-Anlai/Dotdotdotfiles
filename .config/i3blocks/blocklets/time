@@ -25,7 +25,7 @@ function get_new_state {
 
 case ${BLOCK_BUTTON} in 
     3)
-        notify-send --icon=none "$(date +%A,\ %d.%m.%Y)" "\n$(cal)"
+        notify-send --category=display.mono --icon=none "$(date +%A,\ %d.%m.%Y)" "$(cal| sed '/^\s*$/d')"
         print_time_info
     ;;
     1)

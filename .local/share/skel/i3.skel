@@ -237,6 +237,10 @@ bindsym $mod+space [urgent=latest] focus
 bindsym $mod+Shift+Ctrl+r exec sh -c 'merge-configs && i3-msg restart'
 bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
 
+# remove notifications
+bindsym $mod+BackSpace exec dunstctl close-all
+bindsym $mod+Shift+BackSpace exec dunstctl close
+
 # workspace assignments
 assign [class="qutebrowser"] $ws2
 assign [class="Firefox"] $ws2
