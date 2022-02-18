@@ -84,6 +84,9 @@
 !.config/pacman
 !.config/pacman/makepkg.conf
 
+!.config/picom
+!.config/picom/picom.conf
+
 !.config/qutebrowser
 !.config/qutebrowser/config.py
 !.config/qutebrowser/quickmarks
