@@ -23,9 +23,9 @@
     ### Geometry ###
 
     # dynamic width from 0 to 300
-    # width = (0, 300)
+    width = (150, 500)
     # constant width of 300
-    width = 300
+    # width = 300
 
     # The maximum height of a single notification, excluding the frame.
     height = 300
@@ -83,7 +83,7 @@
     horizontal_padding = 8
 
     # Padding between text and icon.
-    text_icon_padding = 0
+    text_icon_padding = 8
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
@@ -156,7 +156,7 @@
 
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
-    alignment = center
+    alignment = left
 
     # Vertical alignment of message text and icon.
     # Possible values are "top", "center" and "bottom".
@@ -192,7 +192,7 @@
     # Align icons left/right/off
     icon_position = left
 
-    icon_theme = Adwaita
+    icon_theme = Arc
 
     icon_size = 32
     # Scale small icons up to this size, set to 0 to disable. Helpful
