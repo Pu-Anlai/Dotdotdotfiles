@@ -11,9 +11,9 @@ interval=5
 
 [mpd]
 label= 
-interval=8
+interval=0
 signal=10
-instance=localhost; 6600
+command=test "$button" = 1 && mpc toggle >/dev/null 2>&1; cat ~/.cache/mpdnotdaem
 
 # [custom]
 {{{custom}}}

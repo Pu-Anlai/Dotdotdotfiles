@@ -325,7 +325,7 @@
 
 [mpd]
     category = desktop.mpd
-    icon_size = 256
+    icon_size = 192
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.
 #

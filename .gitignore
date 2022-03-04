@@ -114,6 +114,7 @@
 !.local/bin/fzfly
 !.local/bin/fzfly-desktop
 !.local/bin/merge-configs
+!.local/bin/mpdnotdaem
 !.local/bin/mpull
 !.local/bin/longless
 !.local/bin/pacupdate
