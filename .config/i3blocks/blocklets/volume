@@ -27,21 +27,35 @@ sub wrap_str {
     return "<span size='x-small'>" . $_[0] . "</span>\n";
 }
 
-if ($ENV{BLOCK_BUTTON}){
-    if ($ENV{BLOCK_BUTTON} == 1) {
-        system("pactl", "set-sink-mute", '@DEFAULT_SINK@', "toggle");
-    } elsif ($ENV{BLOCK_BUTTON} == 4) {
-        system("pactl", "set-sink-volume", '@DEFAULT_SINK@', "+5%");
-    } elsif ($ENV{BLOCK_BUTTON} == 5) {
-        system("pactl", "set-sink-volume", '@DEFAULT_SINK@', "-5%");
-    } elsif ($ENV{BLOCK_BUTTON} == 6) {
-        system("pactl", "set-sink-volume", '@DEFAULT_SINK@', "+1%");
-    } elsif ($ENV{BLOCK_BUTTON} == 7) {
-        system("pactl", "set-sink-volume", '@DEFAULT_SINK@', "-1%");
+sub set_sink {
+    system("pactl", "set-sink-" . $_[0], '@DEFAULT_SINK@', $_[1]);
+}
+
+sub block_button_parse {
+    if ($_[0] == 1) {
+        set_sink("mute", "toggle");
+    } elsif ($_[0] == 4) {
+        set_sink("volume", "+5%");
+    } elsif ($_[0] == 5) {
+        set_sink("volume", "-5%");
     }
 }
 
+if ($ENV{BLOCK_BUTTON} ~~ [ 1, 4, 5 ]){
+    block_button_parse($ENV{BLOCK_BUTTON})
+} elsif ($ARGV[0]){
+    set_sink($ARGV[1], $ARGV[2])
+}
+
 my $volume = get_volume();
+
+if ($ENV{BLOCK_BUTTON} or $ARGV[0]) {
+    if ($volume == -1) {
+        system("dunstify", "--replace=999", "Volume", "muted");
+    } else {
+        system("dunstify", "--replace=999", "--hints=int:value:" . $volume, "Volume");
+    }
+}
 
 if ($volume < 0) {
     print(wrap_str(""));

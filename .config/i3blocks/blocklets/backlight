@@ -1,31 +1,43 @@
 #!/bin/bash
 
-case $BLOCK_BUTTON in
-    4)
-        light -A 5
-        ;;
-    5)
-        light -U 5
-        ;;
-    6)
-        light -A 1
-        ;;
-    7)
-        light -U 1
-        ;;
-esac
+function change_light {
+    case $@ in
+        4 | big_up)
+            light -A 5
+            ;;
+        5 | big_down)
+            light -U 5
+            ;;
+        6 | up)
+            light -A 1
+            ;;
+        7 | down)
+            light -U 1
+            ;;
+        *)
+            light -G | cut -d. -f1
+            return
+            ;;
+    esac
+    l_value=$(light -G | cut -d. -f1)
+    dunstify --replace=999 --hints=int:value:$l_value Screenlight
+    echo "$l_value"
+}
 
-l_value=$(light | sed -r 's/\..+//')
+l_value=$(change_light "$2$BLOCK_BUTTON")
 
-if (( $l_value > 99 )); then
-    echo ""
-elif (( $l_value > 0 )); then
-    echo "<span size='x-small'>${l_value}</span>"
+if [ $# -ne 0 ]; then
+    pkill -RTMIN+$1 i3blocks
 else
-    echo ""
+    if (( $l_value > 99 )); then
+        echo ""
+    elif (( $l_value > 0 )); then
+        echo "<span size='x-small'>${l_value}</span>"
+    else
+        echo ""
+    fi
 fi
 
-if [ "$1" -eq "$1" ] 2>/dev/null
-   then
+if [ "$1" -eq "$1" ] 2>/dev/null; then
     pkill -RTMIN+$1 i3block
 fi
