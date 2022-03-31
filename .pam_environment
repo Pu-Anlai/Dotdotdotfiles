@@ -3,6 +3,7 @@ PATH                                DEFAULT=@{HOME}/.local/bin:/usr/local/bin:${
 GOPATH                              DEFAULT=@{HOME}/.local/share/go
 WINEPREFIX                          DEFAULT=@{HOME}/.local/share/wine
 MAILDIR                             DEFAULT=@{HOME}/.local/share/mail
+PYTHONPYCACHEPREFIX                 DEFAULT=@{HOME}/.cache/python
 
 # define default applications with some common variables
 EDITOR                              DEFAULT=nvim
