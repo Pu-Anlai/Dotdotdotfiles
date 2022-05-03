@@ -2,7 +2,7 @@ function qrit -d "Create a QR Code from the provided argument"
     set -l str_out
     switch (count $argv)
         case 0
-            return 0
+            cat | read str_out
         case 1
             set str_out $argv
         case '*'
