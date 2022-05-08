@@ -378,6 +378,5 @@ bar {
         }
 }
 
-exec --no-startup-id picom -b
 exec --no-startup-id feh --bg-fill $HOME/Bilder/wallpaper.jpg
 exec --no-startup-id ibus-daemon -xrd

@@ -130,8 +130,6 @@ sudo pacman -S --needed \
     syncthing \
     zathura
 
-ask_for_continue "Install compositor for X?" && sudo pacman -S --needed picom
-
 # backend for zathura
 sudo pacman -S --asdeps zathura-pdf-poppler
 
