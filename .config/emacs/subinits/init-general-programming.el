@@ -105,7 +105,7 @@ If DOWN is non-nil, then add lines below instead."
       ;; do nothing if we're already at the end or beginning of the file
       (unless (or
                (= current-line 1)
-               (>= current-line (- (line-number-at-pos (max-char)) 1)))
+               (>= current-line (- (line-number-at-pos (buffer-end 1)) 1)))
         (save-excursion
           (while (and (> counter 0) non-break)
             (forward-line direction)
