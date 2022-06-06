@@ -10,11 +10,6 @@ fi
 charge=$(grep '^POWER_SUPPLY_CAPACITY=' ${battery}/uevent | sed -r 's/^.+=//')
 status=$(grep '^POWER_SUPPLY_STATUS=' ${battery}/uevent | sed -r 's/^.+=//')
 
-# send notification on click
-if [[ -n ${BLOCK_BUTTON} ]]; then
-    notify-send -u normal 'Battery' "$charge percent remaining."
-fi
-
 status=$(cat ${battery}/status)
 if [[ $status = 'Full' ]]; then
     echo ''
@@ -40,6 +35,11 @@ else
     echo ""
 fi
 
+# send notification on click
+if [[ -n ${BLOCK_BUTTON} ]]; then
+    dunstify -r 999 -u normal 'Battery' "$charge percent remaining."
+    exit
+fi
 
 # notification warning system
 if [[ $status != 'Charging' ]]; then
@@ -47,9 +47,9 @@ if [[ $status != 'Charging' ]]; then
         [[ -e /tmp/batwarning_low.i3blocks ]] && rm /tmp/batwarning_low.i3blocks
         [[ -e /tmp/batwarning_critical.i3blocks ]] && rm /tmp/batwarning_critical.i3blocks
     elif [[ $charge -le 10 && ! -e /tmp/batwarning_low.i3blocks ]]; then
-        notify-send -u normal 'Battery' "$charge percent remaining!"
+        dunstify -r 999 -u normal 'Battery' "$charge percent remaining!"
         [[ -e /tmp/batwarning_critical.i3blocks ]] && rm /tmp/batwarning_critical.i3blocks
     elif [[ $charge -le 5 && ! -e /tmp/batwarning_critical.i3blocks ]]; then
-        notify-send -u critical 'Battery' "Only $charge percent remaining!"
+        dunstify -r 999 -u critical 'Battery' "Only $charge percent remaining!"
     fi
 fi
