@@ -39,9 +39,9 @@
    "C-j"            'mu4e-headers-next-unread
    "C-k"            'mu4e-headers-prev-unread
    "C-d"            (general-l
-                      (evil-scroll-down0))
+                      (evil-scroll-down 0))
    "C-u"            (general-l
-                      (evil-scroll-up0))
+                      (evil-scroll-up 0))
    "/"              'mu4e-headers-search-edit
    "S"              'mu4e-headers-change-sorting
    "<tab>"          'mu4e-headers-toggle-include-related
@@ -141,7 +141,7 @@
   ;; add context to °°mu4e-account-list after each modification to the database
   ;; (if they're not already there)
   (dolist (cmd '(add move mkdir sent))
-    (advice-add (°concat-symbols 'mu4e~proc- cmd)
+    (advice-add (°concat-symbols 'mu4e--server- cmd)
                 :after #'°°mu4e-push-to-account-list))
 
   ;; remove from list if the context is updated
@@ -175,7 +175,7 @@
                 :before #'°mu4e-context-switch-at-point))
 
   ;; mark messages as read when moving them
-  (advice-add #'mu4e~proc-move :after #'°°mu4e-mark-read-on-move)
+  (advice-add #'mu4e--server-move :after #'°°mu4e-mark-read-on-move)
 
   ;; headers view
   (setq mu4e-use-fancy-chars t
