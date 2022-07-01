@@ -2,6 +2,12 @@ xkb_symbols "custom" {
 
 key <COMP> { [ Multi_key ]};
 
+key <CAPS> {
+        type= "CTRL+ALT",
+        symbols = [ Escape, Escape, Caps_Lock, Escape, Escape ],
+        actions = [ NoAction(), NoAction(), LockMods(modifiers=Lock), NoAction(), NoAction() ]
+};
+
 key <AE08> {
         type= "FOUR_LEVEL_FLEX",
         symbols = [ 8, parenleft, bracketleft, trademark, bracketleft, braceleft, NoSymbol, 8, 8, 8 ],
