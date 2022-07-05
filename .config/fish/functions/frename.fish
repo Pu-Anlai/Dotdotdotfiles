@@ -1,8 +1,7 @@
 function frename
-    argparse --name='frename' 'a/all' 'n/dry-run' 'r/regex' 'i/ignore-case' 'I/non-interactive' -- $argv
+    argparse --name='frename' 'a/all' 'i/ignore-case' 'I/non-interactive' 'n/dry-run' 'r/regex' 'v/verbose' -- $argv
 
-    set mv_options "-i"
-    [ -n "$_flag_I" ]; and set mv_options ""
+    set -q _flag_non-interactive || set _flag_interactive "--interactive"
 
     # validate input
     if [ ! (count $argv) -ge 3 ]
@@ -28,7 +27,7 @@ function frename
             echo "$file --> $new_name"
         else
             if [ "$file" != "$new_name" ]
-                mv $mv_options "$file" "$new_name"
+                mv $_flag_v $_flag_interactive "$file" "$new_name"
             end
         end
     end

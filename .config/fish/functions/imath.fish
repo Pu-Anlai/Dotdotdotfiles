@@ -6,7 +6,7 @@ function imath -d "Use math interactively"
 
     while true
         read -p 'set_color blue; echo -n math; set_color normal; echo -n "> "' input
-        if [ "$input" = "exit" ]
+        if [ "$input" = "exit" -o $status -ne 0 ]
             return
         end
 
