@@ -5,6 +5,7 @@ function adbfsmount --description "Provide a adbfs mountpoint as $adbfsmnt"
         if set -qg adbfsmnt
             set_color -o; echo "Unmounting \$adbfsmnt ($adbfsmnt)..."; set_color normal
             fusermount -u "$adbfsmnt"
+            rmdir -v "$adbfsmnt"
         else
             set_color -o; echo "Setting \$adbfsmnt to $adbfs..."; set_color normal
             set -g adbfsmnt "$adbfs"
