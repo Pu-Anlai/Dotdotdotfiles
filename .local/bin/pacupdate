@@ -389,6 +389,7 @@ function check_repo_updates
     sudo pacman -Sy > /dev/null || return 1
     set repo_updates (pacman -Quq)
     set repo_updates_count (count $repo_updates)
+    contains archlinux-keyring $repo_updates && set -g keyring_update
 
     if [ $repo_updates_count -gt 0 ]
         echo_important "Yes, $repo_updates_count new updates."
@@ -464,6 +465,13 @@ function install_repo_updates
     cp $pacman_log $pacman_old_log || return 1
 
     echo_head "Installing updates from Pacman's repos..."
+    if set -q keyring_update
+        echo "Upgrading archlinux-keyring before other packages..."
+        sudo pacman -Sy archlinux-keyring || return 1
+    else
+        # Always sync database before upgrade no matter how little time has passed
+        sudo pacman -Sy || return 1
+    end
     sudo pacman -Su || return 1
 
     get_warnings_from_log $pacman_old_log $pacman_log
