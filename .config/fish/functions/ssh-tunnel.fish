@@ -10,16 +10,16 @@ function ssh-tunnel
         end
     end
 
-    string match -eq "$HOME/.ssh/do.cloud_ed25519" (ssh-add -l); or ssh-add $HOME/.ssh/do.cloud_ed25519; or return 1
+    string match -eq "$HOME/.ssh/cloudr_ed25519" (ssh-add -l); or ssh-add $HOME/.ssh/cloudr_ed25519; or return 1
 
-    set -l ssh_pid (pgrep -f "ssh -TND $argv do.cloud")
+    set -l ssh_pid (pgrep -f "ssh -TND $argv cloudr")
 
     if test -n "$ssh_pid"
         kill $ssh_pid
         and echo "SSH tunnel closed at port $argv."
     else
         begin
-            ssh -TND $argv do.cloud > /dev/null &
+            ssh -TND $argv cloudr > /dev/null &
             disown
         end
     and echo "SSH tunnel opened at port $argv."
