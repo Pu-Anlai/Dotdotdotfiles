@@ -30,7 +30,7 @@ function dotool -a cmd
     test "$xytool" = "xdotool" && set clearmod "--clearmodifiers"
     switch $cmd
         case type key
-            $xytool $cmd $clearmod $argv[2..]
+            $xytool $cmd $clearmod "$argv[2..]"
         case keyup
             if [ $xytool = "ydotool" ]
                 $xytool key --up $argv[2..]
