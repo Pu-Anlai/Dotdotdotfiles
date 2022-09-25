@@ -38,6 +38,7 @@ end
 
 
 set_or_fallback PACUPDATE_MIRRORLIST_URL "https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4"
+set_or_fallback PACUPDATE_RSS_FEED_URL "https://archlinux.org/feeds/news/"
 set_or_fallback PACUPDATE_CURL_TIMEOUT 20
 set_or_fallback PACUPDATE_MIRRORLIST_INTERVAL 14
 set_or_fallback PACUPDATE_GIT_INTERVAL 14
@@ -100,6 +101,7 @@ function confirm -a msg
     echo -n $msg
     set_color normal
     head -n 1 - | read -l _ #throwaway var
+    echo
 end
 
 
@@ -107,7 +109,7 @@ function yn_prompt -a msg
     ring_bell
     set answer
     while true
-        read --prompt="set_color -o; echo -n "(string escape $msg)" [Y/n]\ ; set_color normal" answer
+        read --prompt="set_color -o; echo -n "(string escape $msg)" [Y/n]\ ; set_color normal" answer || return 1
         set answer (string lower $answer)
 
         # no answer results in falling back to default 'y'
@@ -227,42 +229,49 @@ end
 
 function check_mailing_list
     echo_head "News in the Arch Mailing List?"
+    test_installed sfeed || return 0
+    test_installed lynx || return 0
+
     set last_update_msg_id (get_cache_var last_update_msg_id)
     set mail_list_file (mktemp --suffix="-maillist")
-    echo "Retrieving current copy..."
-    curl -m "$PACUPDATE_CURL_TIMEOUT" -s https://lists.archlinux.org/pipermail/arch-announce.mbox/arch-announce.mbox > $mail_list_file
+    echo "Retrieving RSS news feed..."
+    curl -m "$PACUPDATE_CURL_TIMEOUT" -s "$PACUPDATE_RSS_FEED_URL" > $mail_list_file
     or begin
         echo "Error retrieving mailing list." >&2
         return 1
     end
 
-    # get most recent message id from arch mailing list
-    set msg_id_list (string match -r '(?<=^Message-ID: <)[^>]+' < $mail_list_file)
-    or begin
-        set_color -o; echo "Error. Server returned the following as mailing list:"; set_color normal
-        cat $mail_list_file
-        yn_prompt "Continue anyway?" && return 0 || return 1
-    end
+    # get all message ids until $last_update_msg_id
+    set msg_id_list (sfeed < $mail_list_file | awk -F\t "/$last_update_msg_id/ {exit}; {print \$1}")
+    set msg_counter (count $msg_id_list)
+    set msg_title_list (sfeed < $mail_list_file | cut -f2)
+    set msg_url_list (sfeed < $mail_list_file | cut -f3)
+    set msg_content_list (sfeed < $mail_list_file | cut -f4)
 
-    if [ -z $last_update_msg_id ]
-        set_cache_var last_update_msg_id $msg_id_list[-1]
-        echo "There are no previously recorded visits to the Arch Mailing List."
+    if not contains $last_update_msg_id (sfeed < $mail_list_file | cut -f1)
+        echo -e "Last message id not found in the RSS feed.\nThis either means that the last check was a long time ago or that this is the first time pacupdate is run."
         yn_prompt "Continue anyway?" && return 0 || return 1
-    else if [ $last_update_msg_id = $msg_id_list[-1] ]
+    else if [ $last_update_msg_id = $msg_id_list[1] ]
         echo_important "No news."
         return
     else
-        set last_update_msg_id_pos (math (contains -i $last_update_msg_id $msg_id_list) + 1)
-        echo_important 'Yes, '(count $msg_id_list[$last_update_msg_id_pos..-1])' unread news items.'
+        echo_important "Yes, $msg_counter unread news item(s)."
 
-        # collect all msg_ids for messages between now and $last_update_msg_id
-        for msg_id in $msg_id_list[$last_update_msg_id_pos..-1]
-            print_msg $msg_id $mail_list_file
+        for i in (seq $msg_counter)
+            print_mailing_list_msg "$msg_title_list[$i]" "$msg_url_list[$i]" "$msg_content_list[$i]"
             confirm 'Press Enter to continue.'
         end
+
         set_cache_var last_update_msg_id $msg_id_list[-1]
         yn_prompt "Continue with the updating process?" && return 0 || return 1
     end
+end
+
+
+function print_mailing_list_msg -a title url content
+    set_color -o; echo "$title"; set_color normal
+    echo -e "$url\n"
+    echo $content | lynx -dump -stdin | string replace '\n' ''
 end
 
 
