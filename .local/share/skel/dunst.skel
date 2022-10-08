@@ -152,7 +152,7 @@
     #   %n  progress value if set without any extra characters
     #   %%  Literal %
     # Markup is allowed
-    format = "<span size='115%' weight='bold'>%s %p</span>\n%b"
+    format = "<span size='115%%' weight='bold'>%s %p</span>\n%b"
 
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
@@ -194,7 +194,7 @@
 
     icon_theme = Arc
 
-    icon_size = 32
+    min_icon_size = 32
     # Scale small icons up to this size, set to 0 to disable. Helpful
     # for e.g. small files or high-dpi screens. In case of conflict,
     # max_icon_size takes precedence over this.
@@ -328,7 +328,8 @@
 
 [mpd]
     category = desktop.mpd
-    icon_size = 192
+    min_icon_size = 192
+    max_icon_size = 192
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.
 #
