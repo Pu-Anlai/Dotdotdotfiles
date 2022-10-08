@@ -1,16 +1,21 @@
 #!/usr/bin/env fish
 
+argparse 'r/skip-replaygain' -- $argv || exit 1
+
 set base_folder "$HOME/Musik/Zwischenspeicher"
 set record_folder $base_folder/Alben
 mkdir -p "$record_folder"
 
 which oggenc >/dev/null || exit 1
 
-
-function process_record_folder -a folder
+function process_record_folder -S -a folder
     set ogg_folder "$record_folder/ogg/"(basename "$folder")
     # return if the folder already exists
-    test -e "$ogg_folder" && return
+    test -e "$ogg_folder" && begin
+        echo "Folder\"$ogg_folder\" already exists. Skipping..."
+        return
+    end
+
     mkdir -p "$ogg_folder"
 
     set_color -o; echo "Preparing "(basename "$folder")"..."; set_color normal
@@ -19,7 +24,9 @@ function process_record_folder -a folder
     oggenc -q 6 *.flac || return 1
     mv *.ogg "$ogg_folder"/
 
-    replaygain "$ogg_folder"/*.ogg
+    if not set -q _flag_r
+        replaygain "$ogg_folder"/*.ogg
+    end
     
     set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
 end
