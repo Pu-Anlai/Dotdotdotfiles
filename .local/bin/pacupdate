@@ -262,7 +262,7 @@ function check_mailing_list
             confirm 'Press Enter to continue.'
         end
 
-        set_cache_var last_update_msg_id $msg_id_list[-1]
+        set_cache_var last_update_msg_id $msg_id_list[1]
         yn_prompt "Continue with the updating process?" && return 0 || return 1
     end
 end
