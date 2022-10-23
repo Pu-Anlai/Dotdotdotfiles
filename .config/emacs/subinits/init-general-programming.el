@@ -266,9 +266,10 @@ If decorator syntax is found a line above the current, don't do any padding."
 
 (use-package project
   :general
-  (:keymaps         'motion
-   "C-q"            'project-switch-project
-   "Q"              'project-find-file))
+  (general-leader
+    :keymaps         'motion
+    "Q"              'project-find-file
+    "C-q"            'project-switch-project))
 
 (use-package quickrun
   :general

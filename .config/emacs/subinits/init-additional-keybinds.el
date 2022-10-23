@@ -51,8 +51,7 @@
                         (call-interactively 'switch-to-buffer)))
   "k"               'kill-this-buffer
   "K"               'kill-buffer-and-window
-  "q"               'find-file
-  "Q"               '°sudo-find-file)
+  "q"               'find-file)
 
 ;; insert keybinds
 (general-def

@@ -63,7 +63,7 @@ config.load_autoconfig(False)
 
 ## Color settings
 # Background color of the completion widget category headers.
-c.colors.completion.category.bg = BASE00
+c.colors.completion.category.bg = BASE02
 # Bottom border color of the completion widget category headers.
 c.colors.completion.category.border.bottom = BASE02
 # Top border color of the completion widget category headers.
@@ -71,9 +71,9 @@ c.colors.completion.category.border.top = BASE00
 # Foreground color of completion widget category headers.
 c.colors.completion.category.fg = BASE07
 # Background color of the completion widget for odd rows.
-c.colors.completion.odd.bg = BASE01
+c.colors.completion.odd.bg = BASE00
 # Background color of the completion widget for even rows.
-c.colors.completion.even.bg = BASE02
+c.colors.completion.even.bg = BASE01
 # Text color of the completion widget.
 c.colors.completion.fg = BASE07
 # Background color of the selected completion item.
@@ -158,17 +158,17 @@ c.colors.statusbar.caret.selection.bg = BASE0E
 # Foreground color of the statusbar in caret mode with a selection.
 c.colors.statusbar.caret.selection.fg = BASE07
 # Background color of the statusbar in command mode.
-c.colors.statusbar.command.bg = BASE00
+c.colors.statusbar.command.bg = BASE03
 # Foreground color of the statusbar in command mode.
 c.colors.statusbar.command.fg = BASE07
 # Background color of the statusbar in private browsing + command mode.
-c.colors.statusbar.command.private.bg = BASE02
+c.colors.statusbar.command.private.bg = BASE03
 # Foreground color of the statusbar in private browsing + command mode.
 c.colors.statusbar.command.private.fg = BASE07
 # Background color of the statusbar in private browsing mode.
-c.colors.statusbar.private.bg = BASE02
+c.colors.statusbar.private.bg = BASE07
 # Foreground color of the statusbar in private browsing mode.
-c.colors.statusbar.private.fg = BASE07
+c.colors.statusbar.private.fg = BASE03
 # Background color of the statusbar in insert mode.
 c.colors.statusbar.insert.bg = BASE0F
 # Foreground color of the statusbar in insert mode.
