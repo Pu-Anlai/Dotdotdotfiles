@@ -6,21 +6,14 @@ use warnings;
 $ENV{LANG} = 'C';
 
 sub get_volume {
-    my $sinks_out = `pacmd list-sinks`;
-
-    # clear output
-    $sinks_out =~ s/^.+?\* index://s;
-
-    # return -1 if muted
-    $sinks_out =~ /muted: (\w+)/;
-    if ($1 eq "yes"){
+    if (substr(`pactl get-sink-mute \@DEFAULT_SINK\@`, -3, 3) eq "yes"){
         return -1
     }
 
     # get volume
-    $sinks_out =~ /volume:.+?(\d+)%/;
+    my $volume = `pactl get-sink-volume \@DEFAULT_SINK\@`;
+    $volume =~ /.+?(\d+)%/;
     return $1;
-    
 }
 
 sub wrap_str {

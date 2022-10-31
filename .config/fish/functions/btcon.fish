@@ -6,11 +6,6 @@ function btcon
         sudo systemctl start bluetooth.service
     end
 
-    # pulseaudio must be running for this to work
-    if not systemctl --user is-active pulseaudio.service > /dev/null
-        systemctl --user start pulseaudio.service
-    end
-
     bluetoothctl power on 2>/dev/null 1>/dev/null
 
     # scan for devices before listing them
