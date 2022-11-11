@@ -380,5 +380,5 @@ bar {
         }
 }
 
-$execno feh --bg-fill $HOME/Bilder/wallpaper.jpg
+$execno /usr/bin/feh --bg-fill $HOME/Bilder/wallpaper.jpg
 $execno ibus-daemon -xrd
