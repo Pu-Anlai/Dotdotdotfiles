@@ -8,6 +8,7 @@ osd-border-size = 1
 osd-font-size = 28
 osd-bar-w = 95
 osd-bar-h = 1.2
+osd-duration = 4000
 sub-scale = 0.8
 sub-border-size = 1.5
 sub-color = '{{{__BASE07_HASH}}}'
