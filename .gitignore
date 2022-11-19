@@ -43,7 +43,7 @@
 !.config/fish/completions/*
 !.config/fish/conf.d/
 !.config/fish/conf.d/*
-.config/fish/conf.d/local.fish
+.config/fish/conf.d/*local.fish
 
 !.config/firejail
 !.config/firejail/*
