@@ -317,7 +317,7 @@ c.url.searchengines = {
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "wd": "https://de.wikipedia.org/w/index.php?search={}",
     "wv": "https://en.wikivoyage.org/wiki/index.php?search={}",
-    "yt": "https://yewtu.be/search?q={}",
+    "yt": "https://invidious.nerdvpn.de/search?q={}",
 }
 
 # Aliases
@@ -368,7 +368,7 @@ config.bind("g6", "tab-focus 6")
 config.bind("g7", "tab-focus 7")
 config.bind("g8", "tab-focus 8")
 config.bind("g9", "tab-focus 9")
-config.bind("g0", "tab-focus 10")
+config.bind("g0", "tab-focus 1")
 # Clear search highlighting
 config.bind("<Ctrl-´>", "search")
 # Quickmark/Bookmark opening
@@ -423,8 +423,3 @@ config.bind("<Ctrl-Shift-f>", "rl-forward-word", mode="prompt")
 # one day these might be supported in insert mode as well... until then at
 # least unbind them
 config.unbind("<Ctrl-e>", mode="insert")
-
-## Per-domain settings
-# SSH tunneling
-# not supported as of now
-# config.set('content.proxy', 'socks://localhost:4711', '*.www.cc.com/*')
