@@ -4,8 +4,15 @@ function jumpToStart () {
 
 function jumpToRandom () {
     var duration = mp.get_property('duration')
-    var min = mp.get_property('time-pos') + 1
+    var min = parseInt(mp.get_property('time-pos')) + 1
     var max = duration - (duration * 0.04)
+    if (min > max ) {
+        return
+    }
+
+    max = ((max - min) / 2)
+    max = min + max
+
     mp.set_property('time-pos', getRandomInt(min, max))
 }
 
