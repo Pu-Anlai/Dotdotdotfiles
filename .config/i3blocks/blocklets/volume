@@ -6,7 +6,7 @@ use warnings;
 $ENV{LANG} = 'C';
 
 sub get_volume {
-    if (substr(`pactl get-sink-mute \@DEFAULT_SINK\@`, -3, 3) eq "yes"){
+    if (substr(`pactl get-sink-mute \@DEFAULT_SINK\@`, -4, 3) eq "yes"){
         return -1
     }
 
