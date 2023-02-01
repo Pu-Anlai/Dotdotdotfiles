@@ -140,7 +140,7 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
   (general-leader
     :keymaps        'normal
     "rf"            'consult-recent-file)
-  :config
+  :init
   (recentf-mode))
 
 (use-package restart-emacs

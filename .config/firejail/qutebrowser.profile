@@ -10,6 +10,8 @@ whitelist ${HOME}/.config/zathura
 noblacklist /usr/lib
 whitelist ${HOME}/.config/zathura
 
+ignore private-tmp
+
 # allow lua for starting mpv from within qutebrowser
 include /etc/firejail/allow-lua.inc
 include /etc/firejail/qutebrowser.profile
