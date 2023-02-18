@@ -1,0 +1,25 @@
+#!/usr/bin/env fish
+
+for i in $argv
+    test -e "$i".lyr && continue
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "artist") print $2 }' | read artist
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "title") print $2 }' | read title
+    or begin
+        echo "Insufficent metadata for $i."
+        continue
+    end
+
+    clyrics $artist $title | while read line
+        set -a lyrics $line
+    end
+
+    if [ -z "$lyrics" ]
+        echo "No lyrics found for $artist - $title." >&2
+    else
+        echo "Writing lyrics to $i.lyr." >&2
+        printf "%s\n" $lyrics | string replace \r '' | string replace '’' "'" | tee "$i".lyr | head -n 3
+        echo ...
+    end
+
+    set -e lyrics
+end
