@@ -205,7 +205,7 @@ function check_mailing_list
     end
 
     # get all message ids until $last_update_msg_id
-    set msg_id_list (sfeed < $mail_list_file | awk -F\t "/$last_update_msg_id/ {print \$1; exit}; {print \$1}")
+    set msg_id_list (sfeed < $mail_list_file | awk -F\t "/$last_update_msg_id/ {exit}; {print \$1}")
     set msg_counter (count $msg_id_list)
     set msg_title_list (sfeed < $mail_list_file | cut -f2)
     set msg_url_list (sfeed < $mail_list_file | cut -f3)
@@ -215,7 +215,7 @@ function check_mailing_list
         echo -e "Last message id not found in the RSS feed.\nThis either means that the last check was a long time ago or that this is the first time pacupdate is run."
         set_cache_var last_update_msg_id $msg_id_list[1]
         yn_prompt "Continue anyway?" && return 0 || return 1
-    else if [ $last_update_msg_id = $msg_id_list[1] ]
+    else if [ $msg_counter -eq 0 ]
         echo_important "No news."
         return
     else
