@@ -32,7 +32,7 @@ function process_record_folder -S -a folder
 end
 
 
-for flac_folder in $record_folder/flac/*
+for flac_folder in $argv
     if [ -d "$flac_folder" -a (count "$flac_folder/"*.flac) -gt 0 ]
         process_record_folder $flac_folder || exit 1
     end
