@@ -35,7 +35,7 @@
 !.config/feh/*
 
 !.config/fish
-# these days, config.fish is generated automatically if it's empty
+# config.fish is generated automatically if it's empty
 .config/fish/config.fish
 !.config/fish/functions
 !.config/fish/functions/*
@@ -117,6 +117,7 @@
 !.local/bin/longless
 !.local/bin/pacupdate
 !.local/bin/playlistctl
+!.local/bin/screenshot
 
 !.local/share
 
