@@ -7,7 +7,7 @@
 
 if [[ -e /usr/bin/xclip ]]; then
     function clip_out {
-        xclip -selection clipboard -o
+        xclip -selection clipboard -o | strings -ws ' '
     }
     function clip_clear {
         xclip -selection clipboard /dev/null
@@ -16,7 +16,7 @@ if [[ -e /usr/bin/xclip ]]; then
     }
 elif [[ -e /usr/bin/xsel ]]; then
     function clip_out {
-        xsel -bo
+        xsel -bo | strings -ws ' '
     }
     function clip_clear {
         xsel -bc
