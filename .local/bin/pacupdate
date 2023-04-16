@@ -100,7 +100,7 @@ function confirm -a msg
     set_color -i
     echo -n $msg
     set_color normal
-    head -n 1 - | read -l _ #throwaway var
+    head -n 1 - | read -l nil #throwaway var
     echo
 end
 
