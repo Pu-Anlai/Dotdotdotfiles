@@ -146,20 +146,7 @@ If DOWN is non-nil, then add lines below instead."
              (cond ((eq side 'left)
                     `("\"\"\"" ,nl))
                    ((eq side 'right)
-                    `(,nl "\"\"\""))))))
-
-  (defun °yas-python-func-padding (indent &optional down)
-    "Use Python INDENT to determine necessary padding for class or function declaration.
-If decorator syntax is found a line above the current, don't do any padding."
-    (let ((decorated nil))
-      (unless down
-        (save-excursion
-          (forward-line -1)
-          (setq decorated (string-match-p "^[ \t]*@" (°get-line)))))
-      ;; exit without any padding here if this is a decorated function
-      (if decorated
-          ""
-        (°yas-func-padding (if (> indent 0) 1 2) down)))))
+                    `(,nl "\"\"\"")))))))
 
 ;; language server
 (use-package eglot

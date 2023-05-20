@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: pdb set tracepoint
-# key: pdb
-# condition: (string-match-p "^[[:space:]]*pdb$" (°get-line))
-# --
-import pdb; pdb.set_trace()
