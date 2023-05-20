@@ -89,12 +89,7 @@ set background=light
 colorscheme dim
 
 " always use system clipboard (you know, like emacs)
-set clipboard+=unnamedplus
-
-"" autocommands
-" retain clipboard content after closing vim
-autocmd VimLeave * call system(getreg('+'), " | xclip -se c -i <<<")
-
+set clipboard=unnamedplus
 
 "" keybinds
 let mapleader=' '
