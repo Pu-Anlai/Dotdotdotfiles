@@ -23,7 +23,7 @@
    "S-<f2>"         (general-l (°split-window-and-do (mu4e))))
   (:states          'emacs
    :keymaps         'mu4e-main-mode-map
-   "J"              'mu4e~headers-jump-to-maildir)
+   "J"              'mu4e-search-maildir)
   (general-leader
     :states         'emacs
     :keymaps        'mu4e-main-mode-map
@@ -31,7 +31,7 @@
   (:states          'emacs
    :keymaps         'mu4e-headers-mode-map
    "q"              '°mu4e-headers-quit-view-or-headers
-   "J"              'mu4e~headers-jump-to-maildir
+   "J"              'mu4e-search-maildir
    "j"              'mu4e-headers-next
    "k"              'mu4e-headers-prev
    "E"              '°mu4e-compose-edit-anything
@@ -52,8 +52,7 @@
    "D"              (general-l (°mu4e-headers-handle-deferred'trash))
    "M"              (general-l (°mu4e-headers-handle-deferred 'move))
    "V"              '°mu4e-search-sender
-   "$"              (general-l
-                      (mu4e-mark-execute-all t)))
+   "$"              'mu4e-mark-execute-all)
   (general-leader
     :states         'emacs
     :keymaps        'mu4e-headers-mode-map
@@ -76,13 +75,10 @@
    "p"              'mu4e-view-headers-prev
    "gg"             'evil-goto-first-line
    "G"              'evil-goto-line
-   "t"              '°mu4e-view-mark-toggle
    "T"              'mu4e-view-mark-pattern
    "V"              '°mu4e-search-sender
-   "%"              '°mu4e-view-mark-pattern
-   "$"              (general-l
-                      (mu4e~view-in-headers-context
-                       (mu4e-mark-execute-all t))))
+   "%"              '°mu4e-headers-mark-pattern
+   "$"              'mu4e-mark-execute-all)
   (general-leader
     :states         'emacs
     :keymaps        'mu4e-view-mode-map
@@ -292,7 +288,7 @@
       (if view-win
           (progn
             (select-window view-win)
-            (mu4e~view-quit-buffer))
+            (mu4e-view-quit))
         (mu4e~headers-quit-buffer))))
 
   (defun °mu4e-headers-handle-deferred (action)
@@ -308,7 +304,7 @@
 
   (defun °mu4e-headers-mark-pattern ()
     (interactive)
-    (cl-letf (((symbol-function #'mu4e~mark-get-markpair)
+    (cl-letf (((symbol-function #'mu4e--mark-get-markpair)
                (lambda (&rest args) '(something))))
       (mu4e-headers-mark-pattern)))
 
@@ -364,21 +360,9 @@
     (interactive)
     (let* ((from (mu4e-message-field (mu4e-message-at-point) :from))
            (senders (string-join
-                     (mapcar (lambda (s) (concat "from:" (cdr s))) from)
+                     (mapcar (lambda (s) (concat "from:" (plist-get s :email))) from)
                      " or ")))
       (mu4e-mark-handle-when-leaving)
-      (mu4e~headers-search-execute senders t)))
-
-  (defun °mu4e-view-mark-toggle ()
-    (interactive)
-    (mu4e~view-in-headers-context
-     (if (mu4e-mark-docid-marked-p mu4e~highlighted-docid)
-         (mu4e-headers-mark-and-next 'unmark)
-       (mu4e-headers-mark-and-next 'something))))
-
-  (defun °mu4e-view-mark-pattern ()
-    (interactive)
-    (mu4e~view-in-headers-context
-     (°mu4e-headers-mark-pattern))))
+      (mu4e--search-execute senders t))))
 
 (provide 'init-mu4e)
