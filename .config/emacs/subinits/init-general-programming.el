@@ -168,7 +168,7 @@ If DOWN is non-nil, then add lines below instead."
     "="              'eglot-format)
   :init
   (setq eglot-workspace-configuration
-        '((:pyls . (:plugins (:pycodestyle (:enabled nil)))))))
+        '(:pyright (:plugins (:pycodestyle (:enabled nil))))))
 
 ;; autocompletion
 (use-package company

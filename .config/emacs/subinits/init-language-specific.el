@@ -37,10 +37,7 @@
     "o"             'evil-open-below
     "O"             'evil-open-above
     "p"             '°evil-lisp-paste-with-newline-below
-    "P"             '°evil-lisp-paste-with-newline-above)
-
-  :config
-  (evil-cp--enable-surround-operators))
+    "P"             '°evil-lisp-paste-with-newline-above))
 
 (use-package suggest
   :commands suggest)
@@ -148,9 +145,10 @@
    ;; ;; width settings
    (setq-local fill-column 79)
    (setq-local column-enforce-column 79)
-   (setq-local electric-pair-open-newline-between-pairs nil)
-   (make-local-variable 'write-file-functions)
-   (add-to-list 'write-file-functions (°nillify-func (eglot-format-buffer)))))
+   (setq-local electric-pair-open-newline-between-pairs nil)))
+
+(use-package blacken
+  :hook python-mode)
 
 ;; golang settings
 (use-package go-mode
