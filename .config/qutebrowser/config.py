@@ -316,7 +316,7 @@ c.url.searchengines = {
     "ug": "https://www.ultimate-guitar.com/search.php?search_type=title&value={}",
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "wd": "https://de.wikipedia.org/w/index.php?search={}",
-    "wv": "https://en.wikivoyage.org/wiki/index.php?search={}",
+    "wv": "https://en.wikivoyage.org/w/index.php?search={}",
     "yt": "https://invidious.nerdvpn.de/search?q={}",
 }
 
