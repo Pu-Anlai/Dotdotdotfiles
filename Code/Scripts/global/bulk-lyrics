@@ -2,8 +2,8 @@
 
 for i in $argv
     test -e "$i".lyr && continue
-    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "artist") print $2 }' | read artist
-    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "title") print $2 }' | read title
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "artist" || tolower($1) == "tpe1") print $2 }' | read artist
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "title" || tolower($1) == "tit2") print $2 }' | read title
     or begin
         echo "Insufficent metadata for $i."
         continue
