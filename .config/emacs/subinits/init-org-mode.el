@@ -6,12 +6,8 @@
    :keymaps         'org-mode-map
    "o"              '°evil-org-meta-open-below
    "O"              '°evil-org-meta-open-above)
-  (general-leader
-    :states         'normal
-    :keymaps        'org-mode-map
-    "o"             'evil-open-below
-    "O"             'evil-open-above)
   :config
+  (evil-collection-init 'org)
   (defun °evil-org-meta-open-below (count)
     (interactive "p")
     (if (org-in-item-p)

@@ -16,9 +16,39 @@
   :keymaps          'override
   "<f12>"           '°straight-update)
 
+;; window navigation
+(general-def
+  :keymaps         'override
+  :states          '(motion emacs)
+  "M-c"            'evil-window-delete
+  "M-h"            'evil-window-left
+  "M-j"            'evil-window-down
+  "M-k"            'evil-window-up
+  "M-l"            'evil-window-right
+  "M-H"            'evil-window-move-far-left
+  "M-J"            'evil-window-move-very-bottom
+  "M-K"            'evil-window-move-very-top
+  "M-L"            'evil-window-move-far-right)
+
+(general-leader
+  :keymaps        'override
+  :states         'motion
+  "<tab>"         'evil-switch-to-windows-last-buffer)
+
+(general-goleader
+  :states         'motion
+  :keymaps        'Info-mode-map
+  "g"             'evil-goto-first-line)
+
 ;; normal state keybinds
 (general-def
   :keymaps          'normal
+  "<escape>"       (general-l
+                     (evil-ex-nohighlight)
+                     (evil-force-normal-state))
+  "ö"              '°evil-dry-open-below
+  "Ö"              '°evil-dry-open-above
+
   "_"               'goto-last-change
   "-"               'goto-last-change-reverse)
 
@@ -33,6 +63,23 @@
                       (°split-window-and-do
                        (°toggle-scratch-buffer)))
   "I"               'imenu)
+
+(general-leader
+  :states         'normal
+  "P"             '°evil-paste-with-newline-above
+  "p"             '°evil-paste-with-newline-below)
+
+;; motion state bindings
+(general-def
+  :keymaps         'motion
+  "("              'evil-backward-paragraph
+  ")"              'evil-forward-paragraph
+  "C-u"            'evil-scroll-up
+  "<escape>"       (general-l
+                     (evil-ex-nohighlight)
+                     (evil-force-normal-state))
+  "{"              'evil-backward-sentence-begin
+  "}"              'evil-forward-sentence-begin)
 
 (general-leader
   :keymaps          'motion
@@ -51,9 +98,15 @@
                         (call-interactively 'switch-to-buffer)))
   "k"               'kill-this-buffer
   "K"               'kill-buffer-and-window
-  "q"               'find-file)
+  "q"               'find-file
+  "v"             'evil-window-split
+  "s"             'evil-window-vsplit
+  "S"             (general-l
+                    (evil-window-vsplit) (evil-window-right 1))
+  "V"             (general-l
+                    (evil-window-split) (evil-window-down 1)))
 
-;; insert keybinds
+;; insert state keybinds
 (general-def
   :keymaps          'insert
   "C-n"             nil
@@ -64,6 +117,16 @@
   "C-S-b"           'backward-word
   "<backtab>"       'indent-relative
   "C-j"             'newline)
+
+;; visual state keybinds
+(general-def
+  :keymaps         'visual
+  "*"              (lambda (count)
+                     (interactive "P")
+                     (°evil-search-visual-selection 'forward count))
+  "#"              (lambda (count)
+                     (interactive "P")
+                     (°evil-search-visual-selection 'backward count)))
 
 ;; isearch keybinds
 (general-def

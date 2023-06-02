@@ -31,20 +31,7 @@
 ;; setup gui early to avoid modeline troubles
 (require 'init-gui-setup)
 
-;; initial general.el setup here, all keybinds in the respective packages or in
-;; init-keybinds.el
-(use-package general
-  :init
-  (setq general-override-states '(insert emacs hybrid normal visual motion operator replace))
-  :config
-  (general-auto-unbind-keys)
-  (general-create-definer general-leader
-    :prefix "SPC")
-  (general-create-definer general-goleader
-    :prefix "g")
-  (general-override-mode))
-
-(require 'init-evil)
+(require 'init-evil-general)
 
 ;; set up autoloads for all non-essential custom functions
 (setq generated-autoload-file (expand-file-name "custom-autoloads.el" emacs-subinit-dir))

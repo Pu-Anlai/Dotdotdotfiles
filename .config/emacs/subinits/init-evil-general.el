@@ -1,69 +1,11 @@
 ;; -*- lexical-binding: t -*-
 (use-package evil
   :init
-  (setq evil-search-module 'evil-search)
-  (evil-mode 1)
-  :general
-  ;; window navigation
-  (:keymaps         'override
-   :states          '(motion emacs)
-   "M-c"            'evil-window-delete
-   "M-h"            'evil-window-left
-   "M-j"            'evil-window-down
-   "M-k"            'evil-window-up
-   "M-l"            'evil-window-right
-   "M-H"            'evil-window-move-far-left
-   "M-J"            'evil-window-move-very-bottom
-   "M-K"            'evil-window-move-very-top
-   "M-L"            'evil-window-move-far-right)
-  ;; other override bindings
-  (general-leader
-    :keymaps        'override
-    :states         'motion
-    "<tab>"         'evil-switch-to-windows-last-buffer)
-  ;; MOTION state bindings
-  (:keymaps         'motion
-   "("              'evil-backward-paragraph
-   ")"              'evil-forward-paragraph
-   "C-u"            'evil-scroll-up
-   "<escape>"       (general-l
-                      (evil-ex-nohighlight)
-                      (evil-force-normal-state))
-   "{"              'evil-backward-sentence-begin
-   "}"              'evil-forward-sentence-begin)
-  (general-leader
-    :keymaps        'motion
-    "v"             'evil-window-split
-    "s"             'evil-window-vsplit
-    "S"             (general-l
-                      (evil-window-vsplit) (evil-window-right 1))
-    "V"             (general-l
-                      (evil-window-split) (evil-window-down 1)))
-  (general-goleader
-    :states         'motion
-    :keymaps        'Info-mode-map
-    "g"             'evil-goto-first-line)
-  ;; NORMAL state bindings
-  (:keymaps         'normal
-   "<escape>"       (general-l
-                      (evil-ex-nohighlight)
-                      (evil-force-normal-state))
-   "ö"              '°evil-dry-open-below
-   "Ö"              '°evil-dry-open-above)
-  (general-leader
-    :states         'normal
-    "P"             '°evil-paste-with-newline-above
-    "p"             '°evil-paste-with-newline-below)
-  ;; VISUAL state bindings
-  (:keymaps         'visual
-   "*"              (lambda (count)
-                      (interactive "P")
-                      (°evil-search-visual-selection 'forward count))
-   "#"              (lambda (count)
-                      (interactive "P")
-                      (°evil-search-visual-selection 'backward count)))
-  
+  (setq evil-search-module 'evil-search
+        evil-want-integration t
+        evil-want-keybinding nil)
   :config
+  (evil-mode 1)
   (setq-default evil-symbol-word-search t)
   ;; workaround for view-mode keybinding behavior
   (add-hook 'view-mode-hook (lambda ()
@@ -99,6 +41,22 @@
             (set-buffer-modified-p nil))))))
 
   (evil-ex-define-cmd "mv" '°mv-buf-and-file))
+
+(use-package evil-collection
+  :after evil)
+
+;; initial general.el setup here, all keybinds in the respective packages or in
+;; init-keybinds.el
+(use-package general
+  :init
+  (setq general-override-states '(insert emacs hybrid normal visual motion operator replace))
+  :config
+  (general-auto-unbind-keys)
+  (general-create-definer general-leader
+    :prefix "SPC")
+  (general-create-definer general-goleader
+    :prefix "g")
+  (general-override-mode))
 
 (use-package undo-fu
   :commands (evil-undo evil-redo))
@@ -162,31 +120,8 @@
   (setq evil-goggles-enable-delete nil))
 
 (use-package evil-mc
-  :general
-  ;; evil-mc-key-map is forced on us so unbind it here
-  (general-unbind
-    :states         '(normal motion visual)
-    :keymaps        'evil-mc-key-map
-    "gr"
-    "C-p"
-    "C-n"
-    "M-N"
-    "M-n"
-    "M-P"
-    "M-p")
-  (:keymaps         'motion
-    "M-n"           'evil-mc-make-and-goto-next-match
-    "M-N"           'evil-mc-skip-and-goto-next-match
-    "M-p"           'evil-mc-skip-and-goto-prev-cursor
-    "M-P"           (general-l
-                      (evil-mc-undo-cursor-at-pos (point))
-                      (evil-mc-skip-and-goto-prev-cursor))
-    "Ä"             'evil-mc-undo-all-cursors
-    "ä"             'evil-mc-make-all-cursors)
-  (:keymaps         'visual
-   "M-n"            'evil-mc-make-and-goto-next-match
-   "M-p"            'evil-mc-skip-and-goto-prev-cursor)
   :config
+  (evil-collection-init 'evil-mc)
   (global-evil-mc-mode 1)
   (setq evil-mc-custom-known-commands
         '((indent-relative ((:default . evil-mc-execute-default-call))))))
@@ -197,4 +132,4 @@
    "C-a"            'evil-numbers/inc-at-pt
    "C-x"            'evil-numbers/dec-at-pt))
 
-(provide 'init-evil)
+(provide 'init-evil-general)
