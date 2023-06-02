@@ -2,6 +2,9 @@
     name = Pu Anlai
     email = inspectormustache@users.noreply.github.com
 
+[init]
+    defaultbranch = mister
+
 [core]
     editor = nvim
 
