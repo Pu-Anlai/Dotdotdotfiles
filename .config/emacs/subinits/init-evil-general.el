@@ -121,7 +121,7 @@
 
 (use-package evil-mc
   :config
-  (evil-collection-init 'evil-mc)
+  (evil-collection-evil-mc-setup)
   (global-evil-mc-mode 1)
   (setq evil-mc-custom-known-commands
         '((indent-relative ((:default . evil-mc-execute-default-call))))))

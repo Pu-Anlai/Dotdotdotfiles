@@ -21,69 +21,17 @@
   (:keymaps         'override
    "<f2>"           'mu4e
    "S-<f2>"         (general-l (°split-window-and-do (mu4e))))
-  (:states          'emacs
-   :keymaps         'mu4e-main-mode-map
-   "J"              'mu4e-search-maildir)
-  (general-leader
-    :states         'emacs
-    :keymaps        'mu4e-main-mode-map
-    "U"             '°mu4e-main-update-all)
-  (:states          'emacs
+  (:states          'normal
    :keymaps         'mu4e-headers-mode-map
    "q"              '°mu4e-headers-quit-view-or-headers
-   "J"              'mu4e-search-maildir
-   "j"              'mu4e-headers-next
-   "k"              'mu4e-headers-prev
-   "E"              '°mu4e-compose-edit-anything
-   "G"              'evil-goto-line
-   "C-j"            'mu4e-headers-next-unread
-   "C-k"            'mu4e-headers-prev-unread
-   "C-d"            (general-l
-                      (evil-scroll-down 0))
-   "C-u"            (general-l
-                      (evil-scroll-up 0))
-   "/"              'mu4e-headers-search-edit
-   "S"              'mu4e-headers-change-sorting
-   "<tab>"          'mu4e-headers-toggle-include-related
-   "<backtab>"      'mu4e-headers-toggle-threading
-   "t"              '°mu4e-headers-mark-toggle
-   "%"              'mu4e-headers-mark-pattern
-   "T"              '°mu4e-headers-mark-pattern
-   "D"              (general-l (°mu4e-headers-handle-deferred'trash))
-   "M"              (general-l (°mu4e-headers-handle-deferred 'move))
-   "V"              '°mu4e-search-sender
-   "$"              'mu4e-mark-execute-all)
+   "*"              '°mu4e-headers-mark-toggle
+   "p"              '°mu4e-search-sender)
   (general-leader
-    :states         'emacs
+    :states         'normal
     :keymaps        'mu4e-headers-mode-map
-    "%"             'mu4e-headers-mark-pattern
-    "/"             'mu4e-headers-search-narrow
-    "d"             'mu4e-headers-mark-for-delete)
-  (general-goleader
-    :states         'emacs
-    :keymaps        'mu4e-headers-mode-map
-    "g"             'evil-goto-first-line)
-  (:states          'emacs
-   :keymaps         'mu4e-view-mode-map
-   "C-d"            'scroll-up-command
-   "C-u"            'scroll-down-command
-   "E"              '°mu4e-compose-edit-anything
-   "k"              'mu4e-scroll-down
-   "j"              'mu4e-scroll-up
-   "f"              'link-hint-open-link
-   "n"              'mu4e-view-headers-next
-   "p"              'mu4e-view-headers-prev
-   "gg"             'evil-goto-first-line
-   "G"              'evil-goto-line
-   "T"              'mu4e-view-mark-pattern
-   "V"              '°mu4e-search-sender
-   "%"              '°mu4e-headers-mark-pattern
-   "$"              'mu4e-mark-execute-all)
-  (general-leader
-    :states         'emacs
-    :keymaps        'mu4e-view-mode-map
-    "/"             'mu4e-view-search-narrow
-    "d"             'mu4e-view-mark-for-delete)
+    "*"             '°mu4e-headers-mark-pattern
+    "m"             (general-l (°mu4e-headers-handle-deferred 'move))
+    "d"             (general-l (°mu4e-headers-handle-deferred 'trash)))
   (general-leader
     :states         'normal
     :keymaps        'mu4e-compose-mode-map
@@ -98,6 +46,7 @@
     "a"             'mail-add-attachment)
 
   :config
+  (evil-collection-mu4e-setup)
   (require 'subr-x)
   (require 'xdg)
   (setq mu4e-context-policy nil)
@@ -136,7 +85,7 @@
 
   ;; add context to °°mu4e-account-list after each modification to the database
   ;; (if they're not already there)
-  (dolist (cmd '(add move mkdir sent))
+  (dolist (cmd '(add move sent))
     (advice-add (°concat-symbols 'mu4e--server- cmd)
                 :after #'°°mu4e-push-to-account-list))
 
@@ -258,22 +207,6 @@
               (setq-local company-backends '(company-capf company-ispell))
               (setq-local company-minimum-prefix-length 6)))
 
-  (defun °mu4e-compose-edit-anything ()
-    (interactive)
-    (let ((msg (mu4e-message-at-point t)))
-      (if (member 'draft (mu4e-message-field msg :flags))
-          (mu4e-compose-edit)
-        (let ((cont (mu4e-message-body-text msg))
-              (buf (get-buffer-create "*mu4e-work-on-message*"))
-              (inhibit-read-only t))
-          (with-current-buffer buf
-            (erase-buffer)
-            (insert cont)
-            (text-mode)
-            (goto-char (point-min)))
-          (switch-to-buffer buf)
-          (internal-show-cursor nil t)))))
-
   (defun °mu4e-context-switch-at-point ()
     "Use the message at point for determining what context to switch to."
     (mu4e-context-switch nil
@@ -293,7 +226,7 @@
 
   (defun °mu4e-headers-handle-deferred (action)
     (cl-letf (((symbol-function #'mu4e-read-option)
-               (lambda (&rest args) action)))
+               (lambda (&rest args) '(action))))
       (mu4e-mark-resolve-deferred-marks)))
 
   (defun °mu4e-headers-mark-toggle ()
@@ -325,14 +258,6 @@
           (message first-part)
           (setq first-part (pop path-list)))
         (equal first-part maildir))))
-
-  (defun °mu4e-main-update-all ()
-    (interactive)
-    (let
-        ((mu4e-get-mail-command (string-join `("mbsync" ,@(mapcar #'mu4e-context-name mu4e-contexts)) " ")))
-      (mu4e-update-mail-and-index nil)
-      ;; this will redundantly call °°mu4e-remove-from-account-list but whatever
-      (setq °°mu4e-account-list nil)))
 
   (defun °mu4e-message-field (msg field)
     "Like `mu4e-message-field' but return nil if msg doesn't exist."

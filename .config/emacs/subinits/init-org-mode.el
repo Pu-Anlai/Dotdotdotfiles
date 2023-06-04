@@ -7,7 +7,7 @@
    "o"              '°evil-org-meta-open-below
    "O"              '°evil-org-meta-open-above)
   :config
-  (evil-collection-init 'org)
+  (evil-collection-org-setup)
   (defun °evil-org-meta-open-below (count)
     (interactive "p")
     (if (org-in-item-p)
