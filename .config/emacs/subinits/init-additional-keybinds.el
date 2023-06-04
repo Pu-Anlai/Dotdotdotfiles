@@ -3,6 +3,9 @@
 ;; any additional keybindings that are not defined in any package declarations
 ;; go into this file
 
+;; evil-collection loads for packages without use-package declarations
+(with-eval-after-load 'xref (evil-collection-xref-setup))
+
 ;; use these EVERYWHERE
 (general-def
   :keymaps          'override
@@ -150,12 +153,6 @@
   "C-v"             'yank
   "C-M-v"           'yank-pop
   "<escape>"        'abort-recursive-edit)
-
-;; simple escape for builtin modes
-(general-def
-  :states           'normal
-  :keymaps          '(xref--xref-buffer-mode-map)
-  "q"               'quit-window)
 
 (general-def
   :states           'normal

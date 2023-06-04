@@ -1,15 +1,16 @@
 ;; -*- lexical-binding: t -*-
 (use-package vertico
+  :init
+  (setq completion-ignore-case t
+        read-buffer-completion-ignore-case t
+        read-file-name-completion-ignore-case t)
+  (vertico-mode)
   :general
   (:keymaps         'vertico-map
     "M-k"           'previous-history-element
     "M-j"           'next-history-element)
-  :init
-  (setq completion-styles (append completion-styles '(flex))
-        completion-ignore-case t
-        read-buffer-completion-ignore-case t
-        read-file-name-completion-ignore-case t)
-  (vertico-mode))
+  :config
+  (evil-collection-vertico-setup))
 
 (use-package embark
   :general
@@ -17,13 +18,17 @@
                              evil-ex-search-keymap read-expression-map
                              minibuffer-local-map)
    "C-,"            'embark-act
-   "C-;"            'embark-dwim))
+   "C-;"            'embark-dwim)
+  :config
+  (evil-collection-embark-setup))
 
 (use-package consult
   :general
   (general-leader
     :keymaps        'normal
-    "B"             'consult-buffer))
+    "B"             'consult-buffer)
+  :config
+  (evil-collection-consult-setup))
 
 (use-package marginalia
   :after vertico
@@ -32,5 +37,10 @@
 
 (use-package embark-consult
   :after (consult embark))
+
+(use-package hotfuzz
+  :defer t
+  :init
+  (setq completion-styles '(hotfuzz)))
 
 (provide 'init-completion)
