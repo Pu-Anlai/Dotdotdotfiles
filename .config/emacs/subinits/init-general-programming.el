@@ -32,6 +32,7 @@
    "RET"            'flymake-goto-diagnostic)
 
   :config
+  (evil-collection-flymake-setup)
   (setq flymake-no-changes-timeout nil
         flymake-fringe-indicator-position 'right-fringe)
   (mapc #'evil-declare-not-repeat #'(flymake-goto-next-error flymake-goto-prev-error)))
@@ -59,14 +60,14 @@
   :config
   (yas-reload-all)
   ;; bind this here because yas-maybe-expand needs to be loaded first
-  (general-define-key
+  (general-def
     :states         'insert
     :keymaps        'yas-minor-mode-map
     "SPC"           yas-maybe-expand
     "<return>"      yas-maybe-expand)  
 
   ;; expansion for some python snippets
-  (general-define-key
+  (general-def
    :keymaps         'python-mode-map
    :states          'insert
    ":"              yas-maybe-expand)
@@ -151,6 +152,9 @@ If DOWN is non-nil, then add lines below instead."
 ;; language server
 (use-package eglot
   :hook ((python-mode go-mode) . eglot-ensure)
+  :init
+  (setq eglot-workspace-configuration
+        '(:pyright (:plugins (:pycodestyle (:enabled nil)))))
   :general
   (general-leader
     :states         'motion
@@ -159,16 +163,13 @@ If DOWN is non-nil, then add lines below instead."
   (general-goleader
     :states         'motion
     :keymaps        'eglot-mode-map
-    "d"             'xref-find-definitions
-    "="             'eglot-format-buffer
-    "*"             'xref-find-references)
+    "="             'eglot-format-buffer)
   (general-goleader
     :states          'visual
     :keymaps         'eglot-mode-map
     "="              'eglot-format)
-  :init
-  (setq eglot-workspace-configuration
-        '(:pyright (:plugins (:pycodestyle (:enabled nil))))))
+  :config
+  (evil-collection-eglot-setup))
 
 ;; autocompletion
 (use-package company
@@ -183,22 +184,16 @@ If DOWN is non-nil, then add lines below instead."
                       (newline 1 t))
    "M-<return>"     (general-l
                       (company-abort)
-                      (newline 1 t))
-   "C-n"            'company-select-next
-   "C-p"            'company-select-previous) 
+                      (newline 1 t)))
   (:states          'insert
    :keymaps         'company-search-map
    "<return>"       (general-l
                       (company-complete)
                       (company-pseudo-tooltip-hide)
                       (newline 1 t)))
-  (general-unbind
-   :keymaps         '(company-active-map company-tng-map)
-    "<tab>"
-    "TAB"
-    "<backtab>")
   
   :config
+  (evil-collection-company-setup)
   (setq company-minimum-prefix-length 3
         company-selection-wrap-around t
         company-idle-delay 0.01
@@ -214,36 +209,16 @@ If DOWN is non-nil, then add lines below instead."
   (setq company-frontends '(company-tng-frontend company-box-frontend))
   (setq company-box-doc-delay 0))
 
-(use-package company-flx
-  :hook (company-mode . company-flx-mode)
-  :config
-  (setq company-flx-limit 250)
-  (company-flx-mode 1))
-
 (use-package magit
   :hook ((magit-mode . °source-ssh-env)
          (with-editor-mode . evil-insert-state))
   :general
-  (:states          'emacs
-   :keymaps         'magit-mode-map
-   "j"              'magit-section-forward
-   "k"              'magit-section-backward
-   "p"              'magit-push
-   "d"              'magit-delete-thing
-   "D"              'magit-diff
-   "Ju"             'magit-jump-to-unstaged
-   "Js"             'magit-jump-to-staged
-   "Jn"             'magit-jump-to-untracked
-   "Jz"             'magit-jump-to-stashes
-   "Jt"             'magit-jump-to-tracked)
   (general-goleader
     :states         'normal
     "G"             'magit-status)
-  (:states          'normal
-   :keymaps         'magit-mode-map
-   "q"              'quit-window)
 
   :config
+  (evil-collection-magit-setup)
   (defun °force-git-access ()
     (interactive)
     (let ((index-file (°join-path nil
