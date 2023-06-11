@@ -23,6 +23,9 @@
     (evil-set-initial-state (car modestate) (cdr modestate)))
   (add-hook 'evil-insert-state-entry-hook (lambda () (blink-cursor-mode 1)))
   (add-hook 'evil-insert-state-exit-hook (lambda () (blink-cursor-mode -1)))
+  (add-hook 'window-state-change-hook (lambda () (if (eq evil-state 'insert)
+                                                     (blink-cursor-mode 1)
+                                                   (blink-cursor-mode -1))))
 
   ;; evil commands and ex-commands
   (evil-define-command °mv-buf-and-file (new-filename)
