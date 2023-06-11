@@ -119,8 +119,10 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
   (:keymaps         'vr/minibuffer-keymap
    "<escape>"       'minibuffer-keyboard-quit))
 
-;; use locally installed package (from AUR) of emacs-vterm
 (use-package vterm
+  :init
+  (setq vterm-shell (concat "/" (°join-path nil "usr" "bin" "fish") " -C __vterm_setup"))
+  ;; use locally installed package (from AUR) of emacs-vterm
   :straight nil
   :general
   (:keymaps         'override
