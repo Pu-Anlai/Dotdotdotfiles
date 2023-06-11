@@ -37,7 +37,9 @@
     "o"             'evil-open-below
     "O"             'evil-open-above
     "p"             '°evil-lisp-paste-with-newline-below
-    "P"             '°evil-lisp-paste-with-newline-above))
+    "P"             '°evil-lisp-paste-with-newline-above)
+  :config
+  (evil-cp--enable-surround-operators))
 
 (use-package suggest
   :commands suggest)
@@ -122,7 +124,9 @@
 
 ;; markdown
 (use-package markdown-mode
-  :commands markdown-mode)
+  :commands markdown-mode
+  :config
+  (evil-collection-markdown-mode-setup))
 
 (use-package flymd
   :after markdown-mode
@@ -153,15 +157,8 @@
 ;; golang settings
 (use-package go-mode
   :commands go-mode
-  :general
-  (:states          'normal
-   :keymaps         'godoc-mode-map
-   "q"              'quit-window
-   (general-leader
-    :states         'normal
-    :keymaps        'go-mode-map
-     "ci"           'go-import-add))
   :config
+  (evil-collection-go-mode-setup)
   (add-hook
    'go-mode-hook
    (lambda ()

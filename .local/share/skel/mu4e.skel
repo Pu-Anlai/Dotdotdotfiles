@@ -21,11 +21,17 @@
   (:keymaps         'override
    "<f2>"           'mu4e
    "S-<f2>"         (general-l (°split-window-and-do (mu4e))))
-  (:states          'normal
-   :keymaps         'mu4e-headers-mode-map
-   "q"              '°mu4e-headers-quit-view-or-headers
-   "*"              '°mu4e-headers-mark-toggle
-   "p"              '°mu4e-search-sender)
+  :config
+  (evil-collection-mu4e-setup)
+  (require 'subr-x)
+  (require 'xdg)
+  ;; setup keybindings here, so they are not overwritten by evil-collection
+  (general-def
+    :states          'normal
+    :keymaps         'mu4e-headers-mode-map
+    "q"              '°mu4e-headers-quit-view-or-headers
+    "*"              '°mu4e-headers-mark-toggle
+    "p"              '°mu4e-search-sender)
   (general-leader
     :states         'normal
     :keymaps        'mu4e-headers-mode-map
@@ -45,10 +51,6 @@
                       (flyspell-buffer))
     "a"             'mail-add-attachment)
 
-  :config
-  (evil-collection-mu4e-setup)
-  (require 'subr-x)
-  (require 'xdg)
   (setq mu4e-context-policy nil)
   (setq mu4e-compose-context-policy nil)
   (defvar °°mu4e-account-list nil

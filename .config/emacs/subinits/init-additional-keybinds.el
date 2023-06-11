@@ -22,7 +22,7 @@
 ;; window navigation
 (general-def
   :keymaps         'override
-  :states          '(motion emacs)
+  :states          '(normal motion emacs)
   "M-c"            'evil-window-delete
   "M-h"            'evil-window-left
   "M-j"            'evil-window-down

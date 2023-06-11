@@ -6,53 +6,14 @@
 (setq browse-url-generic-program "qutebrowser")
 (setq browse-url-browser-function 'browse-url-generic)
 
-;; eshell settings
-(use-package eshell
-  :init 
-  ;; for some reason eshell-mode-map is buffer-local... - why?
-  (defun °eshell-setup-keys ()
-    (general-define-key
-     :states        'insert
-     :keymaps       'eshell-mode-map
-     "<return>"     'eshell-send-input
-     "M-k"          'eshell-previous-matching-input-from-input
-     "M-j"          'eshell-next-matching-input-from-input)
-
-    (general-define-key
-     :states        'normal
-     :keymaps       'eshell-mode-map
-     "^"            'eshell-bol
-     "S"            (general-l
-                      (eshell-bol)
-                      (kill-line)
-                      (evil-insert-state))))
-
-  :hook (eshell-first-time-mode . °eshell-setup-keys)
-
-  :general
-  (:keymaps         'override
-   :states          '(motion emacs)
-   "C-¤"            '°eshell)
-
-  :config
-  (setq eshell-banner-message "")
-  (add-hook 'eshell-exit-hook (lambda ()
-                                (when
-                                    (string= (buffer-name (window-buffer (selected-window)))
-                                             "*eshell*")
-                                  (delete-window)))))
-
 ;; ewwwwwwwwwwwwwwwwwww settings
 (use-package eww
   :general
   (:keymaps         'override
    "<f1>"           'eww
    "S-<f1>"         (general-l (°split-window-and-do (call-interactively 'eww))))
-  (:states          'motion
-   :keymaps         'eww-mode-map
-   "C-o"            'eww-back-url
-   "C-i"            'eww-forward-url
-   "o"              'eww))
+  :config
+  (evil-collection-eww-setup))
 
 ;; spellchecking settings
 (setq ispell-program-name "hunspell")
@@ -100,16 +61,9 @@
                       evil-ex-search-keymapread-expression-map
                       minibuffer-local-map)
    "C-h k"          'helpful-key)
-  (:states          'normal
-   :keymaps         'helpful-mode-map
-   "q"              'quit-window)
-  (:states          'motion
-   :keymaps         'helpful-mode-map
-   "q"              'quit-window
-   "C-o"            '°helpful-previous-buffer
-   "C-i"            'next-buffer)
 
   :config
+  (evil-collection-helpful-setup)
   (setq helpful-switch-buffer-function '°helpful-buffer-other-window)
   (setq helpful-max-buffers 2)
 
@@ -176,8 +130,12 @@ Replace buffer/window if in helpful-mode, lazy-open otherwise."
    :keymaps         'vterm-mode-map
    "C-h k"          'helpful-key
    "C-c $"          '°vterm)
+  (:keymaps         'vterm-mode-map
+   "M-:"            'eval-expression)
 
   :config
+  (evil-collection-vterm-setup)
+
   (defun °vterm ()
     "Hide or show vterm window.
 Start terminal if it isn't running already."
