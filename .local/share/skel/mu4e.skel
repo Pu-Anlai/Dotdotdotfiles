@@ -27,11 +27,16 @@
   (require 'xdg)
   ;; setup keybindings here, so they are not overwritten by evil-collection
   (general-def
-    :states          'normal
-    :keymaps         'mu4e-headers-mode-map
-    "q"              '°mu4e-headers-quit-view-or-headers
-    "*"              '°mu4e-headers-mark-toggle
-    "p"              '°mu4e-search-sender)
+    :states         'normal
+    :keymaps        'mu4e-headers-mode-map
+    "x"             (general-l (mu4e-mark-execute-all t))
+    "q"             '°mu4e-headers-quit-view-or-headers
+    "*"             '°mu4e-headers-mark-toggle
+    "p"             '°mu4e-search-sender)
+  (general-def
+    :states         'normal
+    :keymaps        'mu4e-view-mode-map
+    "x"             (general-l (mu4e-mark-execute-all t)))
   (general-leader
     :states         'normal
     :keymaps        'mu4e-headers-mode-map
