@@ -13,29 +13,23 @@
 
 ;; syntax checking
 (use-package flymake
-  :after evil
-  :hook ((go-mode python-mode) . flymake-mode)
-  :general
-  (:states          'normal
-   :keymaps         'flymake-mode-map
-   "M--"            'flymake-goto-next-error
-   "M-_"            'flymake-goto-prev-error)
-  (general-goleader
-    :states         'normal
-    :keymaps        'flymake-mode-map
-    "!"             'flymake-diagnostic-buffer)
-  ;; flymake diagnostics buffer keybinds
-  (:states          'normal
-   :keymaps         'flymake-diagnostics-buffer-mode-map
-   "j"              'next-line
-   "k"              'previous-line
-   "RET"            'flymake-goto-diagnostic)
-
+  :hook ((go-mode python-mode) . °init-flymake)
   :config
   (evil-collection-flymake-setup)
-  (setq flymake-no-changes-timeout nil
-        flymake-fringe-indicator-position 'right-fringe)
-  (mapc #'evil-declare-not-repeat #'(flymake-goto-next-error flymake-goto-prev-error)))
+  (setq flymake-fringe-indicator-position 'right-fringe)
+  (mapc #'evil-declare-not-repeat #'(flymake-goto-next-error flymake-goto-prev-error))
+
+  (defun °init-flymake ()
+    (make-local-variable 'evil-insert-state-exit-hook)
+    (make-local-variable 'evil-insert-state-entry-hook)
+    (add-hook 'evil-insert-state-exit-hook
+              (lambda ()
+                (flymake-mode 1)))
+    (add-hook 'evil-insert-state-entry-hook
+              (lambda ()
+                (flymake-mode -1))))
+  (flymake-mode)
+  (flymake-start))
 
 (use-package yasnippet
   :hook ((go-mode fish-mode snippet-mode python-mode mu4e-compose-mode) . yas-minor-mode)
@@ -156,10 +150,6 @@ If DOWN is non-nil, then add lines below instead."
   (setq eglot-workspace-configuration
         '(:pyright (:plugins (:pycodestyle (:enabled nil)))))
   :general
-  (general-leader
-    :states         'motion
-    :keymaps        'eglot-mode-map
-    "hx"            'eglot-help-at-point)
   (general-goleader
     :states         'motion
     :keymaps        'eglot-mode-map
@@ -169,7 +159,9 @@ If DOWN is non-nil, then add lines below instead."
     :keymaps         'eglot-mode-map
     "="              'eglot-format)
   :config
-  (evil-collection-eglot-setup))
+  (evil-collection-eglot-setup)
+  (setq eglot-stay-out-of '(flymake))
+  (setq flymake-diagnostic-functions (list #'eglot-flymake-backend)))
 
 ;; autocompletion
 (use-package company
