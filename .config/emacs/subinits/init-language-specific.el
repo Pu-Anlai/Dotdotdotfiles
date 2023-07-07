@@ -152,7 +152,7 @@
    (setq-local electric-pair-open-newline-between-pairs nil)))
 
 (use-package blacken
-  :hook python-mode)
+  :hook (python-mode . blacken-mode))
 
 ;; golang settings
 (use-package go-mode
