@@ -46,12 +46,12 @@ function add_to_playlist -a playlist_name file_path shuffled
 
 end
 
-# build "recent singles"
-set playlist_name 'Recent: !Singles' 
+# build recent singles
+set playlist_name '!Singles' 
 add_to_playlist $playlist_name "$HOME/Musik/Singles" "true"
 
-# build "recent records"
+# build recent records
 for dir in (find $HOME/Musik/Alben/ -mindepth 1 -maxdepth 1 -type d)
-    set playlist_name "Recent: "(basename $dir)
+    set playlist_name (basename $dir)
     add_to_playlist $playlist_name $dir
 end

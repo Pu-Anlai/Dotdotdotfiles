@@ -2,8 +2,20 @@
 
 for i in $argv
     test -e "$i".lyr && continue
-    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "artist" || tolower($1) == "tpe1") print $2 }' | read artist
-    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "title" || tolower($1) == "tit2") print $2 }' | read title
+    set ext (string match -rg '\.([^.]+)$' -- "$i")
+    switch $ext
+        case mp3
+            set artist "tpe1"
+            set title "tit2"
+        case m4a
+            set artist "©art"
+            set title "©nam"
+        case '*'
+            set artist "artist"
+            set title "title"
+    end
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "'$artist'") print $2 }' | read artist
+    mutagen-inspect $i | awk -F= '{ if (tolower($1) == "'$title'") print $2 }' | read title
     or begin
         echo "Insufficent metadata for $i."
         continue
