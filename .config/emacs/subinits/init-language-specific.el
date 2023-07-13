@@ -119,8 +119,7 @@
   (setq-default TeX-master nil)
   :config
   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'company-mode)
-  (add-hook 'LaTeX-mode-hook 'company-auctex-init))
+  (add-hook 'LaTeX-mode-hook 'company-mode))
 
 ;; markdown
 (use-package markdown-mode
