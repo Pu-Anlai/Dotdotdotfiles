@@ -31,7 +31,7 @@
     :keymaps        'mu4e-headers-mode-map
     "x"             (general-l (mu4e-mark-execute-all t))
     "q"             '°mu4e-headers-quit-view-or-headers
-    "*"             '°mu4e-headers-mark-toggle
+    "t"             '°mu4e-headers-mark-toggle
     "p"             '°mu4e-search-sender)
   (general-def
     :states         'normal
@@ -40,7 +40,7 @@
   (general-leader
     :states         'normal
     :keymaps        'mu4e-headers-mode-map
-    "*"             '°mu4e-headers-mark-pattern
+    "t"             '°mu4e-headers-mark-pattern
     "m"             (general-l (°mu4e-headers-handle-deferred 'move))
     "d"             (general-l (°mu4e-headers-handle-deferred 'trash)))
   (general-leader
