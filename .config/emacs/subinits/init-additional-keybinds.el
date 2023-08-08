@@ -75,14 +75,10 @@
 ;; motion state bindings
 (general-def
   :keymaps         'motion
-  "("              'evil-backward-paragraph
-  ")"              'evil-forward-paragraph
   "C-u"            'evil-scroll-up
   "<escape>"       (general-l
                      (evil-ex-nohighlight)
-                     (evil-force-normal-state))
-  "{"              'evil-backward-sentence-begin
-  "}"              'evil-forward-sentence-begin)
+                     (evil-force-normal-state)))
 
 (general-leader
   :keymaps          'motion
