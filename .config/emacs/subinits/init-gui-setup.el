@@ -1,19 +1,20 @@
 ;; -*- lexical-binding: t -*-
 ;; GUI and Highlighting settings
-(setq inhibit-startup-message t)
+(setq inhibit-startup-message t
+      eldoc-idle-delay .45
+      echo-keystrokes .01
+      show-paren-delay 0
+      scroll-step 1
+      ring-bell-function #'ignore)
 (fringe-mode '(0 . 8))
 (scroll-bar-mode -1)
-(setq scroll-step 1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (show-paren-mode 1)
-(setq show-paren-delay 0)
 (blink-cursor-mode 0)
-(setq-default cursor-in-non-selected-windows nil)
-(setq echo-keystrokes .01)
-(setq eldoc-idle-delay .45)
-(setq-default fill-column 80)
-(dolist (hook '(prog text conf telega-root))
+(setq-default fill-column 80
+              cursor-in-non-selected-windows nil)
+(dolist (hook '(prog text conf))
   (add-hook
    (°concat-symbols hook '-mode-hook)
    #'hl-line-mode))
