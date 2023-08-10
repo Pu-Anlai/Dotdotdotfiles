@@ -50,7 +50,7 @@
   :general
   (:keymaps         'motion
    "M-H"            'helpful-kill-buffers)
-  (general-leader
+  (general-goleader
     :keymaps        'motion
     "hx"            'helpful-at-point
     "hf"            'helpful-callable
