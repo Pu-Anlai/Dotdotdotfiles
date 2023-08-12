@@ -252,7 +252,6 @@ assign [class="Firefox"] $ws2
 assign [class="Chromium"] $ws2
 assign [class="TelegramDesktop"] $ws3
 assign [class="whats-app-*"] $ws3
-assign [class="Thunderbird"] $ws3
 assign [class="discord"] $ws3
 assign [class="zoom"] $ws3
 assign [class="Microsoft Teams - Preview"] $ws3
@@ -262,7 +261,7 @@ assign [class="Emacs"] $ws4
 assign [class="jetbrains.*"] $ws4
 assign [class="Soffice"] $ws5
 assign [class="Gimp*"] $ws6
-assign [class="Steam"] $ws7
+assign [class="steam"] $ws7
 
 # window arrangement fixes
 for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
