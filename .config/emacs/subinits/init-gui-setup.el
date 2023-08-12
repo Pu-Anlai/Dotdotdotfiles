@@ -56,6 +56,7 @@
 ;; modeline
 (use-package telephone-line
   :init
+  (require 'project)
   (telephone-line-defsegment °telephone-line-buffer-modified-segment ()
     (unless buffer-read-only
       (if (buffer-modified-p)
