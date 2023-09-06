@@ -4,10 +4,14 @@
   :general
   (:states          'normal
    :keymaps         'org-mode-map
-   "("              'org-backward-element
-   ")"              'org-forward-element
+   "{"              '°org-prev-element
+   "}"              '°org-next-element
    "o"              '°org-meta-open-below
    "O"              '°org-meta-open-above)
+   (:states         'insert
+   :keymaps         'org-mode-map
+   "M-L"            'org-metaright
+   "M-H"            'org-metaleft)
   (general-leader
     :states         'normal
     :keymaps        'org-mode-map
@@ -30,6 +34,8 @@
   ;; keybindings for agenda-view
   (:states          'normal
    :keymaps         'org-agenda-mode-map
+   "j"              'org-agenda-next-line
+   "k"              'org-agenda-previous-line
    "("              'org-agenda-earlier
    ")"              'org-agenda-later
    "r"              'org-agenda-redo
@@ -45,6 +51,18 @@
   (setq org-log-done 'time
         org-adapt-indentation t
         org-cycle-separator-lines -1)
+
+  (defun °org-prev-element ()
+    (interactive)
+    (if (> (or (org-current-level) 0) 1)
+        (org-up-element)
+      (org-backward-element)))
+
+  (defun °org-next-element ()
+    (interactive)
+    (when (> (or (org-current-level) 0) 1)
+      (org-up-element))
+    (org-forward-element))
 
   (defun °org-meta-open-below ()
     (interactive)
@@ -99,7 +117,23 @@
                   "TODO"
               (car org-todo-keywords-1))))
 
-  (add-hook 'org-mode-hook #'visual-line-mode)
-  (add-hook 'org-mode-hook #'org-fold-hide-drawer-all))
+  (defun °°org-undone-children-at-point-p ()
+    (save-excursion
+      (or
+       (not (org-at-heading-p))
+       (org-goto-first-child)
+       (while (and
+               (member (org-get-todo-state) org-done-keywords)
+               (org-get-next-sibling))))))
+  
+
+  (defun °°org-visual-line-mode ()
+    (visual-line-mode)
+    (setq-local display-line-numbers 'visual))
+  
+  (dolist (func
+           #'(°°org-visual-line-mode
+              org-fold-hide-drawer-all))
+    (add-hook 'org-mode-hook func)))
 
 (provide 'init-org-mode)

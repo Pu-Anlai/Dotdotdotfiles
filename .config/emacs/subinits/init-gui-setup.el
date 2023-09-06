@@ -32,7 +32,7 @@
 
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook (lambda ()
-                   (setq display-line-numbers 'visual
+                   (setq display-line-numbers 'relative
                          display-line-numbers-widen t
                          display-line-numbers-current-absolute t))))
 
