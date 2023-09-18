@@ -23,7 +23,8 @@
     "H"             'org-metaleft
     "L"             'org-metaright
     "J"             'org-metadown
-    "K"             'org-metaup)
+    "K"             'org-metaup
+    "X"             'org-toggle-checkbox)
   (general-goleader
     :states         'motion
     :keymaps        'org-mode-map
@@ -52,6 +53,15 @@
         org-adapt-indentation t
         org-cycle-separator-lines -1)
 
+  (dolist (func
+           #'(°°org-visual-line-mode
+              org-fold-hide-drawer-all))
+    (add-hook 'org-mode-hook func))
+
+  (°add-hook-to-mode 'before-save-hook
+                     (lambda () (org-align-tags t))
+                     'org-mode)
+  
   (defun °org-prev-element ()
     (interactive)
     (if (> (or (org-current-level) 0) 1)
@@ -71,6 +81,9 @@
                                #'org-table-wrap-region)
                               ((org-at-item-p)
                                (org-end-of-item)
+                               (unless (org-at-item-p)
+                                 (previous-line)
+                                 (end-of-line))
                                #'org-insert-item)
                               ((org-at-heading-p)
                                (org-end-of-line)
@@ -129,11 +142,6 @@
 
   (defun °°org-visual-line-mode ()
     (visual-line-mode)
-    (setq-local display-line-numbers 'visual))
-  
-  (dolist (func
-           #'(°°org-visual-line-mode
-              org-fold-hide-drawer-all))
-    (add-hook 'org-mode-hook func)))
+    (setq-local display-line-numbers 'visual)))
 
 (provide 'init-org-mode)
