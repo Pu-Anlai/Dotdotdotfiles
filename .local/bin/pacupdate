@@ -419,11 +419,11 @@ end
 
 function get_warnings_from_log -a old_log new_log
     set new_lines (get_added_lines "$old_log" "$new_log")
-    set warnings (string replace -rf '^\[[^\]]+\] \[ALPM\] (warning):\s+' '$1' -- $new_lines)
+    set warnings (string replace -rf '^\[[^\]]+\]\s+\[ALPM\]\s+(warning:\s+)' '$1' -- $new_lines)
 
     if any $warnings
         echo_important "Pacman issued these warnings:"
-        printf -- '- %s\n' $warnings
+        printf '- %s\n' $warnings
         confirm 'Press Enter to continue.'
     end
 end
