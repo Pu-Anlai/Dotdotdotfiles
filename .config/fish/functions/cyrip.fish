@@ -17,5 +17,9 @@ function cyrip -w cyanrip
         end
     end
 
-    cyanrip -U -s "$CYANRIP_OFFSET" -E -R $selection $argv
+    if [ -n "$selection" ]
+        cyanrip -U -s "$CYANRIP_OFFSET" -E -R $selection $argv
+    else
+        cyanrip -U -s "$CYANRIP_OFFSET" -E $argv
+    end
 end
