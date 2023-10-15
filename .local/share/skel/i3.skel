@@ -177,10 +177,10 @@ bindsym XF86MonBrightnessUp $execno $i3blockletsdir/backlight 8 big_up
 bindsym XF86MonBrightnessDown $execno $i3blockletsdir/backlight 8 big_down
 bindsym Shift+XF86MonBrightnessUp $execno $i3blockletsdir/backlight 8 up
 bindsym Shift+XF86MonBrightnessDown $execno $i3blockletsdir/backlight 8 down
-bindsym XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume +5%
-bindsym XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume -5%
-bindsym Shift+XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume +1%
-bindsym Shift+XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume -1%
+bindsym XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume 5%+
+bindsym XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume 5%-
+bindsym Shift+XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume 1%+
+bindsym Shift+XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume 1%-
 bindsym XF86AudioMute $execno $i3blockletsdir/volume 9 mute toggle
 
 # switch to workspace
@@ -300,10 +300,10 @@ mode $mode_music {
         bindsym r $execno mpc random
         bindsym Tab $execno $i3scriptsdir/mpd_toggle
         # volume control
-        bindsym plus $execno $i3blockletsdir/volume 9 volume +5%
-        bindsym minus $execno $i3blockletsdir/volume 9 volume -5%
-        bindsym Shift+plus $execno $i3blockletsdir/volume 9 volume +1%
-        bindsym Shift+minus $execno $i3blockletsdir/volume 9 volume -1%
+        bindsym plus $execno $i3blockletsdir/volume 9 volume 5%+
+        bindsym minus $execno $i3blockletsdir/volume 9 volume 5%-
+        bindsym Shift+plus $execno $i3blockletsdir/volume 9 volume 1%+
+        bindsym Shift+minus $execno $i3blockletsdir/volume 9 volume 1%-
         bindsym Shift+0 $execno $i3blockletsdir/volume 9 volume 100%
 
         # back to normal: Enter or Escape

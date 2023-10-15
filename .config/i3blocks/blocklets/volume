@@ -6,14 +6,14 @@ use warnings;
 $ENV{LANG} = 'C';
 
 sub get_volume {
-    if (substr(`pactl get-sink-mute \@DEFAULT_SINK\@`, -4, 3) eq "yes"){
+    my $volume = `wpctl get-volume \@DEFAULT_AUDIO_SINK\@`;
+    if ($volume =~ /MUTED/){
         return -1
     }
 
     # get volume
-    my $volume = `pactl get-sink-volume \@DEFAULT_SINK\@`;
-    $volume =~ /.+?(\d+)%/;
-    return $1;
+    $volume =~ /Volume:\s+([\d.]+)$/;
+    return $1*100;
 }
 
 sub wrap_str {
@@ -21,20 +21,35 @@ sub wrap_str {
 }
 
 sub set_sink {
-    system("pactl", "set-sink-" . $_[0], '@DEFAULT_SINK@', $_[1]);
+    system("wpctl", "set-" . $_[0], '@DEFAULT_AUDIO_SINK@', $_[1]);
 }
 
 sub block_button_parse {
     if ($_[0] == 1) {
         set_sink("mute", "toggle");
     } elsif ($_[0] == 4) {
-        set_sink("volume", "+5%");
+        set_sink("volume", "5%+");
     } elsif ($_[0] == 5) {
-        set_sink("volume", "-5%");
+        set_sink("volume", "5%-");
     }
 }
 
-if ($ENV{BLOCK_BUTTON} ~~ [ 1, 4, 5 ]){
+sub vol_button_pressed {
+    my $match = 0;
+
+    if (! $ENV{BLOCK_BUTTON}) { return $match; }
+
+    for ( 1, 4, 5 ){
+        print($_);
+        if ($_ eq $ENV{BLOCK_BUTTON}) {
+            $match = 1;
+            last;
+        }
+    }
+    return $match;
+}
+
+if (vol_button_pressed()) {
     block_button_parse($ENV{BLOCK_BUTTON})
 } elsif ($ARGV[0]){
     set_sink($ARGV[1], $ARGV[2])
