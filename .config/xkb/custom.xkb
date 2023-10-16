@@ -1,6 +1,6 @@
 xkb_keymap {
 	xkb_keycodes  { include "evdev+aliases(qwertz)"	};
-	xkb_types     { include "complete+custom"	};
+	xkb_types     { include "complete"	};
 	xkb_compat    { include "complete"	};
 	xkb_symbols   { include "pc+de(nodeadkeys)+inet(evdev)+custom"	};
 	xkb_geometry  { include "pc(pc104)"	};

@@ -8,16 +8,14 @@ key <CAPS> {
         actions = [ NoAction(), NoAction(), LockMods(modifiers=Lock), NoAction(), NoAction() ]
 };
 
-key <AE08> {
-        type= "FOUR_LEVEL_FLEX",
-        symbols = [ 8, parenleft, bracketleft, trademark, bracketleft, braceleft, NoSymbol, 8, 8, 8 ],
-        actions = [ NoAction(), NoAction(), NoAction(), NoAction(), RedirectKey(key=<AE08>,clearmods=Shift+Control,modifiers=Mod5), RedirectKey(key=<AE07>,clearmods=Shift+Mod1,modifiers=Mod5), NoAction(), NoAction(), NoAction(), NoAction() ]
+key <AC03>	{
+        type = "EIGHT_LEVEL_ALPHABETIC",
+        symbols = [ d, D, bracketleft, braceleft, eth, ETH, dead_belowbreve ]
 };
 
-key <AE09> {
-        type= "FOUR_LEVEL_FLEX",
-        symbols = [ 9, parenright, bracketright, trademark, bracketright, braceright, NoSymbol, 9, 9, 9 ] ,
-        actions = [ NoAction(), NoAction(), NoAction(), NoAction(), RedirectKey(key=<AE09>,clearmods=Shift+Control,modifiers=Mod5), RedirectKey(key=<AE10>,clearmods=Shift+Mod1,modifiers=Mod5), NoAction(), NoAction(), NoAction(), NoAction() ]
+key <AC04>	{
+        type = "EIGHT_LEVEL_ALPHABETIC",
+        symbols = [ f, F, bracketright, braceright, U0294, ordfeminine, dead_belowcircumflex ]
 };
 
 };
