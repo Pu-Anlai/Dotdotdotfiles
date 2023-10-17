@@ -5,6 +5,7 @@ import sys
 import signal
 import asyncio
 import aiofiles  # type: ignore
+from html import escape
 from mpd.asyncio import MPDClient, CommandError  # type: ignore
 from typing import Optional
 from typing_extensions import TypedDict
@@ -73,7 +74,7 @@ async def run_dunstify(args: list):
         "999",
         *args,
         stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
+        stderr=asyncio.subprocess.PIPE,
     )
     await proc.communicate()
 
@@ -109,7 +110,9 @@ async def get_album_art(mpc: MPDClient, song: Song) -> Optional[bytes]:
 
 
 async def write_file_info(song: Song):
-    content = "{artist} - {title}\n".format(**song) if song else "Silence.\n"
+    artist = escape(song["artist"])
+    title = escape(song["title"])
+    content = f"{artist} - {title}\n" if song else "Silence.\n"
     async with aiofiles.open(CACHEFILE, mode="w") as f:
         await f.write(content)
 
@@ -133,7 +136,8 @@ async def mpd_idle_loop(mpc: MPDClient, current_song: Song, i3blocks_pid: int):
         if new_song != current_song:
             current_song = new_song
             await asyncio.gather(
-                update_i3blocks(current_song, i3blocks_pid), notify_song(mpc, current_song)
+                update_i3blocks(current_song, i3blocks_pid),
+                notify_song(mpc, current_song),
             )
 
 
