@@ -353,8 +353,8 @@ config.bind("dk", "tab-close --prev")
 config.bind("dj", "tab-close --next")
 config.bind("dK", "tab-only --next")
 config.bind("dJ", "tab-only --prev")
-config.bind("dq", "set-cmd-text --space :quickmark-del")
-config.bind("db", "set-cmd-text --space :bookmark-del")
+config.bind("dq", "cmd-set-text --space :quickmark-del")
+config.bind("db", "cmd-set-text --space :bookmark-del")
 # Tab moving
 config.bind("<Alt-Shift-J>", "tab-move +")
 config.bind("<Alt-Shift-K>", "tab-move -")
@@ -372,8 +372,8 @@ config.bind("g0", "tab-focus 1")
 # Clear search highlighting
 config.bind("<Ctrl-´>", "search")
 # Quickmark/Bookmark opening
-config.bind("gm", "set-cmd-text --space :bookmark-load")
-config.bind("gM", "set-cmd-text --space :bookmark-load -t")
+config.bind("gm", "cmd-set-text --space :bookmark-load")
+config.bind("gM", "cmd-set-text --space :bookmark-load -t")
 # bind mute command
 config.bind("am", "tab-mute")
 # Completion navigation command mode
@@ -383,8 +383,8 @@ config.bind("<Ctrl-n>", "completion-item-focus next", mode="command")
 config.bind("<Ctrl-p>", "completion-item-focus prev", mode="command")
 # Additional hinting
 config.bind("e", "hint all hover", mode="normal")
-config.bind(";o", "set-cmd-text --space :open -b")
-config.bind(";O", "set-cmd-text --space :open -p")
+config.bind(";o", "cmd-set-text --space :open -b")
+config.bind(";O", "cmd-set-text --space :open -p")
 config.bind(";p", "hint images yank")
 config.bind(";v", "hint links userscript mpv-play")
 config.bind(
@@ -394,9 +394,9 @@ config.bind(
 config.bind(";x", "hint links userscript xdg-open")
 # Open current url in new windows
 config.unbind("wO", mode="normal")
-config.bind("gw", "set-cmd-text :open -w {url:pretty}")
+config.bind("gw", "cmd-set-text :open -w {url:pretty}")
 # Buffer navigation
-config.bind("b", "set-cmd-text --space :tab-select")
+config.bind("b", "cmd-set-text --space :tab-select")
 # Source config
 config.bind("<Ctrl-R>", "config-source")
 # Passthrough settings
