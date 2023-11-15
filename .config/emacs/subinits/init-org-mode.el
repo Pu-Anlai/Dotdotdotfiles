@@ -26,7 +26,10 @@
     "K"             'org-metaup
     "x"             'org-toggle-checkbox
     "X"             '°org-toggle-checkbox-presence
-    "p"             'org-set-property)
+    "+"             'org-set-property
+    "#"             'org-priority
+    "D"             'org-insert-drawer
+    "T"             'org-set-tags-command)
   (general-goleader
     :states         'motion
     :keymaps        'org-mode-map
@@ -70,6 +73,12 @@
                      (lambda () (org-align-tags t))
                      'org-mode)
   
+  (setq org-agenda-custom-commands
+        '(("G" "Overview by urgency"
+           ((tags-todo "+PRIORITY=\"A\"")
+            (agenda "")
+            (tags-todo "-PRIORITY=\"A\"")))))
+
   (defun °org-prev-element ()
     (interactive)
     (if (> (or (org-current-level) 0) 1)
