@@ -1,6 +1,9 @@
 function fish_user_key_bindings
+    if status --is-interactive
+        fzf_key_bindings
+    end
+
     fish_hybrid_key_bindings
-    fzf_key_bindings
     
     # additional bindings that base fzf search in $MEDIA
     bind -M insert \eC 'commandline $MEDIA; and fzf-cd-widget'
