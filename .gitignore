@@ -8,8 +8,8 @@
 !.config/
 
 !.config/alacritty
-!.config/alacritty/alacritty.yml
-!.config/alacritty/overlay.yml
+!.config/alacritty/alacritty.toml
+!.config/alacritty/overlay.toml
 
 !.config/aria2
 !.config/aria2/*

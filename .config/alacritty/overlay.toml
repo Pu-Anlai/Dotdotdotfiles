@@ -1,0 +1,4 @@
+import = ["/home/nicolai/.config/alacritty/default.toml"]
+
+[font]
+size = 35
