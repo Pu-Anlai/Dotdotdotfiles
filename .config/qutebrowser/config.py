@@ -336,6 +336,11 @@ c.downloads.position = "bottom"
 c.tabs.background = True
 # Don't store cookies because I don't like them
 c.content.cookies.store = False
+# Use default Firefox HTTP_ACCEPT header
+c.content.headers.accept_language = "de-DE,de;q=0.5"
+c.content.headers.custom = {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+}
 # Set editor
 c.editor.command = ["alacritty", "-e", 'nvim -c "normal {line}G{column0}l" {file}']
 # Which tab to select when the focused tab is removed.
