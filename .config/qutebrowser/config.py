@@ -317,7 +317,7 @@ c.url.searchengines = {
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "wd": "https://de.wikipedia.org/w/index.php?search={}",
     "wv": "https://en.wikivoyage.org/w/index.php?search={}",
-    "yt": "https://invidious.nerdvpn.de/search?q={}",
+    "yt": "https://farside.link/invidious/search?q={}",
 }
 
 # Aliases
