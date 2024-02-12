@@ -28,15 +28,18 @@
     "X"             '°org-toggle-checkbox-presence
     "+"             'org-set-property
     "#"             'org-priority
-    "D"             'org-insert-drawer
-    "T"             'org-set-tags-command)
+    "D"             (general-l
+                      (end-of-line)
+                      (org-insert-drawer))
+    ":"             'org-set-tags-command)
   (general-goleader
     :states         'motion
     :keymaps        'org-mode-map
     "A"             'org-agenda
     "o"             '°org-meta-ctrl-open-below
     "O"             '°org-meta-ctrl-open-above
-    "L"             'org-toggle-link-display)
+    "L"             'org-toggle-link-display
+    "0"             '°org-overview-realign)
   ;; keybindings for agenda-view
   (:states          'normal
    :keymaps         'org-agenda-mode-map
@@ -50,7 +53,8 @@
   (general-leader
     :states         'normal
     :keymaps        'org-agenda-mode-map
-    "t"             'org-agenda-todo)
+    "t"             'org-agenda-todo
+    ":"             'org-agenda-set-tags)
   :config
   (evil-set-initial-state 'org-agenda-mode 'normal)
   (evil-collection-org-setup)
@@ -61,7 +65,8 @@
   (dolist (action #'(org-forward-sentence
                      org-backward-sentence
                      °org-prev-element
-                     °org-next-element))
+                     °org-next-element
+                     org-cycle))
     (evil-declare-not-repeat action))
   
   (dolist (func
@@ -104,7 +109,7 @@
                                #'org-insert-item)
                               ((org-at-heading-p)
                                (org-end-of-line)
-                               #'org-insert-heading-respect-content)
+                               #'org-insert-heading)
                               (t
                                (lambda () (interactive) (evil-insert-newline-below))))))
       (while (org-fold-folded-p)
@@ -190,6 +195,13 @@ no children at all."
        (org-archive-subtree-default)
        (+ count 1))))
   
+  (defun °org-overview-realign ()
+    (interactive)
+    (org-overview)
+    (save-excursion
+      (goto-line 0)
+      (recenter)))
+
   (defun °org-toggle-checkbox-presence ()
     (interactive)
     (let ((current-prefix-arg '(4)))
