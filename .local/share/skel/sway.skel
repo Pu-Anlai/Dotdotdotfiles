@@ -1,6 +1,8 @@
 # %-LOCATION:$HOME/.config/sway/config-% %-CUSTOM:$HOME/.config/sway/custom-% -*-conf-*-
 # DO EDITS HERE: $HOME/.local/share/skel/sway.skel
 
+# shorthand for exec without startup notification
+set $execno exec --no-startup-id
 # Base16 color setup
 set $base00 {{{__BASE00_HASH}}}
 set $base01 {{{__BASE01_HASH}}}
@@ -32,7 +34,7 @@ client.placeholder      $base00 $base00 $base05 $base00 $base00
 client.background       $base07
 
 # define workspaces
-set $ws1 "1   "
+set $ws1 "1  "
 set $ws2 "2  "
 set $ws3 "3  "
 set $ws4 "4  "
@@ -59,10 +61,10 @@ set $i3b_up3 "pkill -RTMIN+3 i3blocks"
 set $i3b_up2 "pkill -RTMIN+2 i3blocks"
 set $i3b_up1 "pkill -RTMIN+1 i3blocks"
 
+include custom
 
-# custom settings
-{{{custom}}}
-# end of custom settings
+# screen settings
+output "Dell Inc. DELL S2522HG B2SH1C3" adaptive_sync on bg {{{HOME}}}/Bilder/wallpaper.jpg fill
 
 ## focus settings
 # never let windows take focus
@@ -77,7 +79,7 @@ no_focus [class="mpv"]
 hide_edge_borders smart
 default_border pixel 5
 # next the title font
-font pango:$font 8
+font pango:$font 9
 # Format the window title beyond the font
 for_window [class=".*"] title_format "     %title"
 # Gaps
@@ -88,13 +90,10 @@ smart_gaps on
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# set cursor hiding timeout
-seat seat0 hide_cursor 10000
-
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return $execno i3-sensible-terminal
 # start a terminal on workspace 1
-bindsym $mod+Shift+Return workspace $ws1 ; exec i3-sensible-terminal
+bindsym $mod+Shift+Return workspace $ws1; $execno i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+q kill
@@ -103,18 +102,18 @@ bindsym $mod+q kill
 bindsym --release button2 kill
 
 # Power management
-bindsym $mod+Pause exec $i3scriptsdir/screen_off
-bindsym $mod+Shift+Pause exec systemctl suspend
+bindsym $mod+Pause $execno $i3scriptsdir/screen_off
+bindsym $mod+Shift+Pause $execno systemctl suspend
 
 # start a program launcher
-bindsym $mod+r exec fzfly-desktop
+bindsym $mod+r $execno tofi-drun | xargs swaymsg exec --
 
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
-# move in relation to parent
+# change in relation to parent
 bindsym $mod+Ctrl+h focus parent; focus left; focus child
 bindsym $mod+Ctrl+j focus parent; focus down; focus child
 bindsym $mod+Ctrl+k focus parent; focus up; focus child
@@ -180,14 +179,15 @@ bindsym $mod+p focus parent
 bindsym $mod+Shift+p focus child
 
 # bind function keys
-bindsym XF86MonBrightnessUp exec light -A 5; exec $i3b_up8
-bindsym XF86MonBrightnessDown exec light -U 5; exec $i3b_up8
-bindsym Shift+XF86MonBrightnessUp exec light -A 1; exec $i3b_up8
-bindsym Shift+XF86MonBrightnessDown exec light -U 1; exec $i3b_up8
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec $i3b_up9
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec $i3b_up9
-bindsym Shift+XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +1%; exec $i3b_up9
-bindsym Shift+XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -1%; exec $i3b_up9
+bindsym XF86MonBrightnessUp $execno $i3blockletsdir/backlight 8 big_up
+bindsym XF86MonBrightnessDown $execno $i3blockletsdir/backlight 8 big_down
+bindsym Shift+XF86MonBrightnessUp $execno $i3blockletsdir/backlight 8 up
+bindsym Shift+XF86MonBrightnessDown $execno $i3blockletsdir/backlight 8 down
+bindsym XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume 5%+
+bindsym XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume 5%-
+bindsym Shift+XF86AudioRaiseVolume $execno $i3blockletsdir/volume 9 volume 1%+
+bindsym Shift+XF86AudioLowerVolume $execno $i3blockletsdir/volume 9 volume 1%-
+bindsym XF86AudioMute $execno $i3blockletsdir/volume 9 mute toggle
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -242,39 +242,33 @@ bindsym $mod+Mod1+Shift+Right move workspace to output right
 # jump to urgent window
 bindsym $mod+space [urgent=latest] focus
 # restart/reload i3 inplace
-bindsym $mod+Shift+Ctrl+r exec sh -c 'merge-configs && i3-msg restart'
-bindsym $mod+Shift+r exec sh -c 'merge-configs && i3-msg reload'
+bindsym $mod+Shift+r $execno sh -c 'merge-configs && swaymsg reload'
 
-# volume control
-bindsym $mod+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym $mod+Shift+KP_Add exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym $mod+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym $mod+Shift+KP_Subtract exec pactl set-sink-volume @DEFAULT_SINK@ -10%
-bindsym $mod+KP_Multiply exec pactl set-sink-volume @DEFAULT_SINK@ 100%
+# remove notifications
+bindsym $mod+BackSpace $execno dunstctl close-all
+bindsym $mod+Shift+BackSpace $execno dunstctl close
+
+# screenshot shortcut
+bindsym $mod+Print exec screenshot
 
 # workspace assignments
-assign [class="qutebrowser"] $ws2
-assign [class="Firefox"] $ws2
-assign [class="Chromium"] $ws2
-assign [class="TelegramDesktop"] $ws3
-assign [class="whats-app-*"] $ws3
-assign [class="Thunderbird"] $ws3
-assign [class="discord"] $ws3
-assign [class="zoom"] $ws3
-assign [class="Microsoft Teams - Preview"] $ws3
-assign [title="LibreOffice" window_type="splash"] $ws5
-assign [class="(?i).*libreoffice.*"] $ws5
-assign [class="Emacs"] $ws4
-assign [class="jetbrains.*"] $ws4
-assign [class="Soffice"] $ws5
-assign [class="Gimp*"] $ws6
-assign [class="Steam"] $ws7
+assign [app_id="qutebrowser"] $ws2
+assign [app_id="Firefox"] $ws2
+assign [app_id="discord"] $ws3
+assign [app_id="zoom"] $ws3
+assign [app_id="Microsoft Teams - Preview"] $ws3
+assign [app_id="LibreOffice" window_type="splash"] $ws5
+assign [app_id="(?i).*libreoffice.*"] $ws5
+assign [app_id="Emacs"] $ws4
+assign [app_id="jetbrains.*"] $ws4
+assign [app_id="Soffice"] $ws5
+assign [app_id="Gimp*"] $ws6
+assign [class="steam"] $ws7
 
 # window arrangement fixes
 for_window [class="Zotero" title="Schnellformatierung Zitation"] floating enable
 for_window [class="Yad"] floating enable
 for_window [class="Pinentry"] floating enable
-for_window [instance="fzfly"] fullscreen enable global
 
 ## modes
 set $mode_resize " resize"
@@ -301,11 +295,17 @@ mode $mode_resize {
 
 # control mpd
 mode $mode_music {
-        bindsym space exec mpc toggle
-        bindsym l exec mpc next; exec $i3b_up10
-        bindsym h exec mpc prev; exec $i3b_up10
-        bindsym r exec mpc random; exec $i3b_up10
-        bindsym Tab exec $i3scriptsdir/mpd_toggle
+        bindsym space $execno mpc toggle
+        bindsym l $execno mpc next
+        bindsym h $execno mpc prev
+        bindsym r $execno mpc random
+        bindsym Tab $execno $i3scriptsdir/mpd_toggle
+        # volume control
+        bindsym plus $execno $i3blockletsdir/volume 9 volume 5%+
+        bindsym minus $execno $i3blockletsdir/volume 9 volume 5%-
+        bindsym Shift+plus $execno $i3blockletsdir/volume 9 volume 1%+
+        bindsym Shift+minus $execno $i3blockletsdir/volume 9 volume 1%-
+        bindsym Shift+0 $execno $i3blockletsdir/volume 9 volume 100%
 
         # back to normal: Enter or Escape
         bindsym Escape mode "default"
@@ -314,12 +314,12 @@ mode $mode_music {
 
 # access i3blocks features without using the mouse
 mode $mode_blocks {
-        bindsym s exec BLOCK_BUTTON=1 $i3blockletsdir/shutdown; mode "default"
-        bindsym w exec BLOCK_BUTTON=2 $i3blockletsdir/shutdown; mode "default"
-        bindsym d exec BLOCK_BUTTON=3 $i3blockletsdir/time; mode "default"
-        bindsym c exec BLOCK_BUTTON=1 $i3blockletsdir/clipboard; mode "default"
-        bindsym n exec BLOCK_BUTTON=1 $i3blockletsdir/network; mode "default"
-        bindsym b exec BLOCK_BUTTON=1 $i3blockletsdir/battery; mode "default"
+        bindsym s $execno BLOCK_BUTTON=1 $i3blockletsdir/shutdown; mode "default"
+        bindsym w $execno BLOCK_BUTTON=2 $i3blockletsdir/shutdown; mode "default"
+        bindsym d $execno BLOCK_BUTTON=3 $i3blockletsdir/time; mode "default"
+        bindsym c $execno BLOCK_BUTTON=1 $i3blockletsdir/clipboard; mode "default"
+        bindsym n $execno BLOCK_BUTTON=1 $i3blockletsdir/network; mode "default"
+        bindsym b $execno BLOCK_BUTTON=1 $i3blockletsdir/battery; mode "default"
 
         bindsym Escape mode "default"
         bindsym $mod+b mode "default"
@@ -327,34 +327,35 @@ mode $mode_blocks {
 
 # insert text
 mode $mode_insert {
-        bindsym m exec $i3scriptsdir/i3insert m; mode "default"
-        bindsym Shift+n exec $i3scriptsdir/i3insert N; mode "default"
-        bindsym n exec $i3scriptsdir/i3insert n; mode "default"
-        bindsym v exec $i3scriptsdir/i3insert v; mode "default"
-        bindsym s exec $i3scriptsdir/i3insert s; mode "default"
-        bindsym Shift+s exec $i3scriptsdir/i3insert S; mode "default"
-        bindsym p exec $i3scriptsdir/i3insert p; mode "default"
-        bindsym o exec $i3scriptsdir/i3insert o; mode "default"
-        bindsym f exec $i3scriptsdir/i3insert f; mode "default"
+        bindsym m $execno $i3scriptsdir/i3insert m; mode "default"
+        bindsym Shift+n $execno $i3scriptsdir/i3insert N; mode "default"
+        bindsym n $execno $i3scriptsdir/i3insert n; mode "default"
+        bindsym v $execno $i3scriptsdir/i3insert v; mode "default"
+        bindsym s $execno $i3scriptsdir/i3insert s; mode "default"
+        bindsym Shift+s $execno $i3scriptsdir/i3insert S; mode "default"
+        bindsym p $execno $i3scriptsdir/i3insert p; mode "default"
+        bindsym o $execno $i3scriptsdir/i3insert o; mode "default"
+        bindsym f $execno $i3scriptsdir/i3insert f; mode "default"
         # password retrieval
-        bindsym less exec $i3scriptsdir/pass_get -X; mode "default"
-        bindsym y exec $i3scriptsdir/pass_get -ux; mode "default"
-        bindsym Ctrl+y exec $i3scriptsdir/pass_get -uxm; mode "default"
-        bindsym Shift+y exec $i3scriptsdir/pass_get -u; mode "default"
-        bindsym Ctrl+Shift+y exec $i3scriptsdir/pass_get -um; mode "default"
-        bindsym x exec $i3scriptsdir/pass_get -x; mode "default"
-        bindsym Ctrl+x exec $i3scriptsdir/pass_get -xm; mode "default"
-        bindsym Shift+x exec $i3scriptsdir/pass_get; mode "default"
-        bindsym Ctrl+Shift+x exec $i3scriptsdir/pass_get; mode "default"
-        bindsym c exec $i3scriptsdir/pass_get -fx; mode "default"
-        bindsym Ctrl+c exec $i3scriptsdir/pass_get -fxm; mode "default"
-        bindsym Shift+c exec $i3scriptsdir/pass_get -f; mode "default"
-        bindsym Ctrl+Shift+c exec $i3scriptsdir/pass_get -fm; mode "default"
+        bindsym less $execno $i3scriptsdir/pass_get -X; mode "default"
+        bindsym y $execno $i3scriptsdir/pass_get -ux; mode "default"
+        bindsym Ctrl+y $execno $i3scriptsdir/pass_get -uxm; mode "default"
+        bindsym Shift+y $execno $i3scriptsdir/pass_get -u; mode "default"
+        bindsym Ctrl+Shift+y $execno $i3scriptsdir/pass_get -um; mode "default"
+        bindsym x $execno $i3scriptsdir/pass_get -x; mode "default"
+        bindsym Ctrl+x $execno $i3scriptsdir/pass_get -xm; mode "default"
+        bindsym Shift+x $execno $i3scriptsdir/pass_get; mode "default"
+        bindsym Ctrl+Shift+x $execno $i3scriptsdir/pass_get; mode "default"
+        bindsym c $execno $i3scriptsdir/pass_get -fx; mode "default"
+        bindsym Ctrl+c $execno $i3scriptsdir/pass_get -fxm; mode "default"
+        bindsym Shift+c $execno $i3scriptsdir/pass_get -f; mode "default"
+        bindsym Ctrl+Shift+c $execno $i3scriptsdir/pass_get -fm; mode "default"
 
 
         bindsym Escape mode "default"
         bindsym $mod+i mode "default"
 }
+
 
 # bind modes to keys
 bindsym $mod+plus mode $mode_resize
@@ -362,11 +363,11 @@ bindsym $mod+m mode $mode_music
 bindsym $mod+b mode $mode_blocks
 bindsym $mod+i mode $mode_insert
 
-# Start swaybar to display a workspace bar
+# Start i3bar to display a workspace bar
 bar {
         status_command i3blocks
         position top
-        font pango:$font, FontAwesome 11
+        font pango:$font, FontAwesome
 
         colors {
             background $base00
@@ -382,9 +383,4 @@ bar {
         }
 }
 
-# set background
-output * bg $HOME/Bilder/wallpaper.jpg fill
-
-# startup programs
-exec --no-startup-id mako
-exec --no-startup-id ibus-daemon -xrd
+$execno ibus-daemon -rxRd
