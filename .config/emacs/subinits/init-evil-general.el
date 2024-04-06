@@ -67,10 +67,10 @@
 (use-package vertigo
   :general
   (:keymaps         'motion
-   "<S-SPC>"        'vertigo-set-digit-argument
+   "SPC SPC"        'vertigo-set-digit-argument
    "<C-S-SPC>"      '°vertigo-reuse-last-arg)
   (:keymaps         'operator
-    "<S-SPC>"       'vertigo-evil-set-digit-argument)
+    "SPC SPC"       'vertigo-evil-set-digit-argument)
   :config
   (evil-define-motion vertigo-evil-set-digit-argument (count)
     "Evil vertigo motion. Count has no effect."
