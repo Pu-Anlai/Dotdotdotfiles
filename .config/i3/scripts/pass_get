@@ -7,14 +7,16 @@ test -z $PASSWORD_STORE_DIR; and set PASSWORD_STORE_DIR $HOME/.password-store
 test -z $PASS_FALLBACK_USER; and set PASS_FALLBACK_USER "User"
 
 # prerequisites
-set required_execs pass ydotool
+set required_execs pass
 # wayland and X11 specific setup
 if [ -n "$WAYLAND_DISPLAY" ]
     set -a required_execs jq wl-copy
     set clip_in wl-copy
+    set xytool wtype
 else
-    set -a required_execs xclip
+    set -a required_execs xclip xdotool
     set clip_in xclip -selection clipboard
+    set xytool xdotool
 end
 for exec in $required_execs
     if not command -q $exec
@@ -41,23 +43,28 @@ else
     set class (string match -r '"[^"]+"$' "$class_line")
     set name (string replace -a ' ' '_' "$name")
     set class (string replace -a ' ' '_' "$class")
-    set xytool
 end
 
 
 function dotool -a cmd
-    test "$xytool" = "xdotool" && set clearmod "--clearmodifiers"
-    switch $cmd
-        case type key
-            $xytool $cmd $clearmod "$argv[2..]"
-        case keyup
-            if [ $xytool = "ydotool" ]
-                $xytool key --up $argv[2..]
-            else
-                $xytool $cmd $argv[2..]
-            end
-        case '*'
-            $xytool $cmd $argv[2..]
+    # for wayland
+    if [ -n "$WAYLAND_DISPLAY" ]
+        switch $cmd
+            case type
+                wtype -- "$argv[2..]"
+            case key
+                wtype -k -- "$argv[2..]"
+            case superup
+                wtype -m logo
+        end
+    # for X11
+    else
+        switch $cmd
+            case type key
+                 $cmd --clearmodifiers "$argv[2..]"
+            case superup
+                xdotool keyup Super
+        end
     end
 end
 
@@ -85,17 +92,13 @@ function xdo_pass_entry -a pass
     set pass_string (pass show $pass | head -n 1); or return 1
     set field_div (get_value $pass "xdoDiv")
     test -z "$field_div"; and set field_div "15:1 15:0"
-    ydotool type "$user"
-    ydotool key (string split " " $field_div)
-    ydotool type "$pass_string"
-    ydotool key 28:1 28:0
-    # do_type $user
-    # dotool keyup Super
-    # dotool key (string split " " $field_div)
-    # dotool keyup Super
-    # do_type $pass_string
-    # dotool keyup Super
-    # dotool key Return
+    dotool type $user
+    dotool superup
+    dotool key (string split " " $field_div)
+    dotool superup
+    dotool type $pass_string
+    dotool superup
+    dotool key Return
 end
 
 
@@ -160,7 +163,7 @@ function handle_candidate -S -a candidate
         fish -c 'sleep 45; and echo -n "" | '$clip_in & disown
     else
         notify-send -u low "Entering information from $candidate..."
-        ydotool type -d 0 "$info"; or return 1
+        dotool type "$info"; or return 1
     end
 end
 
