@@ -6,26 +6,29 @@ set base_folder "$HOME/Musik/Zwischenspeicher"
 set record_folder $base_folder/Alben
 mkdir -p "$record_folder"
 
-which oggenc >/dev/null || exit 1
+which opusenc >/dev/null || exit 1
 
 function process_record_folder -S -a folder
-    set ogg_folder "$record_folder/ogg/"(basename "$folder")
+    set opus_folder "$record_folder/opus/"(basename "$folder")
     # return if the folder already exists
-    test -e "$ogg_folder" && begin
-        echo "Folder\"$ogg_folder\" already exists. Skipping..."
+    test -e "$opus_folder" && begin
+        echo "Folder\"$opus_folder\" already exists. Skipping..."
         return
     end
 
-    mkdir -p "$ogg_folder"
+    mkdir -p "$opus_folder"
 
     set_color -o; echo "Preparing "(basename "$folder")"..."; set_color normal
     cd "$folder"
 
-    oggenc -q 6 *.flac || return 1
-    mv *.ogg "$ogg_folder"/
+    for f in *.flac
+        set new_f (string split -r -f 1 '.' -- $f)".opus"
+        opusenc --music --bitrate 128 $f $new_f || return 1
+    end
+    mv *.opus "$opus_folder"/
 
     if not set -q _flag_r
-        replaygain "$ogg_folder"/*.ogg
+        replaygain "$opus_folder"/*.opus
     end
     
     set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
