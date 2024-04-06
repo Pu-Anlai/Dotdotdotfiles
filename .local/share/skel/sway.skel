@@ -22,7 +22,17 @@ set $base0E {{{__BASE0E_HASH}}}
 set $base0F {{{__BASE0F_HASH}}}
 
 # input setup
-input "type:keyboard" xkb_file {{{HOME}}}/.config/xkb/custom.xkb
+input "type:keyboard" {
+    xkb_file {{{HOME}}}/.config/xkb/custom.xkb
+    xkb_numlock enabled
+}
+input "1133:16505:Logitech_G_Pro" {
+      accel_profile "flat"
+}
+seat seat0 {
+    hide_cursor 5000
+    hide_cursor when-typing enable
+}
 
 # Basic color configuration using the Base16 variables for windows and borders.
 # Property Name         Border  BG      Text    Indicator Child Border
@@ -259,7 +269,7 @@ assign [app_id="zoom"] $ws3
 assign [app_id="Microsoft Teams - Preview"] $ws3
 assign [app_id="LibreOffice" window_type="splash"] $ws5
 assign [app_id="(?i).*libreoffice.*"] $ws5
-assign [app_id="Emacs"] $ws4
+assign [app_id="emacs"] $ws4
 assign [app_id="jetbrains.*"] $ws4
 assign [app_id="Soffice"] $ws5
 assign [app_id="Gimp*"] $ws6
