@@ -31,9 +31,6 @@
 !.config/emacs/themes
 !.config/emacs/themes/base16-generic-theme.el
 
-!.config/feh
-!.config/feh/*
-
 !.config/fish
 # config.fish is generated automatically if it's empty
 .config/fish/config.fish
@@ -109,12 +106,9 @@
 !.local
 
 !.local/bin
-!.local/bin/fzfly
-!.local/bin/fzfly-desktop
 !.local/bin/merge-configs
 !.local/bin/mpdnotdaem
 !.local/bin/mpull
-!.local/bin/longless
 !.local/bin/pacupdate
 !.local/bin/playlistctl
 !.local/bin/screenshot
