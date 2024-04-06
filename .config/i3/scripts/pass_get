@@ -6,23 +6,42 @@ test -z $PASS_SUBNAME_SPLIT_CHAR; and set PASS_SUBNAME_SPLIT_CHAR '%'
 test -z $PASSWORD_STORE_DIR; and set PASSWORD_STORE_DIR $HOME/.password-store
 test -z $PASS_FALLBACK_USER; and set PASS_FALLBACK_USER "User"
 
+# prerequisites
+set required_execs pass ydotool
+# wayland and X11 specific setup
+if [ -n "$WAYLAND_DISPLAY" ]
+    set -a required_execs jq wl-copy
+    set clip_in wl-copy
+else
+    set -a required_execs xclip
+    set clip_in xclip -selection clipboard
+end
+for exec in $required_execs
+    if not command -q $exec
+        notify-send "$exec not installed."
+        exit 1
+    end
+end
+
 # get name of currently active window
-set active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
-set active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
-set name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
-set class_line (string match -r 'WM_CLASS\([^)]+\).+' (xprop -id $active_id))
-set name (string match -r '"[^"]+"$' "$name_line")
-set class (string match -r '"[^"]+"$' "$class_line")
-set name (string replace -a ' ' '_' "$name")
-set class (string replace -a ' ' '_' "$class")
-set xytool
-
-
-function is_x11
-    # check whether display server is x11
-    set session (loginctl show-user (whoami) -p Sessions | string match -r '(?<==)\d+')
-    set login_type (loginctl show-session $session -p Type | cut -d= -f2)
-    test "$login_type" = "x11" && return 0 || return 1
+# in wayland
+if [ -n "$WAYLAND_DISPLAY" ]
+    set active (swaymsg -t get_tree | jq -r '..|try select(.focused == true)')
+    set name (echo $active | jq -r '.name')
+    set class (echo $active | jq -r '.app_id')
+    if [ -z "$class" ]
+        set class (echo $active | jq -r '.class')
+    end
+else
+    set active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
+    set active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
+    set name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
+    set class_line (string match -r 'WM_CLASS\([^)]+\).+' (xprop -id $active_id))
+    set name (string match -r '"[^"]+"$' "$name_line")
+    set class (string match -r '"[^"]+"$' "$class_line")
+    set name (string replace -a ' ' '_' "$name")
+    set class (string replace -a ' ' '_' "$class")
+    set xytool
 end
 
 
@@ -65,14 +84,18 @@ function xdo_pass_entry -a pass
     set user (get_value $pass "user" "$PASS_FALLBACK_USER"); or return 1
     set pass_string (pass show $pass | head -n 1); or return 1
     set field_div (get_value $pass "xdoDiv")
-    test -z "$field_div"; and set field_div "Tab"
-    do_type $user
-    dotool keyup Super
-    dotool key (string split " " $field_div)
-    dotool keyup Super
-    do_type $pass_string
-    dotool keyup Super
-    dotool key Return
+    test -z "$field_div"; and set field_div "15:1 15:0"
+    ydotool type "$user"
+    ydotool key (string split " " $field_div)
+    ydotool type "$pass_string"
+    ydotool key 28:1 28:0
+    # do_type $user
+    # dotool keyup Super
+    # dotool key (string split " " $field_div)
+    # dotool keyup Super
+    # do_type $pass_string
+    # dotool keyup Super
+    # dotool key Return
 end
 
 
@@ -132,12 +155,12 @@ function handle_candidate -S -a candidate
     # handle info
     if [ -z "$_flag_x" ]
         # default: copy to clipboard
-        echo -n -- "$info" | xclip -selection clipboard; or return 1
+        echo -n -- "$info" | $clip_in; or return 1
         and notify-send -u low "Copied information from $candidate to clipboard."
-        fish -c 'sleep 45; and echo -n "" | xclip -selection clipboard' & disown
+        fish -c 'sleep 45; and echo -n "" | '$clip_in & disown
     else
         notify-send -u low "Entering information from $candidate..."
-        do_type "$info"; or return 1
+        ydotool type -d 0 "$info"; or return 1
     end
 end
 
@@ -149,15 +172,6 @@ function interactive_select -a message
     end | dmenu
 end
 
-
-if command -q xdotool && is_x11
-    set xytool xdotool
-else if command -q ydotool
-    set xytool ydotool
-else
-    notify-send "No suitable input application found."
-    exit 1
-end
 
 # get list of all pass files
 set passes (string replace -fr '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)

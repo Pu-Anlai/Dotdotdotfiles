@@ -5,7 +5,7 @@
 # blocklet is clicked (with any mouse button), the clipboard is emptied and the
 # blocklet disappears.
 
-if [[ -e /usr/bin/xclip ]]; then
+if [[ -z "$WAYLAND_DISPLAY" ]]; then
     function clip_out {
         xclip -selection clipboard -o | strings -ws ' '
     }
@@ -14,15 +14,13 @@ if [[ -e /usr/bin/xclip ]]; then
         # this is the only way with xclip or the script won't terminate
         killall xclip
     }
-elif [[ -e /usr/bin/xsel ]]; then
+else
     function clip_out {
-        xsel -bo | strings -ws ' '
+        wl-paste | strings -ws ' '
     }
     function clip_clear {
-        xsel -bc
+        wl-copy --clear
     }
-else
-    exit
 fi
 
 if [[ -n ${BLOCK_BUTTON} ]]; then
