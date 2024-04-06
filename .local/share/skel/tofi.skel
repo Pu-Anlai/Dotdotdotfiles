@@ -89,7 +89,6 @@
 	input-background-corner-radius = 0
 
 	# Default result text theme
-	default-color = {{{__BASE0E_HASH}}}
 	# default-result-background = {{{__BASE00_HASH}}}d9
 	default-result-background-padding = 0
 	default-result-background-corner-radius = 0
@@ -106,7 +105,7 @@
 
 	# Selection text
 	selection-color = {{{__BASE0E_HASH}}}
-	selection-background = {{{__BASE00_HASH}}d9
+	# selection-background = {{{__BASE00_HASH}}}d9
 	selection-background-padding = 0
 	selection-background-corner-radius = 0
 
@@ -192,10 +191,10 @@
 	corner-radius = 0
 
 	# Padding between borders and text. Can be pixels or a percentage.
-	padding-top = 30%
-	padding-bottom = 8
+	padding-top = 20%
+	padding-bottom = 10%
 	padding-left = 30%
-	padding-right = 8
+	padding-right = 5%
 
 	# Whether to clip text drawing to be within the specified padding. This
 	# is mostly important for allowing text to be inset from the border,
