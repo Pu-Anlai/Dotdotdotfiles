@@ -1,4 +1,7 @@
 ;; -*- lexical-binding: t -*-
+;; don't pop up buffer for compilation warnings
+(setq native-comp-async-report-warnings-errors 'silent)
+
 ;; carry history variables across sessions
 (savehist-mode)
 

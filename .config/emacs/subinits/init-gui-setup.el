@@ -94,6 +94,8 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package shackle
+  :straight
+  (:type git :host github :repo "wasamasa/shackle")
   :config
   (shackle-mode 1)
   (setq shackle-rules
