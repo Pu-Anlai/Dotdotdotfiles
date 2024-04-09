@@ -3,22 +3,29 @@
 # DO EDITS HERE: $HOME/.local/share/skel/i3insert.skel
 function dotool {
     local tool
-    session_type=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type| cut -d= -f2)
+    local args
 
-    if command -v xdotool >/dev/null 2>&1 && [ "$session_type" = "x11" ]; then
-        tool=xdotool
-    elif command -v ydotool >/dev/null 2>&1; then
-        tool=ydotool
+    if [[ -n "$WAYLAND_DISPLAY" ]]; then
+        tool=wtype
+        case $1 in
+            type)
+                args="${@:2}"
+                ;;
+            keyup)
+                args=("-p" "${@:2}")
+                ;;
+        esac
     else
+        tool=xdotool
+        args=${@}
+    fi
+
+    if ! command -v "$tool" >/dev/null 2>&1; then
         notify-send "No suitable input application found."
         exit 1
     fi
 
-    if [ "$1" = "keyup" -a "$tool" = "ydotool" ]; then
-        $tool key --up "${@:1}"
-    else
-        $tool "$@"
-    fi
+    $tool "${args}"
 }
 
 function translate_char {
