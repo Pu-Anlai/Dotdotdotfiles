@@ -53,7 +53,7 @@ function dotool -a cmd
             case type
                 wtype -- "$argv[2..]"
             case key
-                wtype -k "$argv[2..]"
+                wtype -s 100 -k "$argv[2..]"
             case superup
                 wtype -m logo
         end
