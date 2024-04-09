@@ -86,7 +86,7 @@ no_focus [class="mpv"]
 
 ## configure window decorations
 # first the border
-hide_edge_borders smart
+hide_edge_borders --i3 smart
 default_border pixel 5
 # next the title font
 font pango:$font 9
