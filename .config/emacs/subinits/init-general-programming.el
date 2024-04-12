@@ -193,14 +193,6 @@ If DOWN is non-nil, then add lines below instead."
 
   (mapc #'evil-declare-not-repeat #'(°company-select-next °company-select-previous)))
 
-(use-package company-box
-  :after company
-  ;; load tng-mode first so it doesn't overwrite company-frontends
-  :hook (company-tng-mode . company-box-mode)
-  :config
-  (setq company-frontends '(company-tng-frontend company-box-frontend))
-  (setq company-box-doc-delay 0))
-
 (use-package magit
   :hook ((magit-mode . °source-ssh-env)
          (with-editor-mode . evil-insert-state))
