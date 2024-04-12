@@ -50,7 +50,7 @@ function nagbar_sd {
 
 function dmenu_sd {
     options=$(printf '%s\n' '  Herunterfahren' '  Neustarten' '  Bereitschaft')
-    response=$(echo -e "$options" | dmenu -p shutdown -i)
+    response=$(echo -e "$options" | dmenu)
 
     case $response in
         '  Bereitschaft')
