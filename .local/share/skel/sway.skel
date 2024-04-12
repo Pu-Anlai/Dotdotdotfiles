@@ -74,7 +74,7 @@ set $i3b_up1 "pkill -RTMIN+1 i3blocks"
 include custom
 
 # screen settings
-output "Dell Inc. DELL S2522HG B2SH1C3" adaptive_sync on bg {{{HOME}}}/Bilder/wallpaper.jpg fill
+output * bg {{{HOME}}}/Bilder/wallpaper.jpg fill
 
 ## focus settings
 # never let windows take focus
