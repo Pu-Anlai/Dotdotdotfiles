@@ -41,9 +41,9 @@ else
     set class_line (string match -r 'WM_CLASS\([^)]+\).+' (xprop -id $active_id))
     set name (string match -r '"[^"]+"$' "$name_line")
     set class (string match -r '"[^"]+"$' "$class_line")
-    set name (string replace -a ' ' '_' "$name")
-    set class (string replace -a ' ' '_' "$class")
 end
+set name (string replace -a ' ' '_' "$name")
+set class (string replace -a ' ' '_' "$class")
 
 
 function dotool -a cmd

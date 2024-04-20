@@ -4,6 +4,7 @@ function btcon
 
     if not systemctl is-active bluetooth.service > /dev/null
         sudo systemctl start bluetooth.service
+        sleep 1.5  # no other way (that I know of) to wait for service to be available
     end
 
     bluetoothctl power on 2>/dev/null 1>/dev/null
