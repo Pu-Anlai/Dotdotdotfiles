@@ -12,5 +12,5 @@ function qrit -d "Create a QR Code from the provided argument"
             end
     end
 
-    echo -n "$str_out" | qrencode --size 10 -o - | feh -. -
+    echo -n "$str_out" | qrencode --size 10 -o - | imv -
 end

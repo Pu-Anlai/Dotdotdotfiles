@@ -119,7 +119,7 @@ sudo pacman -S --needed \
     alsa-utils \
     arc-gtk-theme \
     dnscrypt-proxy \
-    feh \
+    img \
     fzf \
     i3blocks \
     ibus \
