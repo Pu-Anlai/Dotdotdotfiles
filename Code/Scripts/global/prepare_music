@@ -22,13 +22,13 @@ function process_record_folder -S -a folder
     cd "$folder"
 
     for f in *.flac
-        set new_f (string split -r -f 1 '.' -- $f)".opus"
+        set new_f (string split -r -m 1 -f 1 '.' -- $f)".opus"
         opusenc --music --bitrate 128 $f $new_f || return 1
     end
     mv *.opus "$opus_folder"/
 
     if not set -q _flag_r
-        replaygain "$opus_folder"/*.opus
+        rsgain custom -a --tagmode=i --opus-mode=s "$opus_folder"/*.opus
     end
     
     set_color -o; echo "Finished processing "(basename "$folder")"."; set_color normal
