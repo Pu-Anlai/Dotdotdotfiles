@@ -110,11 +110,15 @@ async def get_album_art(mpc: MPDClient, song: Song) -> Optional[bytes]:
 
 
 async def write_file_info(song: Song):
-    artist = escape(song["artist"])
-    title = escape(song["title"])
-    content = f"{artist} - {title}\n" if song else "Silence.\n"
-    async with aiofiles.open(CACHEFILE, mode="w") as f:
-        await f.write(content)
+    try:
+        artist = escape(song["artist"])
+        title = escape(song["title"])
+        content = f"{artist} - {title}\n"
+        async with aiofiles.open(CACHEFILE, mode="w") as f:
+            await f.write(content)
+    except KeyError:
+        async with aiofiles.open(CACHEFILE, mode="w") as f:
+            await f.write("Silence...\n")
 
 
 async def signal_i3blocks(pid: int):
