@@ -408,11 +408,10 @@ unless FOLDERS-ONLY is non-nil."
 
 
 ;;;###autoload
-(defun °sudo-find-file ()
-  "Open 'find-file' with sudo prefix."
+(defun °sudo-this-file ()
+  "Open 'find-file' with sudo prefix on current buffer."
   (interactive)
-  (let ((default-directory "/sudo::/"))
-    (command-execute 'find-file)))
+  (find-file (°join-path nil "/sudo::/" (buffer-file-name))))
 
 (defun °°syntax-depth ()
   "Return depth at point within syntax tree. "
