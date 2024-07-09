@@ -29,6 +29,9 @@ input "type:keyboard" {
 input "1133:16505:Logitech_G_Pro" {
       accel_profile "flat"
 }
+input "1133:49288:Logitech_G_Pro_Wireless_Gaming_Mouse" {
+      accel_profile "flat"
+}
 seat seat0 {
     hide_cursor 5000
     hide_cursor when-typing enable
