@@ -88,7 +88,7 @@
 
 (push (expand-file-name "themes" user-emacs-directory) custom-theme-load-path)
 (load-theme 'base16-generic t)
-(push `(font . ,(concat (or (getenv "FONT_MONO") "Monospace") " 11")) default-frame-alist)
+(push `(font . ,(concat (or (getenv "FONT_MONO") "Monospace"))) default-frame-alist)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
