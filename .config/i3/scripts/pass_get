@@ -6,6 +6,7 @@ test -z $PASS_SUBNAME_SPLIT_CHAR; and set PASS_SUBNAME_SPLIT_CHAR '%'
 test -z $PASSWORD_STORE_DIR; and set PASSWORD_STORE_DIR $HOME/.password-store
 test -z $PASS_FALLBACK_USER; and set PASS_FALLBACK_USER "User"
 
+
 # prerequisites
 set required_execs pass
 # wayland and X11 specific setup
@@ -35,6 +36,7 @@ if [ -n "$WAYLAND_DISPLAY" ]
         set class (echo $active | jq -r '.class')
     end
 else
+# in x11
     set active_line (string match -ri '^_NET_ACTIVE_WINDOW\(WINDOW\).+' (xprop -root))
     set active_id (string replace -r '^[^#]+#\s(\S+)' '$1' "$active_line")
     set name_line (string match -r 'WM_NAME\([^)]+\).+' (xprop -id $active_id))
@@ -175,41 +177,46 @@ function interactive_select -a message
     end | dmenu
 end
 
+function main -S
+    # get list of all pass files
+    set passes (string replace -fr '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
 
-# get list of all pass files
-set passes (string replace -fr '^.+?\.password-store/(.+?)\.gpg$' '$1' $PASSWORD_STORE_DIR/**/*)
+    # loop through files and find one that matches based on name property or if
+    # that doesn't work class property
+    # skip this test if the manual flag was passed
+    set candidates
+    if [ -z "$_flag_m" ]
+        loop_candidates $name
+        test -z "$candidates"; and loop_candidates $class
+    end
 
-# loop through files and find one that matches based on name property or if
-# that doesn't work class property
-# skip this test if the manual flag was passed
-set candidates
-if [ -z "$_flag_m" ]
-    loop_candidates $name
-    test -z "$candidates"; and loop_candidates $class
+    # send candidate to pass; use dmenu to select one if there are too many
+    set cand_num (count $candidates)
+    set final_candidate
+
+    if [ "$_flag_m" ]
+        # select password manually if -m flag was specified
+        interactive_select "" $passes | read final_candidate
+    else if [ $cand_num -eq 1 ]
+        # if there was only one password found set that to final candidate
+        set final_candidate $candidates
+        notify-send "Found $final_candidate."
+    else if [ $cand_num -gt 1 ]
+        # if there's more than one, select one with dmenu
+        interactive_select 'Too many candidates.' $candidates | read final_candidate
+    else 
+        # if there's none, also select one with dmenu
+        interactive_select 'Nothing found. Please select manually.' $passes | read final_candidate
+    end
+
+    if [ -n "$final_candidate" ]
+        handle_candidate $final_candidate; or exit 1
+    else
+        notify-send 'No password selected.'
+        exit 1
+    end
 end
 
-# send candidate to pass; use dmenu to select one if there are too many
-set cand_num (count $candidates)
-set final_candidate
-
-if [ "$_flag_m" ]
-    # select password manually if -m flag was specified
-    interactive_select "" $passes | read final_candidate
-else if [ $cand_num -eq 1 ]
-    # if there was only one password found set that to final candidate
-    set final_candidate $candidates
-    notify-send "Found $final_candidate."
-else if [ $cand_num -gt 1 ]
-    # if there's more than one, select one with dmenu
-    interactive_select 'Too many candidates.' $candidates | read final_candidate
-else 
-    # if there's none, also select one with dmenu
-    interactive_select 'Nothing found. Please select manually.' $passes | read final_candidate
-end
-
-if [ -n "$final_candidate" ]
-    handle_candidate $final_candidate; or exit 1
-else
-    notify-send 'No password selected.'
-    exit 1
+if not status is-interactive
+    main
 end

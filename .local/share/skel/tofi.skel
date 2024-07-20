@@ -296,7 +296,7 @@
 	# Assume input is plain ASCII, and disable some Unicode handling
 	# functions. This is faster, but means e.g. a search for "e" will not
 	# match "é".
-	ascii-input = false
+	ascii-input = true
 
 #
 ### Inclusion
