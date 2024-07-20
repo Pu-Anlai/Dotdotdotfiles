@@ -52,7 +52,8 @@ export __BASE0F=d65d0e
 # setup font settings
 export FONT_SANS=Gidole
 export FONT_SERIF=Merriweather
-export FONT_MONO="Office Code Pro"
+export FONT_MONO="Iosevka Nerd Font"
+export FONT_TERMINAL="Iosevka Nerd Font"
 
 # set FZF options
 export FZF_DEFAULT_OPTS="

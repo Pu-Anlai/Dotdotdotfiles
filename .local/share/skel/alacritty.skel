@@ -55,7 +55,7 @@ shape = "Underline"
 style = "Bold"
 
 [font.normal]
-family = "mononoki"
+family = "{{{FONT_TERMINAL}}}"
 
 [hints]
 alphabet = "jfkdlsöaurieowpq"
