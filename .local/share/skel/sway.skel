@@ -341,6 +341,7 @@ mode $mode_blocks {
 
 # insert text
 mode $mode_insert {
+        bindsym Shift+m $execno $i3scriptsdir/i3insert M; mode "default"
         bindsym m $execno $i3scriptsdir/i3insert m; mode "default"
         bindsym Shift+n $execno $i3scriptsdir/i3insert N; mode "default"
         bindsym n $execno $i3scriptsdir/i3insert n; mode "default"

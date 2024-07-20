@@ -25,11 +25,14 @@ function dotool {
         exit 1
     fi
 
-    $tool "${args}"
+    $tool ${args[@]}
 }
 
 function translate_char {
     case $1 in
+        M)
+            echo "{{{MAIL_ADDRESS_ALT}}}"
+            ;;
         m)
             echo "{{{MAIL_ADDRESS}}}"
             ;;
