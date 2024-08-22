@@ -78,12 +78,9 @@
                     (smtpmail-smtp-server . "posteo.de")
                     (smtpmail-smtp-service . 465)
                     (smtpmail-queue-dir . "~/.local/share/mail/queued_mail/cur")
-                    (mu4e-maildir-shortcuts . (("/posteo/Arbeit+Bildung"    . ?b)
-                                               ("/posteo/Archiv"            . ?a)
+                    (mu4e-maildir-shortcuts . (("/posteo/Archiv"            . ?a)
                                                ("/posteo/Drafts"            . ?d)
-                                               ("/posteo/Following"         . ?f)
                                                ("/posteo/Inbox"             . ?i)
-                                               ("/posteo/Privat"            . ?p)
                                                ("/posteo/Sent"              . ?s)
                                                ("/posteo/Transaktionen"     . ?t)))))
           ;; room for additional contexts
