@@ -60,6 +60,8 @@
 !.config/i3blocks/blocklets/
 !.config/i3blocks/blocklets/*
 
+!.config/mimeapps.list
+
 !.config/mpd
 !.config/mpd/mpd.conf
 
