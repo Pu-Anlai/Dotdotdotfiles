@@ -7,6 +7,10 @@ fi
 WIRED_INSTANCE=${BLOCK_INSTANCE/;*/}
 WIFI_INSTANCE=${BLOCK_INSTANCE/*;/}
 
+html_escape() {
+    sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&#39;/g'
+}
+
 # wired connection
 if [[ -n $WIRED_INSTANCE ]]; then
     STATE=$(cat /sys/class/net/${WIRED_INSTANCE}/operstate)
@@ -26,7 +30,7 @@ if [[ -n $WIFI_INSTANCE ]]; then
     wifi=''
     else
         QUALITY=$(grep $WIFI_INSTANCE /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
-        WIFI_SSID=$(iwctl station $WIFI_INSTANCE show | perl -ne 'print if s/^\s*Connected network\s*(.+?)\s*$/\1/')
+        WIFI_SSID=$(iwctl station $WIFI_INSTANCE show | perl -ne 'print if s/^\s*Connected network\s*(.+?)\s*$/\1/' | html_escape)
 
 
         if [[ $QUALITY -ge 80 ]]; then
