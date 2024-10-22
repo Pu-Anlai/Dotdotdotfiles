@@ -1,6 +1,7 @@
 xkb_symbols "custom" {
 
 key <COMP> { [ Multi_key ]};
+key <PRSC> { [ Multi_key ]};
 
 key <CAPS> {
         type= "CTRL+ALT",
