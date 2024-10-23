@@ -1,1 +1,2 @@
+[general]
 import = ["/home/nicolai/.config/alacritty/default.toml", "/home/nicolai/.config/alacritty/sizes.toml"]
