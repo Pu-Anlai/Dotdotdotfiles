@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+use v5.36;
+
+sub notify_pp_send($name, $vol, $text) {
+    system("notify-send", "-t", "2000", "-a", $name, "-h", "string:x-canonical-private-synchronous:${name}", "-h", "int:value:${vol}", $text);
+}
+
+sub vol($change) {
+    my $n_text;
+    my $wp_cmd = $change eq "toggle" ? "set-mute" : "set-volume";
+
+    system("wpctl", $wp_cmd, "\@DEFAULT_AUDIO_SINK\@", $change);
+    my @wp_out = split ' ', `wpctl get-volume \@DEFAULT_AUDIO_SINK\@`;
+    my $volume = $wp_out[1] * 100;
+
+    if (exists $wp_out[2] && $wp_out[2] eq "[MUTED]") {
+        $n_text = " (${volume}%)";
+    } elsif ($volume >= 70) {
+        $n_text = " ${volume}%";
+    } elsif ($volume >= 10) {
+        $n_text = " ${volume}%";
+    } else {
+        $n_text = " ${volume}%";
+    }
+
+    notify_pp_send("notify-pp-vol", $volume, $n_text);
+}
+
+sub light($change) {
+    my $n_text;
+    my ($light) = (`brightnessctl set ${change}` =~ /^\s*Current brightness[^(]+\((\d+)/m);
+    $n_text = " ${light}%";
+
+    notify_pp_send("notify-pp-light", $light, $n_text);
+}
+
+my %dispatch = (
+    vol      => \&vol,
+    light    => \&light,
+);
+
+$dispatch{$ARGV[0]} -> ($ARGV[1]);
