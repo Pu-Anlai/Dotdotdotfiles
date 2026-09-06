@@ -432,15 +432,10 @@ Start eshell if it isn't running already."
 ;;;###autoload
 (defun +treesit-mode-switch ()
   "Switch to the tree-sitter variant of the current mode, installing its grammar before doing so."
-  (interactive)
   (let ((lang (seq-find
                (lambda (x) (eq (nth 1 x) major-mode))
                +treesit-supported-languages)))
-    (unless (and
-             lang
-             (not (treesit-ready-p (car lang) t))
-             (treesit-install-language-grammar (car lang)))
-      (funcall (nth 2 lang)))))
+    (funcall (nth 2 lang))))
 
 ;;;###autoload
 (defun +window-clear-side ()
