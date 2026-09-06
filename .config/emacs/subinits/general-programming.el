@@ -193,7 +193,8 @@ run corfu-complete."
    (list
     (list #'project-find-file "Find file" "f")
     (list #'consult-git-grep "Find regexp" "g")
-    (list #'project-find-dir "Find directory" "d"))))
+    (list #'project-find-dir "Find directory" "d")
+    (list (general-l (dired (project-root (project-current t)))) "Open dired" "e"))))
 
 (use-package quickrun
   :general
