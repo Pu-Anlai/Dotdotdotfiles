@@ -10,7 +10,7 @@
 # <pkg-name>:<search-term1,search-term2,...>
 
 auracle
-dunst
+mako:makoctl
 fcitx5:fcitx
 foot
 gcr:pinentry-gnome3

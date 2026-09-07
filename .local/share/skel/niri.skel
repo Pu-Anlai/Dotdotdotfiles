@@ -164,8 +164,7 @@ binds {
     Super+R { spawn-sh "tofi-drun | xargs niri msg action spawn -- "; }
 
     // close notifications
-    Super+Backspace { spawn "dunstctl" "close-all"; }
-    Super+Shift+Backspace { spawn "dunstctl" "close"; }
+    Super+Backspace { spawn "makoctl" "dismiss" "-a"; }
 
     // reload all configs
     Super+Shift+R { spawn "fish" "-c" "merge-configs"; }

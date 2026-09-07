@@ -28,13 +28,14 @@ def song_to_notification_args(song: Song) -> tuple:
     """Turn song into a tuple that can be used as args to notify-send."""
     return (
         song["title"],
-        "{artist}<br/><i>{album}</i><br/><br/>".format(**song),
+        '''{artist}
+<i>{album}</i>'''.format(**song),
     )
 
 
 def run_dunstify(args: list):
     subprocess.run(
-        ["dunstify", "-h", "string:category:desktop.mpd", "-r", "999", *args],
+        ["notify-send", "-c", "desktop.mpd", "-a", "mpd-notify", "-h", "string:x-canonical-private-synchronous:mpd-notify", *args],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )

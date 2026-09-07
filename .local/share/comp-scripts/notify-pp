@@ -2,7 +2,7 @@
 use v5.36;
 
 sub notify_pp_send($name, $vol, $text) {
-    system("notify-send", "-t", "2000", "-a", $name, "-h", "string:x-canonical-private-synchronous:${name}", "-h", "int:value:${vol}", $text);
+    system("notify-send", "-c", "desktop.notify-pp", "-a", $name, "-h", "string:x-canonical-private-synchronous:${name}", "-h", "int:value:${vol}", $text);
 }
 
 sub vol($change) {
