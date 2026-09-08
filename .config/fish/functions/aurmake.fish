@@ -1,41 +1,36 @@
 function aurmake -w cower -d 'Build specified AUR package'
-    set pkgs (string match -r '(?<!\x2d)\b\S+' -- $argv)
-    set args (string match -r '(?<!\S)\x2d(\x2d)?\S+' -- $argv)
+    test (count $argv) -eq 1 || return 1
 
-    # building packages
-    for pkg in $pkgs
-        set dep_list (auracle buildorder $pkg); or return 1
+    set pkg $argv[1]
+    set aur_rpc_info "https://aur.archlinux.org/rpc/v5/info?arg[]="
+    set response (curl "$aur_rpc_info$pkg" 2>/dev/null) || return 1
+    set resultcount (echo "$response" | jq .resultcount) || return 1
 
-        for dep in (string join \n $dep_list | awk '$1 == "AUR" {rc=1; print $NF}; END {exit !rc}')
-            if not contains $dep $aur_deps
-                set -a aur_deps $dep
-            end
-        end
-
-        # building AUR dependencies
-        for dep in $aur_deps
-            set_color -o && echo "Building dependency $dep for package $pkg..." && set_color normal
-            __aurmake_single --asdeps $dep
-            or return 1
-        end
-
-        # building the target package
-        __aurmake_single $args $pkg
-        or return 1
-
+    switch $resultcount
+        case 0
+            echo "Package $pkg not found in AUR." >&2
+            return 1
+        case 1
+            :
+        case '*'
+            echo -e "More than one RPC result found for package $pkg.\nWhat's going on?"
+            return 1
     end
 
-    # finding no longer needed build dependencies...
-    set orphans (pacman -Qdtq)
-    for dep in $aur_deps
-        if contains $dep $orphans
-            set -a del_deps $dep
+    for dep in (echo "$response" | jq '.results[0].Depends.[]')
+        if pacman -Si $dep >/dev/null 2>&1
+            echo "Package $dep not in pacman repos. Trying AUR..." >&2
+            aurmake $dep || return 1
         end
     end
 
-    # ...and removing them
-    if [ -n "$del_deps" ]
-        set_color -o && echo "Removing build dependencies installed from AUR..." && set_color normal
-        sudo pacman -Rsc $del_deps
-    end
+    set build_dir (mktemp -d)
+    set orig_dir (pwd)
+    cd $build_dir
+    aurclone -d "build_$pkg" $pkg || return 1
+    cd "build_$pkg"
+    makepkg -sri || return 1
+    # only remove $build_dir if build was succesful, otherwise we might be able
+    # to still use the contents of the directory
+    rm -rf $build_dir || return 1
 end
