@@ -273,7 +273,7 @@ binds {
 
     Super+Tab { focus-workspace-previous; }
 
-    Super+Comma  { consume-window-into-column; }
+    Super+Comma  { consume-or-expel-window-left; }
     Super+Period { expel-window-from-column; }
 
     Super+S { switch-preset-column-width; }

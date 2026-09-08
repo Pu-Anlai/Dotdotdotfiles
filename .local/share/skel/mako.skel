@@ -126,7 +126,7 @@ text-alignment=right
 
 # Set the default timeout to timeout in milliseconds. To disable the timeout,
 # set it to zero.
-default-timeout=30000
+default-timeout=9000
 
 # If set, mako will ignore the expire timeout sent by notifications and use the
 # one provided by default-timeout instead.
