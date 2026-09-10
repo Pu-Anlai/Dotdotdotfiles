@@ -19,7 +19,7 @@ function aurmake -w cower -d 'Build specified AUR package'
 
     for dep in (echo "$response" | jq '.results[0].Depends.[]')
         if pacman -Si $dep >/dev/null 2>&1
-            echo "Package $dep not in pacman repos. Trying AUR..." >&2
+            set_color -o; echo "Package $dep not in pacman repos. Trying AUR..." >&2; set_color normal
             aurmake $dep || return 1
         end
     end
@@ -32,5 +32,6 @@ function aurmake -w cower -d 'Build specified AUR package'
     makepkg -sri || return 1
     # only remove $build_dir if build was succesful, otherwise we might be able
     # to still use the contents of the directory
+    cd $orig_dir
     rm -rf $build_dir || return 1
 end
