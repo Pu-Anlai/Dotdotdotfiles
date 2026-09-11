@@ -1,9 +1,8 @@
 abbr -a -g anspb ansible-playbook
 abbr -a -g ansv ansible-vault
-abbr -a -g aur auracle
-abbr -a -g aurd auracle download
-abbr -a -g auri auracle info
-abbr -a -g aurs auracle search
+abbr -a -g aurc aurclone
+abbr -a -g auri aurinfo
+abbr -a -g aurs aursearch
 abbr -a -g bgd 'bg; and disown'
 abbr -a -g bpy bpython
 abbr -a -g do disown
