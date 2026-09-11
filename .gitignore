@@ -4,10 +4,6 @@
 
 !.config/.packages
 
-!.config/alacritty
-!.config/alacritty/alacritty.toml
-!.config/alacritty/overlay.toml
-
 !.config/aria2
 !.config/aria2/*
 
@@ -41,9 +37,6 @@
 !.config/fish/conf.d/*
 .config/fish/conf.d/*local.fish
 
-!.config/gopass
-!.config/gopass/config
-
 !.config/git
 !.config/git/config
 
@@ -54,9 +47,6 @@
 !.config/ironbar/config.yaml
 !.config/ironbar/scripts
 !.config/ironbar/scripts/*
-
-!.config/khal
-!.config/khal/config
 
 !.config/mimeapps.list
 
@@ -86,7 +76,6 @@
 !.config/systemd
 !.config/systemd/user
 !.config/systemd/user/mpd-notify.service
-!.config/systemd/user/sway-session.target
 !.config/systemd/user/mpdscribble.service.d/
 !.config/systemd/user/mpdscribble.service.d/*
 
@@ -120,10 +109,6 @@
 !.local/share/skel
 !.local/share/skel/*
 
-!.local/share/vendor-skel
-!.local/share/vendor-skel/*
-
-!.bashrc
 !.gitignore
 !.profile
 !.XCompose

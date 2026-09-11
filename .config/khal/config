@@ -1,5 +1,0 @@
-[calendars]
-[[home]]
-type = discover
-path = ~/.local/share/pimsync/cal/*
-color = light green
