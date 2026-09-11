@@ -1,17 +1,15 @@
 function arch-pkg-reqs
-    argparse 'q/query' 'i/install' -- "$argv"
-    if [ -z "$_flag_q$_flag_v$_flag_i" ]
+    argparse 'b/backquery' 'i/install' 'q/query' -- "$argv"
+    if [ -z "$_flag_b$_flag_i$_flag_q" ]
         echo "Mode must be set: --query/--install" >&2
         return 1
     end
 
     set pkg_file $HOME/.config/.packages
     test -f $pkg_file || return 1
-
-    set new_file
+    set -q _flag_backquery && set pkgs_on_system (pacman -Qetq)
 
     while read line
-        set -a new_file "$line"
         string match -qr -- '^\s*$' "$line" && continue
         string match -qr -- '^\s*#' "$line" && continue
         set pkg (string split -m1 -f1 : "$line")
@@ -41,16 +39,21 @@ Supply the i flag twice to install the package with aurmake." >&2
                 git grep -q "\b$query\b" -- ':!.config/.packages' && continue
                 echo "$pkg not verified on system." >&2
             end
+        else if set -q _flag_backquery
+            set i (contains -i $pkg $pkgs_on_system) || continue
+            set -e pkgs_on_system[$i]
         end
     end < $pkg_file
 
-    if [ (count $i_pkgs) -ne 0 ]
-        sudo pacman -S $i_pkgs
-    end
-
-    if [ (count $aur_i_pkgs) -ne 0 ]
+    # handling of collected items
+    if set -q _flag_install
+        test (count $i_pkgs) -ne 0 && sudo pacman -S $i_pkgs
         for p in $aur_i_pkgs
             aurmake $p
         end
+    end
+
+    if set -q _flag_backquery
+        printf "%s\n" $pkgs_on_system
     end
 end
