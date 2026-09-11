@@ -1,7 +1,14 @@
 function aurmake -w cower -d 'Build specified AUR package'
-    test (count $argv) -eq 1 || return 1
+    for a in $argv
+        if [ (string sub -l1 -- "$a") = "-" ]
+            set -a makepkg_args $a
+        else
+            set -a pkg $a
+        end
+    end
 
-    set pkg $argv[1]
+    test (count $pkg) -eq 1 || return 1
+
     set aur_rpc_info "https://aur.archlinux.org/rpc/v5/info?arg[]="
     set response (curl "$aur_rpc_info$pkg" 2>/dev/null) || return 1
     set resultcount (echo "$response" | jq .resultcount) || return 1
@@ -17,7 +24,7 @@ function aurmake -w cower -d 'Build specified AUR package'
             return 1
     end
 
-    for dep in (echo "$response" | jq '.results[0].Depends.[]')
+    for dep in (echo "$response" | jq '.results[0].Depends.[]?')
         if pacman -Si $dep >/dev/null 2>&1
             set_color -o; echo "Package $dep not in pacman repos. Trying AUR..." >&2; set_color normal
             aurmake $dep || return 1
@@ -26,10 +33,21 @@ function aurmake -w cower -d 'Build specified AUR package'
 
     set build_dir (mktemp -d)
     set orig_dir (pwd)
+    set pkg_base (echo "$response" | jq -r '.results[0].PackageBase')
+
     cd $build_dir
-    aurclone -d "build_$pkg" $pkg || return 1
+    aurclone -d "build_$pkg" $pkg_base || return 1
     cd "build_$pkg"
-    makepkg -sri || return 1
+
+    # determine install target
+    set future_pkgs (makepkg --packagelist) || return 1
+    # get index of correct target in $future_pkgs
+    set i (contains -i $pkg (printf "%s\n" $future_pkgs | path basename | string split -r -m3 -f1 -- "-")) || return 1
+    set install_target $future_pkgs[$i]
+
+    makepkg $makepkg_args -sr || return 1
+    sudo pacman -U $install_target || return 1
+
     # only remove $build_dir if build was succesful, otherwise we might be able
     # to still use the contents of the directory
     cd $orig_dir
