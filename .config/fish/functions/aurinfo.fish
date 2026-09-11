@@ -1,7 +1,9 @@
 function aurinfo -a pkg -d "Get info from AUR for the provided package"
-    set date_fields FirstSubmitted LastModified
+    argparse 'j/json' -- $argv
     test (count $argv) -ne 1 && return 1
 
+    set pkg $argv[1]
+    set date_fields FirstSubmitted LastModified
     set aur_rpc_info "https://aur.archlinux.org/rpc/v5/info?arg[]="
     set response (curl "$aur_rpc_info$pkg" 2>/dev/null)
 
@@ -9,6 +11,12 @@ function aurinfo -a pkg -d "Get info from AUR for the provided package"
         echo "Package $pkg not found in AUR." >&2
         return 1
     end
+
+    if set -q _flag_json
+        echo $response | jq .
+        return
+    end
+
     set keys Package
     set values $pkg
 
