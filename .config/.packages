@@ -9,10 +9,10 @@
 # whitespace will be stripped).
 # <pkg-name>:<search-term1,search-term2,...>
 
-auracle
 mako:makoctl
 fcitx5:fcitx
 foot
+fzf
 gcr:pinentry-gnome3
 gnu-free-fonts:FreeSans
 ironbar
@@ -30,6 +30,7 @@ swaybg
 swayidle
 tofi:dmenu
 ttc-iosevka:Iosevka
+ttf-fraunces-variable:Fraunces
 ttf-nerd-fonts-symbols:Symbols Nerd Font
 wl-clipboard:wl-copy
 wlr-which-key
